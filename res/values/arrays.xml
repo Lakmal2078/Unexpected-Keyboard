@@ -58,6 +58,11 @@
     <item>@string/pref_theme_e_lanka_maroon</item>
     <item>@string/pref_theme_e_emerald_forest</item>
     <item>@string/pref_theme_e_midnight_purple</item>
+    <item>@string/pref_theme_e_quantum_neon</item>
+    <item>@string/pref_theme_e_midnight_ocean</item>
+    <item>@string/pref_theme_e_graphite_pro</item>
+    <item>@string/pref_theme_e_sinhala_heritage</item>
+    <item>@string/pref_theme_e_oled_black</item>
   </string-array>
   <string-array name="pref_theme_values">
     <item>system</item>
@@ -89,6 +94,11 @@
     <item>lanka_maroon</item>
     <item>emerald_forest</item>
     <item>midnight_purple</item>
+    <item>quantum_neon</item>
+    <item>midnight_ocean</item>
+    <item>graphite_pro</item>
+    <item>sinhala_heritage</item>
+    <item>oled_black</item>
   </string-array>
   <string-array name="pref_keyboard_font_entries">
     <item>@string/pref_font_default</item>
