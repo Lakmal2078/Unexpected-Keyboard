@@ -103,7 +103,7 @@
     <string name="pref_theme_e_cyberpunk_neon">Cyberpunk Neon</string>
     <string name="pref_theme_e_amoled_cyan">AMOLED Cyan</string>
     <string name="pref_theme_e_sunset_glow">Sunset Glow</string>
-    <string name="pref_theme_e_lanka_maroon">Sri Lanka Maroon &amp; Gold</string>
+    <string name="pref_theme_e_lanka_maroon">Sri Lanka Heritage (Maroon &amp; Gold)</string>
     <string name="pref_theme_e_emerald_forest">Emerald Forest</string>
     <string name="pref_theme_e_midnight_purple">Midnight Purple Nebula</string>
     <string name="pref_theme_e_quantum_neon">Quantum Neon</string>
@@ -122,7 +122,12 @@
     <string name="pref_theme_e_sinhala_sand">Sinhala Sand</string>
     <string name="pref_theme_e_sinhala_tech">Sinhala Tech</string>
     <string name="pref_theme_e_soft_lavender">Soft Lavender</string>
-    <string name="pref_theme_e_high_contrast">High Contrast</string>
+    <string name="pref_theme_e_high_contrast">High Contrast (Black &amp; White)</string>
+    <string name="pref_theme_e_high_contrast_yellow">High Contrast (Yellow)</string>
+    <string name="pref_theme_e_gruvbox_dark">Gruvbox Dark</string>
+    <string name="pref_theme_e_gruvbox_light">Gruvbox Light</string>
+    <string name="pref_theme_e_solarized_dark">Solarized Dark</string>
+    <string name="pref_theme_e_sepia_warm">Sepia Warm Paper</string>
     <string name="pref_keyboard_font_title">Keyboard font style</string>
     <string name="pref_font_default">System default</string>
     <string name="pref_font_sans_bold">Bold Sans-Serif</string>

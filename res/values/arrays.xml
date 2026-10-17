@@ -33,96 +33,76 @@
     <item>@string/pref_theme_e_dark</item>
     <item>@string/pref_theme_e_light</item>
     <item>@string/pref_theme_e_black</item>
-    <item>@string/pref_theme_e_altblack</item>
     <item>@string/pref_theme_e_white</item>
-    <item>@string/pref_theme_e_epaper</item>
-    <item>@string/pref_theme_e_desert</item>
-    <item>@string/pref_theme_e_jungle</item>
     <item>@string/pref_theme_e_monet</item>
     <item>@string/pref_theme_e_monetlight</item>
     <item>@string/pref_theme_e_monetdark</item>
-    <item>@string/pref_theme_e_rosepine</item>
-    <item>@string/pref_theme_e_everforestlight</item>
-    <item>@string/pref_theme_e_cobalt</item>
-    <item>@string/pref_theme_e_pine</item>
-    <item>@string/pref_theme_e_epaperblack</item>
+    <item>@string/pref_theme_e_gruvbox_dark</item>
+    <item>@string/pref_theme_e_gruvbox_light</item>
+    <item>@string/pref_theme_e_solarized_dark</item>
     <item>@string/pref_theme_e_dracula</item>
-    <item>@string/pref_theme_e_gradientpurplepink</item>
+    <item>@string/pref_theme_e_nord</item>
+    <item>@string/pref_theme_e_tokyo_night</item>
     <item>@string/pref_theme_e_catppuccin_mocha</item>
     <item>@string/pref_theme_e_catppuccin_latte</item>
-    <item>@string/pref_theme_e_tokyo_night</item>
-    <item>@string/pref_theme_e_nord</item>
+    <item>@string/pref_theme_e_rosepine</item>
+    <item>@string/pref_theme_e_everforestlight</item>
+    <item>@string/pref_theme_e_sepia_warm</item>
+    <item>@string/pref_theme_e_desert</item>
+    <item>@string/pref_theme_e_sinhala_sand</item>
+    <item>@string/pref_theme_e_emerald_forest</item>
+    <item>@string/pref_theme_e_jungle</item>
     <item>@string/pref_theme_e_cyberpunk_neon</item>
-    <item>@string/pref_theme_e_amoled_cyan</item>
+    <item>@string/pref_theme_e_matrix_green</item>
     <item>@string/pref_theme_e_sunset_glow</item>
     <item>@string/pref_theme_e_lanka_maroon</item>
-    <item>@string/pref_theme_e_emerald_forest</item>
-    <item>@string/pref_theme_e_midnight_purple</item>
-    <item>@string/pref_theme_e_quantum_neon</item>
-    <item>@string/pref_theme_e_midnight_ocean</item>
-    <item>@string/pref_theme_e_graphite_pro</item>
-    <item>@string/pref_theme_e_sinhala_heritage</item>
-    <item>@string/pref_theme_e_oled_black</item>
-    <item>@string/pref_theme_e_cyber_purple</item>
-    <item>@string/pref_theme_e_matrix_green</item>
-    <item>@string/pref_theme_e_neon_rose</item>
-    <item>@string/pref_theme_e_forest_mist</item>
-    <item>@string/pref_theme_e_arctic_blue</item>
-    <item>@string/pref_theme_e_aurora</item>
-    <item>@string/pref_theme_e_ocean_teal</item>
     <item>@string/pref_theme_e_royal_gold</item>
-    <item>@string/pref_theme_e_sinhala_sand</item>
-    <item>@string/pref_theme_e_sinhala_tech</item>
+    <item>@string/pref_theme_e_midnight_purple</item>
+    <item>@string/pref_theme_e_midnight_ocean</item>
+    <item>@string/pref_theme_e_arctic_blue</item>
+    <item>@string/pref_theme_e_cobalt</item>
+    <item>@string/pref_theme_e_graphite_pro</item>
     <item>@string/pref_theme_e_soft_lavender</item>
     <item>@string/pref_theme_e_high_contrast</item>
+    <item>@string/pref_theme_e_high_contrast_yellow</item>
   </string-array>
   <string-array name="pref_theme_values">
     <item>system</item>
     <item>dark</item>
     <item>light</item>
     <item>black</item>
-    <item>altblack</item>
     <item>white</item>
-    <item>epaper</item>
-    <item>desert</item>
-    <item>jungle</item>
     <item>monet</item>
     <item>monetlight</item>
     <item>monetdark</item>
-    <item>rosepine</item>
-    <item>everforestlight</item>
-    <item>cobalt</item>
-    <item>pine</item>
-    <item>epaperblack</item>
+    <item>gruvbox_dark</item>
+    <item>gruvbox_light</item>
+    <item>solarized_dark</item>
     <item>dracula</item>
-    <item>gradientpurplepink</item>
+    <item>nord</item>
+    <item>tokyo_night</item>
     <item>catppuccin_mocha</item>
     <item>catppuccin_latte</item>
-    <item>tokyo_night</item>
-    <item>nord</item>
+    <item>rosepine</item>
+    <item>everforestlight</item>
+    <item>sepia_warm</item>
+    <item>desert</item>
+    <item>sinhala_sand</item>
+    <item>emerald_forest</item>
+    <item>jungle</item>
     <item>cyberpunk_neon</item>
-    <item>amoled_cyan</item>
+    <item>matrix_green</item>
     <item>sunset_glow</item>
     <item>lanka_maroon</item>
-    <item>emerald_forest</item>
-    <item>midnight_purple</item>
-    <item>quantum_neon</item>
-    <item>midnight_ocean</item>
-    <item>graphite_pro</item>
-    <item>sinhala_heritage</item>
-    <item>oled_black</item>
-    <item>cyber_purple</item>
-    <item>matrix_green</item>
-    <item>neon_rose</item>
-    <item>forest_mist</item>
-    <item>arctic_blue</item>
-    <item>aurora</item>
-    <item>ocean_teal</item>
     <item>royal_gold</item>
-    <item>sinhala_sand</item>
-    <item>sinhala_tech</item>
+    <item>midnight_purple</item>
+    <item>midnight_ocean</item>
+    <item>arctic_blue</item>
+    <item>cobalt</item>
+    <item>graphite_pro</item>
     <item>soft_lavender</item>
     <item>high_contrast</item>
+    <item>high_contrast_yellow</item>
   </string-array>
   <string-array name="pref_keyboard_font_entries">
     <item>@string/pref_font_default</item>

@@ -270,17 +270,16 @@ public final class Config
     return get_dip_pref(dm, pref_base_name + suffix, def);
   }
 
-  private int getThemeId(Resources res, String theme_name)
+  static int getThemeId(Resources res, String theme_name)
   {
-    int night_mode = res.getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+    int night_mode = (res == null || res.getConfiguration() == null) ? 0 :
+        (res.getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK);
     switch (theme_name)
     {
       case "light": return R.style.Light;
       case "black": return R.style.Black;
-      case "altblack": return R.style.AltBlack;
       case "dark": return R.style.Dark;
       case "white": return R.style.White;
-      case "epaper": return R.style.ePaper;
       case "desert": return R.style.Desert;
       case "jungle": return R.style.Jungle;
       case "monetlight": return R.style.MonetLight;
@@ -292,37 +291,53 @@ public final class Config
       case "rosepine": return R.style.RosePine;
       case "everforestlight": return R.style.EverforestLight;
       case "cobalt": return R.style.Cobalt;
-      case "pine": return R.style.Pine;
-      case "epaperblack": return R.style.ePaperBlack;
       case "dracula": return R.style.Dracula;
-      case "gradientpurplepink": return R.style.GradientPurplePink;
       case "catppuccin_mocha": return R.style.CatppuccinMocha;
       case "catppuccin_latte": return R.style.CatppuccinLatte;
       case "tokyo_night": return R.style.TokyoNight;
       case "nord": return R.style.Nord;
       case "cyberpunk_neon": return R.style.CyberpunkNeon;
-      case "amoled_cyan": return R.style.AmoledCyan;
       case "sunset_glow": return R.style.SunsetGlow;
       case "lanka_maroon": return R.style.LankaMaroon;
       case "emerald_forest": return R.style.EmeraldForest;
       case "midnight_purple": return R.style.MidnightPurple;
-      case "quantum_neon": return R.style.QuantumNeon;
       case "midnight_ocean": return R.style.MidnightOcean;
       case "graphite_pro": return R.style.GraphitePro;
-      case "sinhala_heritage": return R.style.SinhalaHeritage;
-      case "oled_black": return R.style.OledBlack;
-      case "cyber_purple": return R.style.CyberPurple;
       case "matrix_green": return R.style.MatrixGreen;
-      case "neon_rose": return R.style.NeonRose;
-      case "forest_mist": return R.style.ForestMist;
       case "arctic_blue": return R.style.ArcticBlue;
-      case "aurora": return R.style.Aurora;
-      case "ocean_teal": return R.style.OceanTeal;
       case "royal_gold": return R.style.RoyalGold;
       case "sinhala_sand": return R.style.SinhalaSand;
-      case "sinhala_tech": return R.style.SinhalaTech;
       case "soft_lavender": return R.style.SoftLavender;
+      case "gruvbox_dark": return R.style.GruvboxDark;
+      case "gruvbox_light": return R.style.GruvboxLight;
+      case "solarized_dark": return R.style.SolarizedDark;
+      case "sepia_warm": return R.style.SepiaWarm;
       case "high_contrast": return R.style.HighContrast;
+      case "high_contrast_yellow": return R.style.HighContrastYellow;
+      // Deprecated aliases for backwards compatibility
+      case "oled_black":
+      case "epaperblack":
+      case "altblack":
+        return R.style.Black;
+      case "epaper":
+        return R.style.White;
+      case "pine":
+      case "forest_mist":
+        return R.style.EmeraldForest;
+      case "quantum_neon":
+      case "sinhala_tech":
+      case "amoled_cyan":
+        return R.style.CyberpunkNeon;
+      case "cyber_purple":
+        return R.style.MidnightPurple;
+      case "neon_rose":
+      case "gradientpurplepink":
+        return R.style.SunsetGlow;
+      case "sinhala_heritage":
+        return R.style.LankaMaroon;
+      case "aurora":
+      case "ocean_teal":
+        return R.style.MidnightOcean;
       default:
       case "system":
         if ((night_mode & Configuration.UI_MODE_NIGHT_NO) != 0)
