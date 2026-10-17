@@ -712,4 +712,276 @@
     <item name="clipboard_divider_color" type="color">#292929</item>
   </style>
 
+
+  <!-- Additional themes from the 18-theme palette collection. -->
+  <style name="CyberPurple" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#100817</item>
+    <item name="keyboardGradientStart">#29103F</item>
+    <item name="keyboardGradientEnd">#100817</item>
+    <item name="colorKey">#241333</item>
+    <item name="colorKeyActivated">#7C3AED</item>
+    <item name="colorKeyAction">#351C4B</item>
+    <item name="colorKeySpaceBar">#1B1028</item>
+    <item name="keyBorderWidth">0.8dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#54306C</item>
+    <item name="keyBorderColorTop">#6D3C8C</item>
+    <item name="keyBorderColorRight">#54306C</item>
+    <item name="keyBorderColorBottom">#170D22</item>
+    <item name="colorLabel">#F8F0FF</item>
+    <item name="colorLabelActivated">#D8B4FE</item>
+    <item name="colorLabelLocked">#A3E635</item>
+    <item name="colorSubLabel">#C4A6D9</item>
+    <item name="emoji_button_bg">#241333</item>
+    <item name="emoji_color">#F8F0FF</item>
+  </style>
+
+  <style name="MatrixGreen" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#101713</item>
+    <item name="keyboardGradientStart">#1A2B20</item>
+    <item name="keyboardGradientEnd">#080D0A</item>
+    <item name="colorKey">#202C24</item>
+    <item name="colorKeyActivated">#2E7D32</item>
+    <item name="colorKeyAction">#26382A</item>
+    <item name="colorKeySpaceBar">#17241A</item>
+    <item name="keyBorderWidth">0.8dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#35563A</item>
+    <item name="keyBorderColorTop">#47784D</item>
+    <item name="keyBorderColorRight">#35563A</item>
+    <item name="keyBorderColorBottom">#111A13</item>
+    <item name="colorLabel">#E8F5E9</item>
+    <item name="colorLabelActivated">#B6FF00</item>
+    <item name="colorLabelLocked">#76FF03</item>
+    <item name="colorSubLabel">#9BC7A0</item>
+    <item name="emoji_button_bg">#202C24</item>
+    <item name="emoji_color">#E8F5E9</item>
+  </style>
+
+  <style name="NeonRose" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#1D0C18</item>
+    <item name="keyboardGradientStart">#35102D</item>
+    <item name="keyboardGradientEnd">#160A16</item>
+    <item name="colorKey">#32182D</item>
+    <item name="colorKeyActivated">#C02678</item>
+    <item name="colorKeyAction">#48203E</item>
+    <item name="colorKeySpaceBar">#271426</item>
+    <item name="keyBorderWidth">0.8dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#633052</item>
+    <item name="keyBorderColorTop">#87406F</item>
+    <item name="keyBorderColorRight">#633052</item>
+    <item name="keyBorderColorBottom">#1B0C19</item>
+    <item name="colorLabel">#FFF0FA</item>
+    <item name="colorLabelActivated">#FF8AD8</item>
+    <item name="colorLabelLocked">#B6FF8A</item>
+    <item name="colorSubLabel">#E3A9CF</item>
+    <item name="emoji_button_bg">#32182D</item>
+    <item name="emoji_color">#FFF0FA</item>
+  </style>
+
+  <style name="ForestMist" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#14251D</item>
+    <item name="keyboardGradientStart">#1D382A</item>
+    <item name="keyboardGradientEnd">#101C16</item>
+    <item name="colorKey">#263D31</item>
+    <item name="colorKeyActivated">#477B5A</item>
+    <item name="colorKeyAction">#304B3A</item>
+    <item name="colorKeySpaceBar">#1B3024</item>
+    <item name="keyBorderWidth">0.7dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#466A51</item>
+    <item name="keyBorderColorTop">#5C8667</item>
+    <item name="keyBorderColorRight">#466A51</item>
+    <item name="keyBorderColorBottom">#17291E</item>
+    <item name="colorLabel">#F0F7F1</item>
+    <item name="colorLabelActivated">#B4E4C0</item>
+    <item name="colorLabelLocked">#D3F36B</item>
+    <item name="colorSubLabel">#B2CFB9</item>
+    <item name="emoji_button_bg">#263D31</item>
+    <item name="emoji_color">#F0F7F1</item>
+  </style>
+
+  <style name="ArcticBlue" parent="BaseTheme">
+    <item name="android:isLightTheme">true</item>
+    <item name="colorKeyboard">#EAF4FF</item>
+    <item name="colorKey">#FFFFFF</item>
+    <item name="colorKeyActivated">#C7E3FF</item>
+    <item name="colorKeyAction">#D8EAFC</item>
+    <item name="colorKeySpaceBar">#DCEEFF</item>
+    <item name="keyBorderWidth">0.7dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#C3D9EF</item>
+    <item name="keyBorderColorTop">#FFFFFF</item>
+    <item name="keyBorderColorRight">#C3D9EF</item>
+    <item name="keyBorderColorBottom">#AFC9E2</item>
+    <item name="colorLabel">#17324D</item>
+    <item name="colorLabelActivated">#075DAA</item>
+    <item name="colorLabelLocked">#237A4B</item>
+    <item name="colorSubLabel">#466783</item>
+    <item name="emoji_button_bg">#D8EAFC</item>
+    <item name="emoji_color">#17324D</item>
+  </style>
+
+  <style name="Aurora" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#102A35</item>
+    <item name="keyboardGradientStart">#174A50</item>
+    <item name="keyboardGradientEnd">#211C42</item>
+    <item name="colorKey">#1A3A46</item>
+    <item name="colorKeyActivated">#287F80</item>
+    <item name="colorKeyAction">#263E52</item>
+    <item name="colorKeySpaceBar">#162F3B</item>
+    <item name="keyBorderWidth">0.8dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#35636A</item>
+    <item name="keyBorderColorTop">#4B8581</item>
+    <item name="keyBorderColorRight">#35636A</item>
+    <item name="keyBorderColorBottom">#142A37</item>
+    <item name="colorLabel">#F0FFFC</item>
+    <item name="colorLabelActivated">#54E1C1</item>
+    <item name="colorLabelLocked">#B7F36B</item>
+    <item name="colorSubLabel">#B8D9DE</item>
+    <item name="emoji_button_bg">#1A3A46</item>
+    <item name="emoji_color">#F0FFFC</item>
+  </style>
+
+  <style name="OceanTeal" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#073B3A</item>
+    <item name="keyboardGradientStart">#0A4A48</item>
+    <item name="keyboardGradientEnd">#052B2B</item>
+    <item name="colorKey">#0E504D</item>
+    <item name="colorKeyActivated">#1C9B88</item>
+    <item name="colorKeyAction">#145B56</item>
+    <item name="colorKeySpaceBar">#0A413F</item>
+    <item name="keyBorderWidth">0.8dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#23766D</item>
+    <item name="keyBorderColorTop">#31988A</item>
+    <item name="keyBorderColorRight">#23766D</item>
+    <item name="keyBorderColorBottom">#062F2E</item>
+    <item name="colorLabel">#E8FFFA</item>
+    <item name="colorLabelActivated">#42E8C4</item>
+    <item name="colorLabelLocked">#B9FBC0</item>
+    <item name="colorSubLabel">#A6DCD4</item>
+    <item name="emoji_button_bg">#0E504D</item>
+    <item name="emoji_color">#E8FFFA</item>
+  </style>
+
+  <style name="RoyalGold" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#211B13</item>
+    <item name="keyboardGradientStart">#3A2B17</item>
+    <item name="keyboardGradientEnd">#17120D</item>
+    <item name="colorKey">#35291B</item>
+    <item name="colorKeyActivated">#80652F</item>
+    <item name="colorKeyAction">#47351F</item>
+    <item name="colorKeySpaceBar">#2A2117</item>
+    <item name="keyBorderWidth">0.8dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#6B532C</item>
+    <item name="keyBorderColorTop">#92733D</item>
+    <item name="keyBorderColorRight">#6B532C</item>
+    <item name="keyBorderColorBottom">#20180F</item>
+    <item name="colorLabel">#FFF8E7</item>
+    <item name="colorLabelActivated">#F5D98B</item>
+    <item name="colorLabelLocked">#B8E986</item>
+    <item name="colorSubLabel">#D9C99F</item>
+    <item name="emoji_button_bg">#35291B</item>
+    <item name="emoji_color">#FFF8E7</item>
+  </style>
+
+  <style name="SinhalaSand" parent="BaseTheme">
+    <item name="android:isLightTheme">true</item>
+    <item name="colorKeyboard">#FFF4E6</item>
+    <item name="colorKey">#FFFFFF</item>
+    <item name="colorKeyActivated">#E8C7AE</item>
+    <item name="colorKeyAction">#F2E0D0</item>
+    <item name="colorKeySpaceBar">#F5E5D6</item>
+    <item name="keyBorderWidth">0.7dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#DCC5B2</item>
+    <item name="keyBorderColorTop">#FFFFFF</item>
+    <item name="keyBorderColorRight">#DCC5B2</item>
+    <item name="keyBorderColorBottom">#C9AD98</item>
+    <item name="colorLabel">#39271F</item>
+    <item name="colorLabelActivated">#795548</item>
+    <item name="colorLabelLocked">#3E7A4A</item>
+    <item name="colorSubLabel">#795548</item>
+    <item name="emoji_button_bg">#F2E0D0</item>
+    <item name="emoji_color">#39271F</item>
+  </style>
+
+  <style name="SinhalaTech" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#0B1628</item>
+    <item name="keyboardGradientStart">#102B47</item>
+    <item name="keyboardGradientEnd">#07101D</item>
+    <item name="colorKey">#142A43</item>
+    <item name="colorKeyActivated">#145B7A</item>
+    <item name="colorKeyAction">#1B3653</item>
+    <item name="colorKeySpaceBar">#102239</item>
+    <item name="keyBorderWidth">0.8dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#24516D</item>
+    <item name="keyBorderColorTop">#2F6C8A</item>
+    <item name="keyBorderColorRight">#24516D</item>
+    <item name="keyBorderColorBottom">#0A192A</item>
+    <item name="colorLabel">#F5FAFF</item>
+    <item name="colorLabelActivated">#32D9FF</item>
+    <item name="colorLabelLocked">#B6FF00</item>
+    <item name="colorSubLabel">#B3CDE2</item>
+    <item name="emoji_button_bg">#142A43</item>
+    <item name="emoji_color">#F5FAFF</item>
+  </style>
+
+  <style name="SoftLavender" parent="BaseTheme">
+    <item name="android:isLightTheme">true</item>
+    <item name="colorKeyboard">#F4F0FF</item>
+    <item name="colorKey">#FFFFFF</item>
+    <item name="colorKeyActivated">#DDD2F8</item>
+    <item name="colorKeyAction">#E9E1FA</item>
+    <item name="colorKeySpaceBar">#EDE6FC</item>
+    <item name="keyBorderWidth">0.7dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#D4C8ED</item>
+    <item name="keyBorderColorTop">#FFFFFF</item>
+    <item name="keyBorderColorRight">#D4C8ED</item>
+    <item name="keyBorderColorBottom">#C2B3E0</item>
+    <item name="colorLabel">#302545</item>
+    <item name="colorLabelActivated">#6F55A6</item>
+    <item name="colorLabelLocked">#39734A</item>
+    <item name="colorSubLabel">#66587D</item>
+    <item name="emoji_button_bg">#E9E1FA</item>
+    <item name="emoji_color">#302545</item>
+  </style>
+
+  <style name="HighContrast" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#000000</item>
+    <item name="colorKey">#000000</item>
+    <item name="colorKeyActivated">#FFFF00</item>
+    <item name="colorKeyAction">#111111</item>
+    <item name="colorKeySpaceBar">#080808</item>
+    <item name="keyBorderWidth">1dp</item>
+    <item name="keyBorderWidthActivated">2dp</item>
+    <item name="keyBorderColorLeft">#FFFFFF</item>
+    <item name="keyBorderColorTop">#FFFFFF</item>
+    <item name="keyBorderColorRight">#FFFFFF</item>
+    <item name="keyBorderColorBottom">#FFFFFF</item>
+    <item name="colorLabel">#FFFFFF</item>
+    <item name="colorLabelPressed">#000000</item>
+    <item name="colorLabelActivated">#000000</item>
+    <item name="colorLabelLocked">#FFFF00</item>
+    <item name="colorSubLabel">#FFFFFF</item>
+    <item name="keyBorderRadius">3dp</item>
+    <item name="emoji_button_bg">#000000</item>
+    <item name="emoji_color">#FFFFFF</item>
+  </style>
+
 </resources>
