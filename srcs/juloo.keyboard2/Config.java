@@ -311,6 +311,18 @@ public final class Config
       case "graphite_pro": return R.style.GraphitePro;
       case "sinhala_heritage": return R.style.SinhalaHeritage;
       case "oled_black": return R.style.OledBlack;
+      case "cyber_purple": return R.style.CyberPurple;
+      case "matrix_green": return R.style.MatrixGreen;
+      case "neon_rose": return R.style.NeonRose;
+      case "forest_mist": return R.style.ForestMist;
+      case "arctic_blue": return R.style.ArcticBlue;
+      case "aurora": return R.style.Aurora;
+      case "ocean_teal": return R.style.OceanTeal;
+      case "royal_gold": return R.style.RoyalGold;
+      case "sinhala_sand": return R.style.SinhalaSand;
+      case "sinhala_tech": return R.style.SinhalaTech;
+      case "soft_lavender": return R.style.SoftLavender;
+      case "high_contrast": return R.style.HighContrast;
       default:
       case "system":
         if ((night_mode & Configuration.UI_MODE_NIGHT_NO) != 0)
