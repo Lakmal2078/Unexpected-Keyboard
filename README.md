@@ -15,6 +15,8 @@ See [keepandroidopen.org](https://keepandroidopen.org/) and the [F-Droid blog](h
      alt="Get it on Google Play"
      height="80">](https://play.google.com/store/apps/details?id=juloo.keyboard2)
 
+[සිංහල අනුවාදය](README.si.md)
+
 Lightweight and privacy-conscious virtual keyboard for Android.
 
 https://github.com/Julow/Unexpected-Keyboard/assets/2310568/28f8f6fe-ac13-46f3-8c5e-d62443e16d0d
