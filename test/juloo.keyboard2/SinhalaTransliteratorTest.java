@@ -163,6 +163,43 @@ public class SinhalaTransliteratorTest
     assertEquals("කීබෝඩ්", SinhalaTransliterator.transliterate("keyboard"));
   }
 
+  @Test
+  public void testHelakuruPhoneticBasicWords()
+  {
+    assertEquals("අම්මා", SinhalaTransliterator.transliterate("ammaa"));
+    assertEquals("තාත්තා", SinhalaTransliterator.transliterate("thaaththaa"));
+    assertEquals("මම", SinhalaTransliterator.transliterate("mama"));
+    assertEquals("ඔබ", SinhalaTransliterator.transliterate("oba"));
+    assertEquals("ගෙදර", SinhalaTransliterator.transliterate("gedhara"));
+  }
+
+  @Test
+  public void testSangyakaConsonants()
+  {
+    assertEquals("සඳ", SinhalaTransliterator.transliterate("sanndha"));
+    assertEquals("ගඟ", SinhalaTransliterator.transliterate("gannga"));
+    assertEquals("හඹ", SinhalaTransliterator.transliterate("hammba"));
+    assertEquals("කඬ", SinhalaTransliterator.transliterate("kannda"));
+  }
+
+  @Test
+  public void testLigaturesYansayaAndRakaransaya()
+  {
+    assertEquals("ක්‍රමය", SinhalaTransliterator.transliterate("kramaya"));
+    assertEquals("ප්‍රකාශන", SinhalaTransliterator.transliterate("prakaashana"));
+    assertEquals("ව්‍යාපාර", SinhalaTransliterator.transliterate("vyaapaara"));
+    assertEquals("විද්‍යාව", SinhalaTransliterator.transliterate("vidhyaava"));
+  }
+
+  @Test
+  public void testHalKirimaAndPiliCombinations()
+  {
+    assertEquals("සිංහල", SinhalaTransliterator.transliterate("sinhala"));
+    assertEquals("සුබ", SinhalaTransliterator.transliterate("suba"));
+    assertEquals("දවසක්", SinhalaTransliterator.transliterate("dhavasak"));
+    assertEquals("කොහොමද", SinhalaTransliterator.transliterate("kohomadha"));
+  }
+
   public static void main(String[] args)
   {
     SinhalaTransliteratorTest test = new SinhalaTransliteratorTest();

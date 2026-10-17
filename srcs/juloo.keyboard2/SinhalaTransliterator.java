@@ -21,8 +21,12 @@ public final class SinhalaTransliterator
   {
     // High-frequency colloquial Singlish words and names mapping (Helakuru-like)
     COMMON_WORDS.put("amma", "අම්මා");
+    COMMON_WORDS.put("ammaa", "අම්මා");
     COMMON_WORDS.put("thaththa", "තාත්තා");
     COMMON_WORDS.put("thatha", "තාත්තා");
+    COMMON_WORDS.put("thaaththaa", "තාත්තා");
+    COMMON_WORDS.put("thaththaa", "තාත්තා");
+    COMMON_WORDS.put("oba", "ඔබ");
     COMMON_WORDS.put("akka", "අක්කා");
     COMMON_WORDS.put("aiyya", "අයියා");
     COMMON_WORDS.put("aiya", "අයියා");
@@ -34,6 +38,7 @@ public final class SinhalaTransliterator
     COMMON_WORDS.put("bhaashawa", "භාෂාව");
     COMMON_WORDS.put("bhashaawa", "භාෂාව");
     COMMON_WORDS.put("kohomada", "කොහොමද");
+    COMMON_WORDS.put("kohomadha", "කොහොමද");
     COMMON_WORDS.put("mokada", "මොකද");
     COMMON_WORDS.put("monawada", "මොනවද");
     COMMON_WORDS.put("kawadda", "කවද්ද");
@@ -147,6 +152,9 @@ public final class SinhalaTransliterator
     COMMON_WORDS.put("meka", "මේක");
     COMMON_WORDS.put("araka", "අරක");
     COMMON_WORDS.put("gedara", "ගෙදර");
+    COMMON_WORDS.put("gedhara", "ගෙදර");
+    COMMON_WORDS.put("vidhyaava", "විද්‍යාව");
+    COMMON_WORDS.put("vidyaava", "විද්‍යාව");
     COMMON_WORDS.put("wada", "වැඩ");
     COMMON_WORDS.put("wadak", "වැඩක්");
     COMMON_WORDS.put("wade", "වැඩේ");
@@ -384,6 +392,7 @@ public final class SinhalaTransliterator
   // Standalone vowels (start of word or preceded by vowel)
   private static final String[][] VOWELS_INDEPENDENT = {
     {"aae", "\u0D88"}, // ඈ
+    {"aau", "\u0D96"}, // ඖ
     {"ae", "\u0D87"},  // ඇ
     {"aa", "\u0D86"},  // ආ
     {"A", "\u0D86"},   // ආ
@@ -410,6 +419,7 @@ public final class SinhalaTransliterator
   // Dependent vowel signs (attached to consonants)
   private static final String[][] VOWELS_DEPENDENT = {
     {"aae", "\u0DD1"}, // ෑ
+    {"aau", "\u0DDE"}, // ෞ
     {"ae", "\u0DD0"},  // ැ
     {"aa", "\u0DCF"},  // ා
     {"A", "\u0DCF"},   // ා
@@ -436,10 +446,15 @@ public final class SinhalaTransliterator
   // Consonants ordered by prefix length descending
   private static final String[][] CONSONANTS = {
     {"chch", "\u0DA0\u0DCA\u200D\u0DA0"}, // ච්ච
+    {"nndh", "\u0DB3"}, // ඳ
     {"shh", "\u0DC2\u0DCA"}, // ෂ්
     {"chh", "\u0DA1"}, // ඡ
+    {"nng", "\u0D9F"},  // ඟ
+    {"mmb", "\u0DB9"},  // ඹ
+    {"nnd", "\u0DAC"},  // ඬ
     {"kh", "\u0D9B"},  // ඛ
     {"gh", "\u0D9D"},  // ඝ
+    {"Ch", "\u0DA1"},  // ඡ
     {"ch", "\u0DA0"},  // ච
     {"jh", "\u0DA3"},  // ඣ
     {"Th", "\u0DAE"},  // ථ
@@ -450,6 +465,7 @@ public final class SinhalaTransliterator
     {"bh", "\u0DB7"},  // භ
     {"sh", "\u0DC1"},  // ශ
     {"Sh", "\u0DC2"},  // ෂ
+    {"ny", "\u0DA4"},  // ඤ
     {"gn", "\u0DA4"},  // ඤ
     {"kn", "\u0DA4"},  // ඤ
     {"jn", "\u0DA5"},  // ඥ
