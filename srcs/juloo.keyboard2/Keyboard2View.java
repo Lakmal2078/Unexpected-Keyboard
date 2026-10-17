@@ -69,6 +69,7 @@ public class Keyboard2View extends View
     _config = Config.globalConfig();
     _pointers = new Pointers(this, _config);
     refresh_navigation_bar(context);
+    setHapticFeedbackEnabled(true);
     setOnTouchListener(this);
     int layout_id = (attrs == null) ? 0 :
       attrs.getAttributeResourceValue(null, "layout", 0);

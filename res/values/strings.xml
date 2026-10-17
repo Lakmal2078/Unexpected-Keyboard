@@ -36,6 +36,8 @@
     <string name="pref_category_suggestions">Suggestions</string>
     <string name="pref_suggestions_title">Suggestions</string>
     <string name="pref_suggestions_summary">Enable word completion and spell checking</string>
+    <string name="pref_sinhala_transliteration_title">Sinhala Auto-Transliteration</string>
+    <string name="pref_sinhala_transliteration_summary">Automatically convert Singlish words (e.g. amma → අම්මා) on space</string>
     <string name="pref_space_bar_auto_complete_title">Autocomplete with the space bar</string>
     <string name="pref_space_bar_auto_complete_summary">Enter the best suggestion by pressing space</string>
     <string name="pref_suggestions_add_space_title">Automatically add a space</string>
@@ -87,6 +89,13 @@
     <string name="pref_theme_e_epaperblack">ePaper Black</string>
     <string name="pref_theme_e_dracula">Dracula</string>
     <string name="pref_theme_e_gradientpurplepink">Purple Pink Gradient</string>
+    <string name="pref_theme_e_catppuccin_mocha">Catppuccin Mocha</string>
+    <string name="pref_theme_e_catppuccin_latte">Catppuccin Latte</string>
+    <string name="pref_theme_e_tokyo_night">Tokyo Night</string>
+    <string name="pref_theme_e_nord">Nord</string>
+    <string name="pref_theme_e_cyberpunk_neon">Cyberpunk Neon</string>
+    <string name="pref_theme_e_amoled_cyan">AMOLED Cyan</string>
+    <string name="pref_theme_e_sunset_glow">Sunset Glow</string>
     <string name="pref_swipe_dist_e_very_short">Very short</string>
     <string name="pref_swipe_dist_e_short">Short</string>
     <string name="pref_swipe_dist_e_default">Normal</string>
@@ -164,6 +173,8 @@
     <string name="dictionaries_from_internet">Download a dictionary from the Internet</string>
     <string name="dictionaries_download_success">Dictionary installed</string>
     <string name="dictionaries_download_failed">Download failed: Please allow internet access</string>
+    <string name="dictionaries_download_button">Download dictionary</string>
+    <string name="dictionaries_delete_button">Delete dictionary</string>
     <string name="candidates_status_click_to_install">Click to install a dictionary for %s</string>
     <string name="dictionary_switcher_title">Change language</string>
     <string name="pref_physical_keyboard_behavior">When a physical keyboard is connected</string>

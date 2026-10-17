@@ -34,6 +34,7 @@ public final class KeyEventHandler
   /** Remember the action that was handled. This is used by autocorrect. */
   LastAction _last_action = null;
   LastAction _next_last_action = null;
+  StringBuilder _sinhala_buffer = new StringBuilder();
 
   public KeyEventHandler(Config conf, IReceiver recv, Suggestions sg)
   {
@@ -47,6 +48,35 @@ public final class KeyEventHandler
     _typedword = new CurrentlyTypedWord(handler, this);
   }
 
+  @Override
+  public void finish_composing()
+  {
+    if (_sinhala_buffer.length() > 0)
+    {
+      InputConnection conn = _recv.getCurrentInputConnection();
+      if (conn != null)
+      {
+        conn.finishComposingText();
+      }
+      _sinhala_buffer.setLength(0);
+      _suggestions.clear();
+      _recv.set_suggestions(_suggestions);
+    }
+  }
+
+  private static boolean is_ascii_letters(String s)
+  {
+    if (s == null || s.isEmpty())
+      return false;
+    for (int i = 0; i < s.length(); i++)
+    {
+      char c = s.charAt(i);
+      if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))
+        return false;
+    }
+    return true;
+  }
+
   /** Editing just started. */
   public void started()
   {
@@ -54,16 +84,33 @@ public final class KeyEventHandler
     _autocap.started(_config, ic);
     _typedword.started(_config, ic);
     _suggestions.started();
+    _sinhala_buffer.setLength(0);
     _move_cursor_force_fallback =
       _config.editor_config.should_move_cursor_force_fallback;
     _last_action = null;
   }
 
   /** Selection has been updated. */
-  public void selection_updated(int oldSelStart, int newSelStart, int newSelEnd)
+  public void selection_updated(int oldSelStart, int newSelStart, int newSelEnd, int candidatesStart, int candidatesEnd)
   {
+    if (_sinhala_buffer.length() > 0)
+    {
+      if (newSelStart != newSelEnd)
+      {
+        finish_composing();
+      }
+      else if (candidatesStart != -1 && (newSelStart < candidatesStart || newSelStart > candidatesEnd))
+      {
+        finish_composing();
+      }
+    }
     _autocap.selection_updated(oldSelStart, newSelStart);
     _typedword.selection_updated(oldSelStart, newSelStart, newSelEnd);
+  }
+
+  public void selection_updated(int oldSelStart, int newSelStart, int newSelEnd)
+  {
+    selection_updated(oldSelStart, newSelStart, newSelEnd, -1, -1);
   }
 
   /** A key is being pressed. There will not necessarily be a corresponding
@@ -138,6 +185,19 @@ public final class KeyEventHandler
 
   public void suggestion_entered(String text, boolean add_space_after)
   {
+    InputConnection conn = _recv.getCurrentInputConnection();
+    if (_sinhala_buffer.length() > 0 && conn != null)
+    {
+      if (add_space_after)
+        text = text + " ";
+      conn.commitText(text, 1);
+      _sinhala_buffer.setLength(0);
+      _suggestions.clear();
+      _recv.set_suggestions(_suggestions);
+      _typedword.typed(text);
+      _next_last_action = LastAction.SUGGESTION_ENTERED;
+      return;
+    }
     if (add_space_after)
       text = text + " ";
     String old = _typedword.get();
@@ -157,6 +217,10 @@ public final class KeyEventHandler
   @Override
   public void currently_typed_word(String word)
   {
+    if (_config.sinhala_transliteration && _sinhala_buffer.length() > 0)
+    {
+      return;
+    }
     _suggestions.currently_typed_word(word);
   }
 
@@ -248,6 +312,8 @@ public final class KeyEventHandler
     InputConnection conn = _recv.getCurrentInputConnection();
     if (conn == null)
       return;
+    if (eventAction == KeyEvent.ACTION_DOWN)
+      finish_composing();
     conn.sendKeyEvent(new KeyEvent(1, 1, eventAction, eventCode, 0,
           metaState, KeyCharacterMap.VIRTUAL_KEYBOARD, 0,
           KeyEvent.FLAG_SOFT_KEYBOARD | KeyEvent.FLAG_KEEP_TOUCH_MODE));
@@ -263,6 +329,22 @@ public final class KeyEventHandler
     InputConnection conn = _recv.getCurrentInputConnection();
     if (conn == null)
       return;
+
+    boolean is_sinhala = _config.sinhala_transliteration
+        && (_meta_state & (KeyEvent.META_CTRL_ON | KeyEvent.META_ALT_ON | KeyEvent.META_META_ON)) == 0;
+
+    if (is_sinhala && is_ascii_letters(text))
+    {
+      _sinhala_buffer.append(text);
+      String transliterated = SinhalaTransliterator.transliterateWord(_sinhala_buffer.toString());
+      conn.setComposingText(transliterated, 1);
+      if (_config.suggestions_enabled)
+        _suggestions.currently_typed_word(_sinhala_buffer.toString());
+      _next_last_action = LastAction.OTHER;
+      return;
+    }
+
+    finish_composing();
     _autocap.typed(text);
     _typedword.typed(text);
     conn.commitText(text, 1);
@@ -332,6 +414,7 @@ public final class KeyEventHandler
   /** [r] might be negative, in which case the direction is reversed. */
   void handle_slider(KeyValue.Slider s, int r, boolean key_down)
   {
+    finish_composing();
     switch (s)
     {
       case Cursor_left: move_cursor(-r); break;
@@ -353,7 +436,19 @@ public final class KeyEventHandler
       case Complete_emoji:
         suggestion_entered(st.toString());
         break;
+      case Toggle_language:
+        toggle_language();
+        break;
     }
+  }
+
+  public void toggle_language()
+  {
+    finish_composing();
+    _config.sinhala_transliteration = !_config.sinhala_transliteration;
+    Config.globalPrefs().edit().putBoolean("sinhala_transliteration", _config.sinhala_transliteration).apply();
+    _suggestions.clear();
+    _recv.language_changed();
   }
 
   /** Move the cursor right or left, if possible without sending key events.
@@ -551,20 +646,34 @@ public final class KeyEventHandler
       backspace. */
   int last_replacement_word_len = 0;
 
-  /** Implement autocorrect when enabled in the settings. */
+  /** Implement autocorrect and Sinhala auto-transliteration when enabled in the settings. */
   void handle_space_bar()
   {
-    if (_config.space_bar_auto_complete && _suggestions.count > 0
-        && !_typedword.is_selection_not_empty()
+    InputConnection conn = _recv.getCurrentInputConnection();
+    if (_sinhala_buffer.length() > 0 && conn != null)
+    {
+      conn.finishComposingText();
+      conn.commitText(" ", 1);
+      _sinhala_buffer.setLength(0);
+      _suggestions.clear();
+      _recv.set_suggestions(_suggestions);
+      _next_last_action = LastAction.OTHER;
+      return;
+    }
+    if (!_typedword.is_selection_not_empty()
         && _typedword.cursor_relative() == 0
         && _last_action == LastAction.OTHER)
     {
-      // Don't replace the typed word if unecessary to avoid flickering
-      String w = _suggestions.suggestions[0];
-      if (!w.equals(_typedword.get()))
+      String typed = _typedword.get();
+      if (_config.space_bar_auto_complete && _suggestions.count > 0)
       {
-        suggestion_entered(w, true);
-        return;
+        // Don't replace the typed word if unecessary to avoid flickering
+        String w = _suggestions.suggestions[0];
+        if (!w.equals(typed))
+        {
+          suggestion_entered(w, true);
+          return;
+        }
       }
     }
     send_text(" ");
@@ -573,6 +682,28 @@ public final class KeyEventHandler
   /** Undo the last autocorrect. */
   void handle_backspace()
   {
+    InputConnection conn = _recv.getCurrentInputConnection();
+    if (_sinhala_buffer.length() > 0 && conn != null)
+    {
+      _sinhala_buffer.deleteCharAt(_sinhala_buffer.length() - 1);
+      if (_sinhala_buffer.length() > 0)
+      {
+        String transliterated = SinhalaTransliterator.transliterateWord(_sinhala_buffer.toString());
+        conn.setComposingText(transliterated, 1);
+        if (_config.suggestions_enabled)
+          _suggestions.currently_typed_word(_sinhala_buffer.toString());
+      }
+      else
+      {
+        conn.setComposingText("", 1);
+        conn.finishComposingText();
+        _suggestions.clear();
+        _recv.set_suggestions(_suggestions);
+      }
+      _next_last_action = LastAction.OTHER;
+      return;
+    }
+
     if (_last_action == LastAction.SUGGESTION_ENTERED
         && last_replaced_word != null)
     {
@@ -594,6 +725,7 @@ public final class KeyEventHandler
     public void selection_state_changed(boolean selection_is_ongoing);
     public InputConnection getCurrentInputConnection();
     public Handler getHandler();
+    public void language_changed();
   }
 
   class Autocapitalisation_callback implements Autocapitalisation.Callback

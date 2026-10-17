@@ -194,6 +194,8 @@ public class Keyboard2 extends InputMethodService
     if (dict_name == null)
       dict_name = (_config.device_locales.default_ != null) ?
         _config.device_locales.default_.dictionary : null;
+    if (dict_name == null || !_dictionaries.get_installed().contains(dict_name))
+      dict_name = "en_US";
     _dictionaries.set_current_dictionary(_config, dict_name);
   }
 
@@ -208,9 +210,12 @@ public class Keyboard2 extends InputMethodService
 
   private void refresh_candidates_view()
   {
+    boolean has_dict = _config.current_dictionary != null;
+    boolean has_sinhala = _config.sinhala_transliteration;
     boolean should_show =
       _config.suggestions_enabled
-      && _config.editor_config.should_show_candidates_view
+      && (has_dict || has_sinhala)
+      && (_config.editor_config.should_show_candidates_view || has_sinhala)
       && !_config.split_layout;
     if (should_show)
     {
@@ -364,7 +369,7 @@ public class Keyboard2 extends InputMethodService
   public void onUpdateSelection(int oldSelStart, int oldSelEnd, int newSelStart, int newSelEnd, int candidatesStart, int candidatesEnd)
   {
     super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd);
-    _keyeventhandler.selection_updated(oldSelStart, newSelStart, newSelEnd);
+    _keyeventhandler.selection_updated(oldSelStart, newSelStart, newSelEnd, candidatesStart, candidatesEnd);
     if ((oldSelStart == oldSelEnd) != (newSelStart == newSelEnd))
       _keyboard_layout_view.set_selection_state(newSelStart != newSelEnd);
   }
@@ -380,6 +385,8 @@ public class Keyboard2 extends InputMethodService
   public void onSharedPreferenceChanged(SharedPreferences _prefs, String _key)
   {
     refresh_config();
+    if (_keyeventhandler != null)
+      _keyeventhandler.started();
     _keyboard_layout_view.setKeyboard(current_layout());
   }
 
@@ -561,8 +568,18 @@ public class Keyboard2 extends InputMethodService
         case Complete_second: return _suggestions.suggestions[1];
         case Complete_third: return _suggestions.suggestions[2];
         case Complete_emoji: return _suggestions.emoji_suggestion;
+        case Toggle_language:
+          return _config.sinhala_transliteration ? "සි" : "EN";
       }
       return "";
+    }
+
+    public void language_changed()
+    {
+      refresh_current_dictionary();
+      refresh_candidates_view();
+      if (_keyboard_layout_view != null)
+        _keyboard_layout_view.invalidate();
     }
 
     public void on_change_dictionary(String dict_name)

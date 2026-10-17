@@ -76,6 +76,7 @@ public final class Config
   public boolean clipboard_history_enabled;
   public int clipboard_history_duration;
   public boolean space_bar_auto_complete;
+  public boolean sinhala_transliteration;
   public boolean physical_keyboard_hide;
 
   // Dynamically set
@@ -202,6 +203,7 @@ public final class Config
     clipboard_history_enabled = _prefs.getBoolean("clipboard_history_enabled", false);
     clipboard_history_duration = Integer.parseInt(_prefs.getString("clipboard_history_duration", "5"));
     space_bar_auto_complete = _prefs.getBoolean("space_bar_auto_complete", false);
+    sinhala_transliteration = _prefs.getBoolean("sinhala_transliteration", true);
     physical_keyboard_hide = _prefs.getString("physical_keyboard_behavior", "hide").equals("hide");
     float screen_width_dp = dm.widthPixels / dm.density;
     wide_screen = screen_width_dp >= WIDE_DEVICE_THRESHOLD;
@@ -283,6 +285,13 @@ public final class Config
       case "epaperblack": return R.style.ePaperBlack;
       case "dracula": return R.style.Dracula;
       case "gradientpurplepink": return R.style.GradientPurplePink;
+      case "catppuccin_mocha": return R.style.CatppuccinMocha;
+      case "catppuccin_latte": return R.style.CatppuccinLatte;
+      case "tokyo_night": return R.style.TokyoNight;
+      case "nord": return R.style.Nord;
+      case "cyberpunk_neon": return R.style.CyberpunkNeon;
+      case "amoled_cyan": return R.style.AmoledCyan;
+      case "sunset_glow": return R.style.SunsetGlow;
       default:
       case "system":
         if ((night_mode & Configuration.UI_MODE_NIGHT_NO) != 0)
@@ -338,6 +347,7 @@ public final class Config
     public void key_up(KeyValue value, Pointers.Modifiers mods);
     public void mods_changed(Pointers.Modifiers mods);
     public void suggestion_entered(String text);
+    public void finish_composing();
   }
 
   /** Config migrations. */

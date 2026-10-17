@@ -37,11 +37,6 @@ public class CandidatesView extends LinearLayout
       shown. Might be [null]. */
   View _status_no_dict = null;
 
-  View _dictionary_switch_button;
-  boolean should_show_dictionary_switch = false;
-
-  TextView _lang_name_view;
-
   public CandidatesView(Context context, AttributeSet attrs)
   {
     super(context, attrs);
@@ -55,8 +50,6 @@ public class CandidatesView extends LinearLayout
     setup_item_view(1, R.id.candidates_right);
     setup_item_view(2, R.id.candidates_left);
     setup_item_view(3, R.id.candidates_emoji);
-    setup_dictionary_switch_button();
-    _lang_name_view = (TextView)findViewById(R.id.candidates_lang_name);
   }
 
   public void set_candidates(Suggestions s)
@@ -81,10 +74,6 @@ public class CandidatesView extends LinearLayout
         v.setVisibility(View.GONE);
       }
     }
-    int dict_vis =
-      (should_show_dictionary_switch && s.count == 0) ? View.VISIBLE : View.GONE;
-    _dictionary_switch_button.setVisibility(dict_vis);
-    _lang_name_view.setVisibility(dict_vis);
   }
 
   void clear_candidates()
@@ -99,20 +88,9 @@ public class CandidatesView extends LinearLayout
   public void refresh_config(Config config)
   {
     clear_candidates();
-    // The status message indicates whether the dictionaries should be
-    // installed.
-    if (config.current_dictionary == null)
-      inflate_status_no_dict(config);
-    else if (_status_no_dict != null)
+    if (_status_no_dict != null)
       _status_no_dict.setVisibility(View.GONE);
-    should_show_dictionary_switch = config.should_show_dictionary_switch;
     set_sizes(config);
-    SupportedDictionaries sd = SupportedDictionaries.get(getResources());
-    if (config.current_dictionary_name == null)
-      _lang_name_view.setText(R.string.dictionary_switcher_title);
-    else
-      _lang_name_view.setText(
-          sd.get_display_name(config.current_dictionary_name));
   }
 
   /** Set the height of the suggestion row and the text size. */
@@ -138,24 +116,6 @@ public class CandidatesView extends LinearLayout
     }
   }
 
-  void inflate_status_no_dict(Config config)
-  {
-    if (_status_no_dict == null)
-    {
-      _status_no_dict = View.inflate(getContext(),
-          R.layout.candidates_status_no_dict, null);
-      addView(_status_no_dict);
-    }
-    Locale current_locale = (config.device_locales.default_ != null) ?
-      Locale.forLanguageTag(config.device_locales.default_.lang_tag) : null;
-    TextView tv = _status_no_dict.findViewById(android.R.id.text1);
-    if (tv != null && current_locale != null)
-      tv.setText(getResources().getString(
-            R.string.candidates_status_click_to_install,
-            current_locale.getDisplayName()));
-    _status_no_dict.setVisibility(View.VISIBLE);
-  }
-
   private void setup_item_view(final int item_index, int item_id)
   {
     TextView v = (TextView)findViewById(item_id);
@@ -173,24 +133,11 @@ public class CandidatesView extends LinearLayout
     _item_views[item_index] = v;
   }
 
-  void setup_dictionary_switch_button()
-  {
-    _dictionary_switch_button = findViewById(R.id.dictionary_switch);
-    _dictionary_switch_button.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View _v)
-          {
-            Config.globalConfig().handler.key_up(
-                KeyValue.getKeyByName("change_dictionary"),
-                Pointers.Modifiers.EMPTY);
-          }
-        });
-  }
-
   /** Whether the candidates view should be shown for a given editor. */
   public static boolean should_show(EditorInfo info)
   {
+    if (Config.globalConfig() != null && !Config.globalConfig().suggestions_enabled)
+      return false;
     int variation = info.inputType & InputType.TYPE_MASK_VARIATION;
     int flags = info.inputType & InputType.TYPE_MASK_FLAGS;
     switch (info.inputType & InputType.TYPE_MASK_CLASS)
@@ -203,6 +150,8 @@ public class CandidatesView extends LinearLayout
           case InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD:
             return false;
           default:
+            if (Config.globalConfig().sinhala_transliteration)
+              return true;
             /* Editor requested that we don't show suggestions. Enable
                suggestions anyway when the flags [NO_SUGGESTIONS] and
                [AUTO_CORRECT] are present at the same time. This happens with

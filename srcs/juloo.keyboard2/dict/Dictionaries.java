@@ -43,12 +43,19 @@ public final class Dictionaries
     config.emoji_dictionary = null;
     if (name == null)
       return;
-    Cdict[] dicts = load(name);
-    if (dicts == null)
-      return;
-    config.current_dictionary_name = name;
-    config.current_dictionary = find_by_name(dicts, "main");
-    config.emoji_dictionary = find_by_name(dicts, "emoji");
+    try
+    {
+      Cdict[] dicts = load(name);
+      if (dicts == null)
+        return;
+      config.current_dictionary_name = name;
+      config.current_dictionary = find_by_name(dicts, "main");
+      config.emoji_dictionary = find_by_name(dicts, "emoji");
+    }
+    catch (Throwable t)
+    {
+      android.util.Log.e("juloo.keyboard2", "Dictionaries: failed to load " + name, t);
+    }
   }
 
   /** Util for finding a dictionary by name. Returns [null] if not found. */
@@ -64,14 +71,27 @@ public final class Dictionaries
       is not installed or the dictionary couldn't be loaded. */
   public Cdict[] load(String dict_name)
   {
-    if (_loaded_dictionaries.containsKey(dict_name))
-      return _loaded_dictionaries.get(dict_name);
-    Cdict[] dict = load_uncached(dict_name);
-    _loaded_dictionaries.put(dict_name, dict);
-    return dict;
+    try
+    {
+      if (_loaded_dictionaries.containsKey(dict_name))
+        return _loaded_dictionaries.get(dict_name);
+      Cdict[] dict = load_uncached(dict_name);
+      _loaded_dictionaries.put(dict_name, dict);
+      return dict;
+    }
+    catch (Throwable t)
+    {
+      android.util.Log.e("juloo.keyboard2", "Dictionaries: load failed for " + dict_name, t);
+      return null;
+    }
   }
 
-  public Set<String> get_installed() { return _installed_dictionaries; }
+  public Set<String> get_installed()
+  {
+    Set<String> set = new HashSet<String>(_installed_dictionaries);
+    set.add("en_US");
+    return set;
+  }
 
   /** The selected dictionary for the current layout. */
   public String get_selected(Config config)
@@ -133,7 +153,8 @@ public final class Dictionaries
 
   Dictionaries(Context ctx, SharedPreferences prefs)
   {
-    _context = ctx;
+    Context appCtx = ctx.getApplicationContext();
+    _context = (appCtx != null) ? appCtx : ctx;
     _installed_dictionaries = new HashSet();
     _shared_prefs = prefs;
     _loaded_dictionaries = new TreeMap<String, Cdict[]>();
@@ -144,17 +165,25 @@ public final class Dictionaries
 
   Cdict[] load_uncached(String dict_name)
   {
-    if (!_installed_dictionaries.contains(dict_name))
-      return null;
+    if (_installed_dictionaries.contains(dict_name))
+    {
+      try
+      {
+        FileInputStream inp = _context.openFileInput(dict_file_name(dict_name));
+        byte[] data = Utils.read_all_bytes(inp);
+        inp.close();
+        return Cdict.of_bytes(data);
+      }
+      catch (Throwable t) { }
+    }
     try
     {
-      FileInputStream inp = _context.openFileInput(dict_file_name(dict_name));
+      java.io.InputStream inp = _context.getAssets().open("dict/" + dict_file_name(dict_name));
       byte[] data = Utils.read_all_bytes(inp);
       inp.close();
       return Cdict.of_bytes(data);
     }
-    catch (IOException e) { return null; }
-    catch (Cdict.ConstructionError e) { return null; }
+    catch (Throwable t) { return null; }
   }
 
   void save()

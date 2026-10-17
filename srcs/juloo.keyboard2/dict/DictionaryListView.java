@@ -144,11 +144,15 @@ public class DictionaryListView extends LinearLayout
 
     public void refresh(Set<String> installed)
     {
+      boolean is_installed = installed.contains(dict_name);
       int res =
         _pending.contains(dict_name) ? 0 :
-        installed.contains(dict_name) ? R.drawable.ic_delete :
+        is_installed ? R.drawable.ic_delete :
         R.drawable.ic_download;
       download_button.setImageResource(res);
+      download_button.setContentDescription(
+          download_button.getContext().getString(
+              is_installed ? R.string.dictionaries_delete_button : R.string.dictionaries_download_button));
     }
 
     @Override
@@ -177,6 +181,8 @@ public class DictionaryListView extends LinearLayout
       // Remote files are compressed with gzip at rest. Do not use server side
       // compression and force decompression.
       URLConnection con = url_of_dictionary(dict_name).openConnection();
+      con.setConnectTimeout(15000);
+      con.setReadTimeout(30000);
       con.setRequestProperty("Accept-Encoding", "identity");
       byte[] data = Utils.read_all_bytes(new GZIPInputStream(con.getInputStream()));
       Cdict.of_bytes(data); // Check that the dictionary can load.

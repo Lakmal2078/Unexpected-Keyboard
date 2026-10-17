@@ -30,6 +30,7 @@ android {
       java.srcDirs("srcs/juloo.keyboard2", "vendor/cdict/java/juloo.cdict")
       res.srcDirs("res", "build/generated-resources")
       assets.srcDirs("assets")
+      jniLibs.srcDirs("libs")
     }
 
     named("test") {
@@ -37,11 +38,11 @@ android {
     }
   }
 
-  externalNativeBuild {
-    ndkBuild {
-      path = file("vendor/Android.mk")
-    }
-  }
+  // externalNativeBuild {
+  //   ndkBuild {
+  //     path = file("vendor/Android.mk")
+  //   }
+  // }
 
   signingConfigs {
     // Debug builds will always be signed. If no environment variables are set, a default

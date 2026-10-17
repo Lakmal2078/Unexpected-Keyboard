@@ -661,6 +661,11 @@ public final class KeyValue implements Comparable<KeyValue>
       case "complete_second": return statefulKey(Stateful.Complete_second);
       case "complete_third": return statefulKey(Stateful.Complete_third);
       case "complete_emoji": return statefulKey(Stateful.Complete_emoji);
+      case "toggle_language":
+      case "toggle_sinhala":
+      case "sinhala":
+      case "change_language":
+        return statefulKey(Stateful.Toggle_language);
       case "hide_self": return eventKey("⊻", Event.HIDE_SELF, FLAG_SMALLER_FONT);
       case "change_dictionary": return eventKey(0xE01D, Event.CHANGE_DICTIONARY, 0);
 
@@ -940,13 +945,21 @@ public final class KeyValue implements Comparable<KeyValue>
     Complete_first,
     Complete_second,
     Complete_third,
-    Complete_emoji;
+    Complete_emoji,
+    Toggle_language;
 
     @Override
     public String toString()
     {
       if (_handler == null)
+      {
+        if (this == Toggle_language)
+        {
+          Config c = Config.globalConfig();
+          return (c != null && c.sinhala_transliteration) ? "සි" : "EN";
+        }
         return "";
+      }
       String s = _handler.provide_stateful_key_symbol(this);
       return (s == null) ? "" : s;
     }

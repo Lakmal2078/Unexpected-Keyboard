@@ -48,6 +48,13 @@
     <item>@string/pref_theme_e_epaperblack</item>
     <item>@string/pref_theme_e_dracula</item>
     <item>@string/pref_theme_e_gradientpurplepink</item>
+    <item>@string/pref_theme_e_catppuccin_mocha</item>
+    <item>@string/pref_theme_e_catppuccin_latte</item>
+    <item>@string/pref_theme_e_tokyo_night</item>
+    <item>@string/pref_theme_e_nord</item>
+    <item>@string/pref_theme_e_cyberpunk_neon</item>
+    <item>@string/pref_theme_e_amoled_cyan</item>
+    <item>@string/pref_theme_e_sunset_glow</item>
   </string-array>
   <string-array name="pref_theme_values">
     <item>system</item>
@@ -69,6 +76,13 @@
     <item>epaperblack</item>
     <item>dracula</item>
     <item>gradientpurplepink</item>
+    <item>catppuccin_mocha</item>
+    <item>catppuccin_latte</item>
+    <item>tokyo_night</item>
+    <item>nord</item>
+    <item>cyberpunk_neon</item>
+    <item>amoled_cyan</item>
+    <item>sunset_glow</item>
   </string-array>
   <string-array name="pref_swipe_dist_entries">
     <item>@string/pref_swipe_dist_e_very_short</item>

@@ -372,4 +372,147 @@
     <item name="emoji_button_bg">#3B2D50</item>
     <item name="emoji_color">#FFFFFF</item>
   </style>
+  <style name="CatppuccinMocha" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#1E1E2E</item>
+    <item name="colorKey">#313244</item>
+    <item name="colorKeyActivated">#45475A</item>
+    <item name="colorKeyAction">#585B70</item>
+    <item name="colorKeySpaceBar">#313244</item>
+    <item name="colorLabel">#CDD6F4</item>
+    <item name="colorLabelPressed">#FFFFFF</item>
+    <item name="colorLabelActivated">#CBA6F7</item>
+    <item name="colorLabelLocked">#A6E3A1</item>
+    <item name="colorSubLabel">#89DCEB</item>
+    <item name="keyBorderRadius">8dp</item>
+    <item name="keyBorderWidth">0dp</item>
+    <item name="keyBorderWidthActivated">0dp</item>
+    <item name="emoji_button_bg">#313244</item>
+    <item name="emoji_color">#CDD6F4</item>
+    <item name="suggestions_background">#1E1E2E</item>
+  </style>
+  <style name="CatppuccinLatte" parent="BaseTheme">
+    <item name="android:isLightTheme">true</item>
+    <item name="colorKeyboard">#EFF1F5</item>
+    <item name="colorKey">#E6E9EF</item>
+    <item name="colorKeyActivated">#CCD0DA</item>
+    <item name="colorKeyAction">#BCC0CC</item>
+    <item name="colorKeySpaceBar">#E6E9EF</item>
+    <item name="colorLabel">#4C4F69</item>
+    <item name="colorLabelPressed">#1E66F5</item>
+    <item name="colorLabelActivated">#1E66F5</item>
+    <item name="colorLabelLocked">#40A02B</item>
+    <item name="colorSubLabel">#8839EF</item>
+    <item name="keyBorderRadius">8dp</item>
+    <item name="keyBorderWidth">0dp</item>
+    <item name="keyBorderWidthActivated">0dp</item>
+    <item name="emoji_button_bg">#E6E9EF</item>
+    <item name="emoji_color">#4C4F69</item>
+    <item name="suggestions_background">#EFF1F5</item>
+  </style>
+  <style name="TokyoNight" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#1A1B26</item>
+    <item name="colorKey">#24283B</item>
+    <item name="colorKeyActivated">#414868</item>
+    <item name="colorKeyAction">#343B58</item>
+    <item name="colorKeySpaceBar">#24283B</item>
+    <item name="colorLabel">#C0CAF5</item>
+    <item name="colorLabelPressed">#FFFFFF</item>
+    <item name="colorLabelActivated">#7AA2F7</item>
+    <item name="colorLabelLocked">#9ECE6A</item>
+    <item name="colorSubLabel">#BB9AF7</item>
+    <item name="keyBorderRadius">8dp</item>
+    <item name="keyBorderWidth">0dp</item>
+    <item name="keyBorderWidthActivated">0dp</item>
+    <item name="emoji_button_bg">#24283B</item>
+    <item name="emoji_color">#C0CAF5</item>
+    <item name="suggestions_background">#1A1B26</item>
+  </style>
+  <style name="Nord" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#2E3440</item>
+    <item name="colorKey">#3B4252</item>
+    <item name="colorKeyActivated">#4C566A</item>
+    <item name="colorKeyAction">#434C5E</item>
+    <item name="colorKeySpaceBar">#3B4252</item>
+    <item name="colorLabel">#ECEFF4</item>
+    <item name="colorLabelPressed">#88C0D0</item>
+    <item name="colorLabelActivated">#88C0D0</item>
+    <item name="colorLabelLocked">#A3BE8C</item>
+    <item name="colorSubLabel">#81A1C1</item>
+    <item name="keyBorderRadius">8dp</item>
+    <item name="keyBorderWidth">0dp</item>
+    <item name="keyBorderWidthActivated">0dp</item>
+    <item name="emoji_button_bg">#3B4252</item>
+    <item name="emoji_color">#ECEFF4</item>
+    <item name="suggestions_background">#2E3440</item>
+  </style>
+  <style name="CyberpunkNeon" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#0B0C10</item>
+    <item name="colorKey">#1F2833</item>
+    <item name="colorKeyActivated">#00F0FF</item>
+    <item name="colorKeyAction">#451B38</item>
+    <item name="colorKeySpaceBar">#1F2833</item>
+    <item name="colorLabel">#66FCF1</item>
+    <item name="colorLabelPressed">#FFFFFF</item>
+    <item name="colorLabelActivated">#0B0C10</item>
+    <item name="colorLabelLocked">#FF007F</item>
+    <item name="colorSubLabel">#FF2A85</item>
+    <item name="keyBorderRadius">6dp</item>
+    <item name="keyBorderWidth">1dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#00F0FF</item>
+    <item name="keyBorderColorTop">#00F0FF</item>
+    <item name="keyBorderColorRight">#00F0FF</item>
+    <item name="keyBorderColorBottom">#00F0FF</item>
+    <item name="emoji_button_bg">#1F2833</item>
+    <item name="emoji_color">#66FCF1</item>
+    <item name="suggestions_background">#0B0C10</item>
+  </style>
+  <style name="AmoledCyan" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#000000</item>
+    <item name="colorKey">#141416</item>
+    <item name="colorKeyActivated">#222228</item>
+    <item name="colorKeyAction">#1C1C24</item>
+    <item name="colorKeySpaceBar">#141416</item>
+    <item name="colorLabel">#FFFFFF</item>
+    <item name="colorLabelPressed">#00E5FF</item>
+    <item name="colorLabelActivated">#00E5FF</item>
+    <item name="colorLabelLocked">#00E676</item>
+    <item name="colorSubLabel">#00E5FF</item>
+    <item name="keyBorderRadius">8dp</item>
+    <item name="keyBorderWidth">1dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#252530</item>
+    <item name="keyBorderColorTop">#252530</item>
+    <item name="keyBorderColorRight">#252530</item>
+    <item name="keyBorderColorBottom">#252530</item>
+    <item name="emoji_button_bg">#141416</item>
+    <item name="emoji_color">#FFFFFF</item>
+    <item name="suggestions_background">#000000</item>
+  </style>
+  <style name="SunsetGlow" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#1A121E</item>
+    <item name="keyboardGradientStart">#B71C1C</item>
+    <item name="keyboardGradientEnd">#E65100</item>
+    <item name="colorKey">#B3201428</item>
+    <item name="colorKeyActivated">#DD582B48</item>
+    <item name="colorKeyAction">#C83E1C38</item>
+    <item name="colorKeySpaceBar">#BF251730</item>
+    <item name="colorLabel">#FFF8E1</item>
+    <item name="colorLabelPressed">#FFFFFF</item>
+    <item name="colorLabelActivated">#FFD54F</item>
+    <item name="colorLabelLocked">#FF8A80</item>
+    <item name="colorSubLabel">#FFA726</item>
+    <item name="keyBorderRadius">8dp</item>
+    <item name="keyBorderWidth">0dp</item>
+    <item name="keyBorderWidthActivated">0dp</item>
+    <item name="emoji_button_bg">#3E1C38</item>
+    <item name="emoji_color">#FFF8E1</item>
+    <item name="suggestions_background">#1A121E</item>
+  </style>
 </resources>

@@ -1,6 +1,7 @@
 package juloo.keyboard2;
 
 import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Build.VERSION;
@@ -145,6 +146,13 @@ public final class ClipboardHistoryService
     try { clip = _cm.getPrimaryClip(); } catch (Exception _e) {}
     if (clip == null)
       return;
+    // On Android 13+ (API 33+), respect EXTRA_IS_SENSITIVE to protect passwords and OTPs
+    if (VERSION.SDK_INT >= 33 && clip.getDescription() != null)
+    {
+      android.os.PersistableBundle extras = clip.getDescription().getExtras();
+      if (extras != null && extras.getBoolean(ClipDescription.EXTRA_IS_SENSITIVE, false))
+        return;
+    }
     int count = clip.getItemCount();
     for (int i = 0; i < count; i++)
     {

@@ -7,6 +7,7 @@ import juloo.keyboard2.dict.Dictionaries;
 import juloo.keyboard2.Config;
 import juloo.keyboard2.ComposeKey;
 import juloo.keyboard2.ComposeKeyData;
+import juloo.keyboard2.SinhalaTransliterator;
 
 /** Keep track of the word being typed and provide suggestions for
     [CandidatesView]. */
@@ -33,7 +34,8 @@ public final class Suggestions
 
   public void started()
   {
-    _enabled = _config.editor_config.should_show_candidates_view;
+    _enabled = _config.suggestions_enabled
+      && (_config.editor_config.should_show_candidates_view || _config.sinhala_transliteration);
     clear();
   }
 
@@ -41,6 +43,22 @@ public final class Suggestions
   {
     if (!_enabled)
       return;
+    if (_config.sinhala_transliteration && is_ascii_letters(word))
+    {
+      java.util.List<String> list = SinhalaTransliterator.getSuggestions(word);
+      if (!list.isEmpty())
+      {
+        clear();
+        count = Math.min(list.size(), MAX_COUNT);
+        for (int i = 0; i < count; i++)
+        {
+          suggestions[i] = list.get(i);
+        }
+        emoji_suggestion = query_emoji(word);
+        _callback.set_suggestions(this);
+        return;
+      }
+    }
     if (word.length() < 2 || _config.current_dictionary == null)
       clear();
     else
@@ -48,7 +66,45 @@ public final class Suggestions
     _callback.set_suggestions(this);
   }
 
-  void clear()
+  private static boolean is_ascii_letters(String s)
+  {
+    if (s == null || s.isEmpty())
+      return false;
+    for (int i = 0; i < s.length(); i++)
+    {
+      char c = s.charAt(i);
+      if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))
+        return false;
+    }
+    return true;
+  }
+
+  void append_dict_suggestions(String word)
+  {
+    Cdict dict = _config.current_dictionary;
+    if (dict == null) return;
+    boolean first_char_upper = Character.isUpperCase(word.charAt(0));
+    word = apply_substitutions(word);
+    Cdict.Result r = dict.find(word);
+    int i = 1;
+    if (r.found && i < MAX_COUNT)
+      suggestions[i++] = dict.word(r.index);
+    int[] suffixes = dict.suffixes(r, MAX_COUNT);
+    int[] dist = (word.length() < 3 || i + 1 >= MAX_COUNT) ? NO_RESULTS :
+      dict.distance(word, 1, MAX_COUNT);
+    for (int j = 0; j < MAX_COUNT && i < MAX_COUNT; j++)
+    {
+      if (suffixes.length > j)
+        suggestions[i++] = dict.word(suffixes[j]);
+      if (dist.length > j && i < MAX_COUNT)
+        suggestions[i++] = dict.word(dist[j]);
+    }
+    if (first_char_upper)
+      capitalize_results(suggestions, i);
+    count = i;
+  }
+
+  public void clear()
   {
     count = 0;
     for (int i = 0; i < MAX_COUNT; i++)
