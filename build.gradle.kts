@@ -10,6 +10,7 @@ dependencies {
   implementation("androidx.window:window-java:1.4.0")
   implementation("androidx.core:core:1.16.0") // Version 1.17.0 available with sdk 36
   testImplementation("junit:junit:4.13.2")
+  testImplementation("org.mockito:mockito-core:5.14.2")
   androidTestImplementation("androidx.test:core:1.6.1")
   androidTestImplementation("androidx.test.ext:junit:1.2.1")
   androidTestImplementation("androidx.test:runner:1.6.2")
@@ -47,6 +48,7 @@ android {
     targetSdk { version = release(36) }
     versionCode = 56
     versionName = "2.1.0"
+    ndk.abiFilters.addAll(listOf("x86", "x86_64", "armeabi-v7a", "arm64-v8a"))
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
