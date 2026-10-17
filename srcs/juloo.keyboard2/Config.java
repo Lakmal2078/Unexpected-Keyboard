@@ -306,6 +306,11 @@ public final class Config
       case "lanka_maroon": return R.style.LankaMaroon;
       case "emerald_forest": return R.style.EmeraldForest;
       case "midnight_purple": return R.style.MidnightPurple;
+      case "quantum_neon": return R.style.QuantumNeon;
+      case "midnight_ocean": return R.style.MidnightOcean;
+      case "graphite_pro": return R.style.GraphitePro;
+      case "sinhala_heritage": return R.style.SinhalaHeritage;
+      case "oled_black": return R.style.OledBlack;
       default:
       case "system":
         if ((night_mode & Configuration.UI_MODE_NIGHT_NO) != 0)
