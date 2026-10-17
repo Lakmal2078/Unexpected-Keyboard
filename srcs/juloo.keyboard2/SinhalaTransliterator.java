@@ -1,6 +1,8 @@
 package juloo.keyboard2;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +15,7 @@ import java.util.regex.Pattern;
 public final class SinhalaTransliterator
 {
   private static final Map<String, String> COMMON_WORDS = new HashMap<>();
+  private static final Map<String, List<String>> NEXT_WORD_PREDICTIONS = new HashMap<>();
 
   static
   {
@@ -257,6 +260,125 @@ public final class SinhalaTransliterator
     COMMON_WORDS.put("sinduwa", "සින්දුව");
     COMMON_WORDS.put("kathawa", "කතාව");
     COMMON_WORDS.put("katakawa", "කටකතාව");
+
+    // Questions & Conversations
+    COMMON_WORDS.put("kawadada", "කවදාද");
+    COMMON_WORDS.put("kageda", "කාගේද");
+    COMMON_WORDS.put("katada", "කාටද");
+    COMMON_WORDS.put("mokak", "මොකක්");
+    COMMON_WORDS.put("monada", "මොනවද");
+    COMMON_WORDS.put("kiyada", "කීයද");
+    COMMON_WORDS.put("apiwa", "අපිව");
+    COMMON_WORDS.put("oyawa", "ඔයාව");
+    COMMON_WORDS.put("eyawa", "එයාව");
+    COMMON_WORDS.put("karamu", "කරමු");
+    COMMON_WORDS.put("karannada", "කරන්නද");
+    COMMON_WORDS.put("karannam", "කරන්නම්");
+    COMMON_WORDS.put("karanne", "කරන්නේ");
+    COMMON_WORDS.put("yamu", "යමු");
+    COMMON_WORDS.put("balamu", "බලමු");
+    COMMON_WORDS.put("denawa", "දෙනවා");
+    COMMON_WORDS.put("denna", "දෙන්න");
+    COMMON_WORDS.put("dunna", "දුන්නා");
+    COMMON_WORDS.put("gannawa", "ගන්නවා");
+    COMMON_WORDS.put("ganna", "ගන්න");
+    COMMON_WORDS.put("gaththa", "ගත්තා");
+    COMMON_WORDS.put("inawa", "ඉන්නවා");
+    COMMON_WORDS.put("innawa", "ඉන්නවා");
+    COMMON_WORDS.put("hitanawa", "හිතනවා");
+    COMMON_WORDS.put("una", "වුණා");
+    COMMON_WORDS.put("wuna", "වුණා");
+    COMMON_WORDS.put("baerida", "බැරිද");
+    COMMON_WORDS.put("barida", "බැරිද");
+    COMMON_WORDS.put("epa", "එපා");
+    COMMON_WORDS.put("epaa", "එපා");
+    COMMON_WORDS.put("aluth", "අලුත්");
+    COMMON_WORDS.put("awuruddak", "අවුරුද්දක්");
+    COMMON_WORDS.put("vesak", "වෙසක්");
+    COMMON_WORDS.put("poson", "පොසොන්");
+    COMMON_WORDS.put("mithura", "මිතුරා");
+    COMMON_WORDS.put("yaluwa", "යාලුවා");
+    COMMON_WORDS.put("yaaluwa", "යාලුවා");
+    COMMON_WORDS.put("machan", "මචං");
+    COMMON_WORDS.put("patta", "පට්ට");
+    COMMON_WORDS.put("maru", "මරු");
+    COMMON_WORDS.put("nikan", "නිකන්");
+    COMMON_WORDS.put("aththatama", "ඇත්තටම");
+    COMMON_WORDS.put("aniwa", "අනිවා");
+    COMMON_WORDS.put("aniva", "අනිවා");
+    COMMON_WORDS.put("aniwaryen", "අනිවාර්යයෙන්");
+    COMMON_WORDS.put("samawenna", "සමාවෙන්න");
+    COMMON_WORDS.put("phone", "ෆෝන්");
+    COMMON_WORDS.put("mobile", "මොබයිල්");
+    COMMON_WORDS.put("app", "ඇප්");
+    COMMON_WORDS.put("keyboard", "කීබෝඩ්");
+    COMMON_WORDS.put("message", "මැසේජ්");
+    COMMON_WORDS.put("call", "කෝල්");
+    COMMON_WORDS.put("link", "ලින්ක්");
+    COMMON_WORDS.put("group", "ගෲප්");
+    COMMON_WORDS.put("post", "පෝස්ට්");
+    COMMON_WORDS.put("video", "වීඩියෝ");
+    COMMON_WORDS.put("photo", "ෆොටෝ");
+    COMMON_WORDS.put("camera", "කැමරා");
+    COMMON_WORDS.put("battery", "බැටරි");
+    COMMON_WORDS.put("charge", "චාජ්");
+    COMMON_WORDS.put("sim", "සිම්");
+    COMMON_WORDS.put("signal", "සිග්නල්");
+    COMMON_WORDS.put("net", "නෙට්");
+    COMMON_WORDS.put("data", "ඩේටා");
+    COMMON_WORDS.put("wifi", "වයිෆයි");
+    COMMON_WORDS.put("online", "ඔන්ලයින්");
+    COMMON_WORDS.put("offline", "ඕෆ්ලයින්");
+    COMMON_WORDS.put("office", "ඔෆිස්");
+    COMMON_WORDS.put("job", "ජොබ්");
+    COMMON_WORDS.put("school", "ඉස්කෝලේ");
+    COMMON_WORDS.put("iskole", "ඉස්කෝලේ");
+    COMMON_WORDS.put("campus", "කැම්පස්");
+    COMMON_WORDS.put("class", "ක්ලාස්");
+    COMMON_WORDS.put("cricket", "ක්‍රිකට්");
+    COMMON_WORDS.put("match", "මැච්");
+
+    // High frequency Next-word predictions
+    NEXT_WORD_PREDICTIONS.put("සුබ", Arrays.asList("උදෑසනක්", "දවසක්", "රාත්‍රියක්"));
+    NEXT_WORD_PREDICTIONS.put("ස්තූතියි", Arrays.asList("බොහොම", "ඔබට", "යාලුවා"));
+    NEXT_WORD_PREDICTIONS.put("ආයුබෝවන්", Arrays.asList("ඔබට", "සියලු දෙනාටම", "සුබ"));
+    NEXT_WORD_PREDICTIONS.put("මම", Arrays.asList("යනවා", "කරන්නම්", "දන්නවා"));
+    NEXT_WORD_PREDICTIONS.put("ඔයා", Arrays.asList("කොහොමද", "මොකද", "එනවද"));
+    NEXT_WORD_PREDICTIONS.put("අපි", Arrays.asList("යමු", "කරමු", "බලමු"));
+    NEXT_WORD_PREDICTIONS.put("තෙරුවන්", Arrays.asList("සරණයි", "ආශිර්වාදය"));
+    NEXT_WORD_PREDICTIONS.put("බුදු", Arrays.asList("සරණයි", "දහම්", "ගුණ"));
+    NEXT_WORD_PREDICTIONS.put("ජය", Arrays.asList("වේවා", "නියතයි", "ගමු"));
+    NEXT_WORD_PREDICTIONS.put("ලංකා", Arrays.asList("දීප", "බැංකුව", "මාතාව"));
+    NEXT_WORD_PREDICTIONS.put("ගොඩක්", Arrays.asList("ස්තූතියි", "හොඳයි", "පින්"));
+    NEXT_WORD_PREDICTIONS.put("පරිස්සමෙන්", Arrays.asList("යන්න", "ඉන්න", "එන්න"));
+    NEXT_WORD_PREDICTIONS.put("හරි", Arrays.asList("මචං", "යාලුවා", "එහෙනම්"));
+    NEXT_WORD_PREDICTIONS.put("දැන්", Arrays.asList("මොකද", "යමු", "හරි"));
+    NEXT_WORD_PREDICTIONS.put("හෙට", Arrays.asList("හමුවෙමු", "එන්නම්", "යමු"));
+    NEXT_WORD_PREDICTIONS.put("කොහොමද", Arrays.asList("ඔයාට", "යාලුවා", "විස්තර"));
+    NEXT_WORD_PREDICTIONS.put("මොකද", Arrays.asList("කරන්නේ", "විස්තර", "හිතන්නේ"));
+    NEXT_WORD_PREDICTIONS.put("කාරුණික", Arrays.asList("ඉල්ලීමක්", "දැනුම්දීමක්"));
+    NEXT_WORD_PREDICTIONS.put("කරුණාකර", Arrays.asList("සවන් දෙන්න", "පැමිණෙන්න", "බලන්න"));
+    NEXT_WORD_PREDICTIONS.put("අද", Arrays.asList("දවසේ", "මොකද", "යනවද"));
+    NEXT_WORD_PREDICTIONS.put("ඊයේ", Arrays.asList("රෑ", "හවස", "මොකද"));
+    NEXT_WORD_PREDICTIONS.put("කොහෙද", Arrays.asList("යන්නේ", "ඉන්නේ", "ගියේ"));
+    NEXT_WORD_PREDICTIONS.put("කවද්ද", Arrays.asList("එන්නේ", "යන්නේ", "හමුවෙන්නේ"));
+    NEXT_WORD_PREDICTIONS.put("මොනවද", Arrays.asList("විස්තර", "කරන්නේ", "ඕන"));
+  }
+
+  /**
+   * Return contextual next-word predictions for a given Sinhala word.
+   */
+  public static List<String> getNextWordPredictions(String word)
+  {
+    if (word == null || word.isEmpty())
+      return java.util.Collections.emptyList();
+    String trimmed = word.trim();
+    if (NEXT_WORD_PREDICTIONS.containsKey(trimmed))
+      return NEXT_WORD_PREDICTIONS.get(trimmed);
+    String transliterated = transliterateWord(trimmed);
+    if (NEXT_WORD_PREDICTIONS.containsKey(transliterated))
+      return NEXT_WORD_PREDICTIONS.get(transliterated);
+    return java.util.Collections.emptyList();
   }
 
   // Standalone vowels (start of word or preceded by vowel)

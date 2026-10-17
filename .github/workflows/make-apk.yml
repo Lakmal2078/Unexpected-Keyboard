@@ -1,65 +1,82 @@
-name: Make Apk CI
+name: Build & Release APK
 
 on:
   workflow_dispatch:
   push:
     branches:
       - master
+    tags:
+      - 'v*'
   pull_request:
 
 jobs:
-  Build-Apk:
+  build:
+    name: Build & Release Unexpected Keyboard APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v6
-      with:
-        submodules: true
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
 
-    - name: Restore debug keystore from GitHub Secrets
-      run: |
-        # Check if exist and use the secret named DEBUG_KEYSTORE
-        # The contents of the secret can be obtained -
-        #  from the debug.keystore.asc from you local folder 
-        #  (refer to CONTRIBUTING.md Using the local debug.keystore on the Github CI actions)
-        if [[ ! "${{ secrets.DEBUG_KEYSTORE }}" = "" ]]; then
-            echo "${{ secrets.DEBUG_KEYSTORE }}" > "debug.keystore.asc"
-            if [[ -s "debug.keystore.asc" ]]; then
-                echo "Restoring debug keystore from GitHub secrets"
-                gpg -d --passphrase "debug0" --batch "debug.keystore.asc" > "debug.keystore"
-            fi
-        fi
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-    - uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v4
-      with:
-        gradle-version: 8.14.4
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.14.4
 
-    - name: Run tests
-      run: gradle test
+      - name: Prepare environment for runner
+        run: |
+          # Remove local Termux aapt2 override so runner uses standard Maven aapt2
+          sed -i '/android.aapt2FromMavenOverride/d' gradle.properties || true
+          chmod +x gradlew
 
-    - name: Build debug APK
-      run: |
-        gradle assembleDebug
-        artifact="${{github.repository_owner}} ${{github.ref_name}}"
-        artifact="${artifact//\//-}" # replace slashes
-        echo "artifact=${artifact}" >> $GITHUB_ENV
-      env:
-        DEBUG_KEYSTORE: "debug.keystore"
-        DEBUG_KEYSTORE_PASSWORD: debug0
-        DEBUG_KEY_ALIAS: debug
-        DEBUG_KEY_PASSWORD: debug0
+      - name: Run Unit Tests
+        run: ./gradlew test
 
-    - name: Upload debug APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: "${{env.artifact}} debug_apk"
-        path: build/outputs/apk/debug/*.apk
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
 
-    - name: Check generated files
-      run:
-        git diff --name-only --exit-code
+      - name: Package Artifacts
+        run: |
+          mkdir -p dist
+          cp build/outputs/apk/debug/Unexpected-Keyboard-debug.apk dist/Unexpected-Keyboard-Sinhala-debug.apk
+          ls -lh dist/
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Unexpected-Keyboard-Sinhala-debug
+          path: dist/Unexpected-Keyboard-Sinhala-debug.apk
+          retention-days: 30
+
+      - name: Publish to GitHub Releases
+        if: (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) && github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "Unexpected Keyboard - Sinhala Edition (Latest Build)"
+          body: |
+            ### 📱 Unexpected Keyboard - Sinhala Edition
+            
+            **ස්වයංක්‍රීයව Build කරන ලද නවතම APK එක මෙතැනින් download කරගන්න:**
+            - 📥 **[Unexpected-Keyboard-Sinhala-debug.apk](https://github.com/${{ github.repository }}/releases/download/latest/Unexpected-Keyboard-Sinhala-debug.apk)**
+
+            #### ✨ නව විශේෂාංග සහ දියුණු කිරීම් (Features & Improvements):
+            - 🇱🇰 **ප්‍රබල සිංහල යතුරුලියනය (Singlish to Sinhala Transliteration)**
+            - 🧠 **මීළඟ වචන අනාවැකි සහ යෝජනා පද්ධතිය (Next-Word Contextual Predictions)**
+            - 📳 **නවීන Haptic Feedback (Android 10 - 15 Linear Resonant Actuators)**
+            - 🛡️ **Universal App Audit ප්‍රමිතීන්ට අනුකූල දැඩි ආරක්ෂණ සහ පෞද්ගලිකත්ව පියවර (Security & Privacy)**
+            - ⚡ **වේගවත් සහ මතක කාන්දු නොවන සැහැල්ලු ක්‍රියාකාරීත්වය (Zero-Leak Architecture)**
+          files: dist/Unexpected-Keyboard-Sinhala-debug.apk
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

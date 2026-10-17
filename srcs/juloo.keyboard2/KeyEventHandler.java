@@ -188,12 +188,41 @@ public final class KeyEventHandler
     InputConnection conn = _recv.getCurrentInputConnection();
     if (_sinhala_buffer.length() > 0 && conn != null)
     {
+      String rawText = text.trim();
       if (add_space_after)
         text = text + " ";
       conn.commitText(text, 1);
       _sinhala_buffer.setLength(0);
       _suggestions.clear();
-      _recv.set_suggestions(_suggestions);
+      java.util.List<String> nextWords = SinhalaTransliterator.getNextWordPredictions(rawText);
+      if (!nextWords.isEmpty() && _config.suggestions_enabled)
+      {
+        _suggestions.set_predictions(nextWords);
+      }
+      else
+      {
+        _recv.set_suggestions(_suggestions);
+      }
+      _typedword.typed(text);
+      _next_last_action = LastAction.SUGGESTION_ENTERED;
+      return;
+    }
+    if (_config.sinhala_transliteration && _sinhala_buffer.length() == 0 && conn != null && _suggestions.count > 0)
+    {
+      String rawText = text.trim();
+      if (add_space_after)
+        text = text + " ";
+      conn.commitText(text, 1);
+      _suggestions.clear();
+      java.util.List<String> nextWords = SinhalaTransliterator.getNextWordPredictions(rawText);
+      if (!nextWords.isEmpty() && _config.suggestions_enabled)
+      {
+        _suggestions.set_predictions(nextWords);
+      }
+      else
+      {
+        _recv.set_suggestions(_suggestions);
+      }
       _typedword.typed(text);
       _next_last_action = LastAction.SUGGESTION_ENTERED;
       return;
@@ -652,11 +681,20 @@ public final class KeyEventHandler
     InputConnection conn = _recv.getCurrentInputConnection();
     if (_sinhala_buffer.length() > 0 && conn != null)
     {
+      String committedSinhala = SinhalaTransliterator.transliterateWord(_sinhala_buffer.toString());
       conn.finishComposingText();
       conn.commitText(" ", 1);
       _sinhala_buffer.setLength(0);
       _suggestions.clear();
-      _recv.set_suggestions(_suggestions);
+      java.util.List<String> nextWords = SinhalaTransliterator.getNextWordPredictions(committedSinhala);
+      if (!nextWords.isEmpty() && _config.suggestions_enabled)
+      {
+        _suggestions.set_predictions(nextWords);
+      }
+      else
+      {
+        _recv.set_suggestions(_suggestions);
+      }
       _next_last_action = LastAction.OTHER;
       return;
     }

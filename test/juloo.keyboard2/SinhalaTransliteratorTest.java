@@ -101,6 +101,37 @@ public class SinhalaTransliteratorTest
     assertFalse(gamageeSug.contains("ගමගේා")); // Invalid diacritic combination must NOT be generated
   }
 
+  @Test
+  public void testNextWordPredictions()
+  {
+    java.util.List<String> subaPredictions = SinhalaTransliterator.getNextWordPredictions("සුබ");
+    assertTrue(subaPredictions.contains("උදෑසනක්"));
+    assertTrue(subaPredictions.contains("දවසක්"));
+
+    java.util.List<String> sthuthiPredictions = SinhalaTransliterator.getNextWordPredictions("sthuthi");
+    assertTrue(sthuthiPredictions.contains("බොහොම"));
+
+    java.util.List<String> jayaPredictions = SinhalaTransliterator.getNextWordPredictions("ජය");
+    assertTrue(jayaPredictions.contains("වේවා"));
+  }
+
+  @Test
+  public void testExpandedVocabulary()
+  {
+    assertEquals("කවදාද", SinhalaTransliterator.transliterate("kawadada"));
+    assertEquals("කීයද", SinhalaTransliterator.transliterate("kiyada"));
+    assertEquals("කරමු", SinhalaTransliterator.transliterate("karamu"));
+    assertEquals("දෙන්න", SinhalaTransliterator.transliterate("denna"));
+    assertEquals("ගන්න", SinhalaTransliterator.transliterate("ganna"));
+    assertEquals("බැරිද", SinhalaTransliterator.transliterate("baerida"));
+    assertEquals("අලුත්", SinhalaTransliterator.transliterate("aluth"));
+    assertEquals("අවුරුද්දක්", SinhalaTransliterator.transliterate("awuruddak"));
+    assertEquals("මිතුරා", SinhalaTransliterator.transliterate("mithura"));
+    assertEquals("ෆෝන්", SinhalaTransliterator.transliterate("phone"));
+    assertEquals("ඇප්", SinhalaTransliterator.transliterate("app"));
+    assertEquals("කීබෝඩ්", SinhalaTransliterator.transliterate("keyboard"));
+  }
+
   public static void main(String[] args)
   {
     SinhalaTransliteratorTest test = new SinhalaTransliteratorTest();

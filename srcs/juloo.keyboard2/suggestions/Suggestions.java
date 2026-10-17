@@ -39,6 +39,19 @@ public final class Suggestions
     clear();
   }
 
+  public void set_predictions(List<String> list)
+  {
+    if (!_enabled || list == null || list.isEmpty())
+      return;
+    clear();
+    count = Math.min(list.size(), MAX_COUNT);
+    for (int i = 0; i < count; i++)
+    {
+      suggestions[i] = list.get(i);
+    }
+    _callback.set_suggestions(this);
+  }
+
   public void currently_typed_word(String word)
   {
     if (!_enabled)

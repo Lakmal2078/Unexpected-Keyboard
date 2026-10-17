@@ -77,6 +77,9 @@ android {
       isDebuggable = false
       resValue("string", "app_name", "@string/app_name_release")
       signingConfig = signingConfigs["release"]
+      ndk {
+        debugSymbolLevel = "none"
+      }
     }
 
     named("debug") {
@@ -93,6 +96,12 @@ android {
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+  }
+
+  packaging {
+    jniLibs {
+      keepDebugSymbols.add("**/*.so")
+    }
   }
 }
 
