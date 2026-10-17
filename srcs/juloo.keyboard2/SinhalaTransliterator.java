@@ -371,6 +371,26 @@ public final class SinhalaTransliterator
     NEXT_WORD_PREDICTIONS.put("කොහෙද", Arrays.asList("යන්නේ", "ඉන්නේ", "ගියේ"));
     NEXT_WORD_PREDICTIONS.put("කවද්ද", Arrays.asList("එන්නේ", "යන්නේ", "හමුවෙන්නේ"));
     NEXT_WORD_PREDICTIONS.put("මොනවද", Arrays.asList("විස්තර", "කරන්නේ", "ඕන"));
+
+    // Additional expanded suggestions
+    NEXT_WORD_PREDICTIONS.put("එන්න", Arrays.asList("පුළුවන්ද", "කෝ", "ගෙදර"));
+    NEXT_WORD_PREDICTIONS.put("යන්න", Arrays.asList("ඕනේ", "කෝ", "එපා"));
+    NEXT_WORD_PREDICTIONS.put("කන්න", Arrays.asList("ඕනේ", "යමු", "මොනවද"));
+    NEXT_WORD_PREDICTIONS.put("බොන්න", Arrays.asList("ඕනේ", "යමු", "මොනවද"));
+    NEXT_WORD_PREDICTIONS.put("බලන්න", Arrays.asList("ඕනේ", "යමු", "මොනවද"));
+    NEXT_WORD_PREDICTIONS.put("කරන්න", Arrays.asList("පුළුවන්ද", "ඕනේ", "එපා"));
+    NEXT_WORD_PREDICTIONS.put("ගන්න", Arrays.asList("ඕනේ", "පුළුවන්ද", "එපා"));
+    NEXT_WORD_PREDICTIONS.put("දෙන්න", Arrays.asList("පුළුවන්ද", "කෝ", "එපා"));
+    NEXT_WORD_PREDICTIONS.put("මගේ", Arrays.asList("අම්මා", "යාලුවා", "රට"));
+    NEXT_WORD_PREDICTIONS.put("ඔයාගේ", Arrays.asList("නම", "ගම", "වැඩ"));
+    NEXT_WORD_PREDICTIONS.put("එයා", Arrays.asList("ආවා", "ගියා", "එනවද"));
+    NEXT_WORD_PREDICTIONS.put("පොඩ්ඩක්", Arrays.asList("ඉන්න", "බලන්න", "අහන්න"));
+    NEXT_WORD_PREDICTIONS.put("කතා", Arrays.asList("කරන්න", "කරමු", "කරලා"));
+    NEXT_WORD_PREDICTIONS.put("වැඩ", Arrays.asList("ඉවරද", "කොහොමද", "කරන්න"));
+    NEXT_WORD_PREDICTIONS.put("ගෙදර", Arrays.asList("යනවා", "ආවා", "ඉන්නේ"));
+    NEXT_WORD_PREDICTIONS.put("උදේ", Arrays.asList("කෑවද", "නැගිට්ටා", "ආවා"));
+    NEXT_WORD_PREDICTIONS.put("රෑ", Arrays.asList("වෙලා", "කෑම", "නිදාගන්න"));
+    NEXT_WORD_PREDICTIONS.put("මොකක්ද", Arrays.asList("ප්‍රශ්නය", "වෙන්නේ", "කරන්නේ"));
   }
 
   /**

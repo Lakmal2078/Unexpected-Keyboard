@@ -314,6 +314,7 @@ public final class Config
       case "sepia_warm": return R.style.SepiaWarm;
       case "high_contrast": return R.style.HighContrast;
       case "high_contrast_yellow": return R.style.HighContrastYellow;
+      case "lanka_blue": return R.style.LankaBlue;
       // Deprecated aliases for backwards compatibility
       case "oled_black":
       case "epaperblack":

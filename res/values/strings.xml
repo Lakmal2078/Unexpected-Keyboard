@@ -124,6 +124,7 @@
     <string name="pref_theme_e_soft_lavender">Soft Lavender</string>
     <string name="pref_theme_e_high_contrast">High Contrast (Black &amp; White)</string>
     <string name="pref_theme_e_high_contrast_yellow">High Contrast (Yellow)</string>
+    <string name="pref_theme_e_lanka_blue">Lanka Blue</string>
     <string name="pref_theme_e_gruvbox_dark">Gruvbox Dark</string>
     <string name="pref_theme_e_gruvbox_light">Gruvbox Light</string>
     <string name="pref_theme_e_solarized_dark">Solarized Dark</string>

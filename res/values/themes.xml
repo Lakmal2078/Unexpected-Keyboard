@@ -1079,4 +1079,27 @@
     <item name="emoji_color">#FFFF00</item>
   </style>
 
+  <style name="LankaBlue" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#0A1A2F</item>
+    <item name="keyboardGradientStart">#0B2040</item>
+    <item name="keyboardGradientEnd">#050C16</item>
+    <item name="colorKey">#112D55</item>
+    <item name="colorKeyActivated">#1F4F99</item>
+    <item name="colorKeyAction">#173B70</item>
+    <item name="colorKeySpaceBar">#0F2545</item>
+    <item name="keyBorderWidth">0.8dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#1C4685</item>
+    <item name="keyBorderColorTop">#255BB0</item>
+    <item name="keyBorderColorRight">#1C4685</item>
+    <item name="keyBorderColorBottom">#0A1C36</item>
+    <item name="colorLabel">#E8F1FF</item>
+    <item name="colorLabelActivated">#66A3FF</item>
+    <item name="colorLabelLocked">#A3FFB3</item>
+    <item name="colorSubLabel">#99C2FF</item>
+    <item name="emoji_button_bg">#112D55</item>
+    <item name="emoji_color">#E8F1FF</item>
+  </style>
+
 </resources>
