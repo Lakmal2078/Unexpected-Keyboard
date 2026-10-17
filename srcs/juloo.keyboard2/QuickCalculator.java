@@ -182,10 +182,25 @@ public final class QuickCalculator
       throw new RuntimeException("Unexpected character: " + (char)ch);
     }
 
-    // Trailing percent: e.g. 15% -> 0.15
-    if (eat('%'))
+    // Postfix percent: e.g. 15% -> 0.15, or 200 * 15%
+    // Only if NOT followed by an operand (which would make it modulo: 17 % 6)
+    if (ch == '%')
     {
-      x = x / 100.0;
+      int nextIdx = pos + 1;
+      while (nextIdx < str.length() && str.charAt(nextIdx) == ' ')
+        nextIdx++;
+      boolean hasOperandAfter = false;
+      if (nextIdx < str.length())
+      {
+        char cNext = str.charAt(nextIdx);
+        if (Character.isDigit(cNext) || Character.isLetter(cNext) || cNext == '(' || cNext == '.')
+          hasOperandAfter = true;
+      }
+      if (!hasOperandAfter)
+      {
+        eat('%');
+        x = x / 100.0;
+      }
     }
 
     // Power
