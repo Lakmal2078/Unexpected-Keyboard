@@ -645,6 +645,7 @@
 
   <style name="GraphitePro" parent="BaseTheme">
     <item name="android:isLightTheme">false</item>
+    <item name="keyBorderRadius">9dp</item>
     <item name="colorKeyboard">#202124</item>
     <item name="colorKey">#303238</item>
     <item name="colorKeyActivated">#454A54</item>
