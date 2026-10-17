@@ -52,12 +52,19 @@ public final class QuickCalculator
     }
     if (!hasDigit) return null;
 
+    // Normalize unicode math symbols and commas
+    s = s.replace('×', '*').replace('÷', '/');
+    if (s.contains(","))
+    {
+      if (s.matches(".*\\d+,\\d{3}(\\D.*|$)") && !s.contains("."))
+        s = s.replace(",", "");
+      else
+        s = s.replace(',', '.');
+    }
+
     // Check if it's just a signed number like "+12" or "-5"
     if (s.matches("^[+-]?[0-9]+(\\.[0-9]+)?$"))
       return null;
-
-    // Normalize unicode math symbols
-    s = s.replace('×', '*').replace('÷', '/');
 
     // Quick sanity check on allowed characters
     for (int i = 0; i < s.length(); i++)

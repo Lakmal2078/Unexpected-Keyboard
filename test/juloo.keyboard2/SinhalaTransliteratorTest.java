@@ -102,6 +102,13 @@ public class SinhalaTransliteratorTest
   }
 
   @Test
+  public void testLeadingAnusvaraPrevention()
+  {
+    String res = SinhalaTransliterator.parsePhonetic("nsb");
+    assertFalse(res.startsWith("\u0D82")); // Anusvara (ං) must never be the first character
+  }
+
+  @Test
   public void testNextWordPredictions()
   {
     java.util.List<String> subaPredictions = SinhalaTransliterator.getNextWordPredictions("සුබ");

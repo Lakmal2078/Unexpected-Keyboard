@@ -82,4 +82,20 @@ public class ProductivityTest
     // Unknown snippet
     assertNull(SmartSnippets.getSnippet("//nonexistent"));
   }
+
+  @Test
+  public void testQuickCalculatorCommas()
+  {
+    assertEquals("= 2000", QuickCalculator.evaluate("1,000*2"));
+    assertEquals("= 10", QuickCalculator.evaluate("2,5*4"));
+  }
+
+  @Test
+  public void testCurrentlyTypedWordBrackets()
+  {
+    assertFalse(CurrentlyTypedWord.is_word_char('('));
+    assertFalse(CurrentlyTypedWord.is_word_char(')'));
+    assertTrue(CurrentlyTypedWord.is_word_char('a'));
+    assertTrue(CurrentlyTypedWord.is_word_char('1'));
+  }
 }

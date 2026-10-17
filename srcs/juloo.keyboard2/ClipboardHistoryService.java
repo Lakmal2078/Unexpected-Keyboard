@@ -48,6 +48,11 @@ public final class ClipboardHistoryService
       _paste_callback.paste_from_clipboard_pane(clip);
   }
 
+  public static void on_destroy()
+  {
+    _paste_callback = null;
+  }
+
   /** The maximum size limits the amount of user data stored in memory but also
       gives a sense to the user that the history is not persisted and can be
       forgotten as soon as the app stops. */
@@ -107,17 +112,17 @@ public final class ClipboardHistoryService
   public synchronized void remove_history_entry(String clip)
   {
     int last_pos = _history.size() - 1;
-    boolean last_pos_changed = false;
+    boolean first_pos_changed = false;
     for (int pos = last_pos; pos >= 0; pos--)
     {
       if (!_history.get(pos).content.equals(clip))
         continue;
-      // Removing the current clipboard, clear the system clipboard.
-      if (pos == last_pos)
-        last_pos_changed = true;
+      // Removing the current clipboard (index 0), clear the system clipboard.
+      if (pos == 0)
+        first_pos_changed = true;
       _history.remove(pos);
     }
-    if (last_pos_changed)
+    if (first_pos_changed)
     {
       if (VERSION.SDK_INT >= 28)
         _cm.clearPrimaryClip();

@@ -17,7 +17,7 @@ public final class VibratorCompat
     if (config.vibrate_custom)
     {
       if (config.vibrate_duration > 0)
-        vibrator_vibrate(v, config.vibrate_duration);
+        vibrator_vibrate(v, config.vibrate_duration, true);
     }
     else
     {
@@ -26,7 +26,7 @@ public final class VibratorCompat
       {
         done = v.performHapticFeedback(
             HapticFeedbackConstants.KEYBOARD_TAP,
-            HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING | HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+            HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
       }
       catch (Throwable t) {}
 
@@ -36,7 +36,7 @@ public final class VibratorCompat
         {
           done = v.performHapticFeedback(
               HapticFeedbackConstants.VIRTUAL_KEY,
-              HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING | HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+              HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
         }
         catch (Throwable t) {}
       }
@@ -45,7 +45,7 @@ public final class VibratorCompat
       // fallback to gentle hardware vibration (30ms)
       if (!done)
       {
-        vibrator_vibrate(v, 30);
+        vibrator_vibrate(v, 30, false);
       }
     }
   }
@@ -54,7 +54,7 @@ public final class VibratorCompat
    * Resilient hardware vibration supporting modern Android 10-15 LRA haptic motors,
    * VibrationAttributes (API 30+), AudioAttributes (API 26+), and fallback.
    */
-  static void vibrator_vibrate(View v, long duration)
+  static void vibrator_vibrate(View v, long duration, boolean isCustom)
   {
     try
     {
@@ -63,36 +63,30 @@ public final class VibratorCompat
       if (vib == null || !vib.hasVibrator())
         return;
 
-      // Ensure duration is perceptible (at least 35ms on linear resonant motors)
-      long dur = Math.max(duration, 35);
+      // Ensure duration is perceptible if default, or respect custom duration
+      long dur = isCustom ? Math.max(duration, 1) : Math.max(duration, 35);
 
       VibrationEffect effect = null;
-      if (Build.VERSION.SDK_INT >= 29)
+      if (Build.VERSION.SDK_INT >= 29 && !isCustom && duration <= 30)
       {
-        // Try hardware-tuned EFFECT_CLICK for small durations (<= 30ms)
-        if (duration <= 30)
+        try
         {
-          try
-          {
-            effect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK);
-          }
-          catch (Throwable t) {}
+          effect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK);
         }
+        catch (Throwable t) {}
       }
       if (effect == null && Build.VERSION.SDK_INT >= 26)
       {
         effect = VibrationEffect.createOneShot(dur, VibrationEffect.DEFAULT_AMPLITUDE);
       }
 
-      // 1. Android 13+ (API 33+) / Android 15: VibrationAttributes with USAGE_TOUCH & bypass interruption
+      // 1. Android 13+ (API 33+) / Android 15: VibrationAttributes with USAGE_TOUCH
       if (Build.VERSION.SDK_INT >= 33 && effect != null)
       {
         try
         {
           VibrationAttributes attrs = new VibrationAttributes.Builder()
               .setUsage(VibrationAttributes.USAGE_TOUCH)
-              .setFlags(VibrationAttributes.FLAG_BYPASS_INTERRUPTION_POLICY,
-                        VibrationAttributes.FLAG_BYPASS_INTERRUPTION_POLICY)
               .build();
           vib.vibrate(effect, attrs);
           return;
@@ -108,22 +102,8 @@ public final class VibratorCompat
           AudioAttributes audioAttrs = new AudioAttributes.Builder()
               .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
               .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-              .setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED)
               .build();
           vib.vibrate(effect, audioAttrs);
-          return;
-        }
-        catch (Throwable t) {}
-
-        // Fallback AudioAttributes with USAGE_ALARM (bypasses silent/DND profile restrictions)
-        try
-        {
-          AudioAttributes alarmAttrs = new AudioAttributes.Builder()
-              .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-              .setUsage(AudioAttributes.USAGE_ALARM)
-              .setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED)
-              .build();
-          vib.vibrate(effect, alarmAttrs);
           return;
         }
         catch (Throwable t) {}

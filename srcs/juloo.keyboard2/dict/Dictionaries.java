@@ -69,14 +69,15 @@ public final class Dictionaries
 
   /** Load an installed dictionary. Return [null] if the requested dictionary
       is not installed or the dictionary couldn't be loaded. */
-  public Cdict[] load(String dict_name)
+  public synchronized Cdict[] load(String dict_name)
   {
     try
     {
       if (_loaded_dictionaries.containsKey(dict_name))
         return _loaded_dictionaries.get(dict_name);
       Cdict[] dict = load_uncached(dict_name);
-      _loaded_dictionaries.put(dict_name, dict);
+      if (dict != null)
+        _loaded_dictionaries.put(dict_name, dict);
       return dict;
     }
     catch (Throwable t)
@@ -86,7 +87,7 @@ public final class Dictionaries
     }
   }
 
-  public Set<String> get_installed()
+  public synchronized Set<String> get_installed()
   {
     Set<String> set = new HashSet<String>(_installed_dictionaries);
     set.add("en_US");
@@ -107,7 +108,7 @@ public final class Dictionaries
       .apply();
   }
 
-  public void install(String dict_name, byte[] data) throws IOException
+  public synchronized void install(String dict_name, byte[] data) throws IOException
   {
     FileOutputStream outp = _context.openFileOutput(dict_file_name(dict_name),
         Context.MODE_PRIVATE);
@@ -125,14 +126,14 @@ public final class Dictionaries
 
   /** Declare a dictionary as installed. A dictionary file must exist at the
       path returned by [get_install_location(dict_name)]. */
-  public void set_installed(String dict_name)
+  public synchronized void set_installed(String dict_name)
   {
     _installed_dictionaries.add(dict_name);
     _loaded_dictionaries.remove(dict_name);
     save();
   }
 
-  public void uninstall(String dict_name)
+  public synchronized void uninstall(String dict_name)
   {
     _context.deleteFile(dict_file_name(dict_name));
     _installed_dictionaries.remove(dict_name);
@@ -186,11 +187,11 @@ public final class Dictionaries
     catch (Throwable t) { return null; }
   }
 
-  void save()
+  synchronized void save()
   {
     _shared_prefs.edit()
-      .putStringSet(PREF_INSTALLED_DICTS, _installed_dictionaries)
-      .commit();
+      .putStringSet(PREF_INSTALLED_DICTS, new HashSet<>(_installed_dictionaries))
+      .apply();
   }
 
   static String dict_file_name(String dict_name)

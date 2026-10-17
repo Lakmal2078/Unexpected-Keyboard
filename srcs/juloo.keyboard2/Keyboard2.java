@@ -155,6 +155,14 @@ public class Keyboard2 extends InputMethodService
     super.onDestroy();
 
     _foldStateTracker.close();
+    try
+    {
+      SharedPreferences prefs = DirectBootAwarePreferences.get_shared_preferences(this);
+      prefs.unregisterOnSharedPreferenceChangeListener(this);
+    }
+    catch (Exception e) {}
+    KeyValue.Stateful._handler = null;
+    ClipboardHistoryService.on_destroy();
   }
 
   private void create_keyboard_view()
@@ -212,10 +220,13 @@ public class Keyboard2 extends InputMethodService
   {
     boolean has_dict = _config.current_dictionary != null;
     boolean has_sinhala = _config.sinhala_transliteration;
+    boolean has_productivity = _config.quick_calculator_enabled
+        || _config.smart_snippets_enabled
+        || _config.clipboard_suggestion_enabled;
     boolean should_show =
       _config.suggestions_enabled
-      && (has_dict || has_sinhala)
-      && (_config.editor_config.should_show_candidates_view || has_sinhala)
+      && (has_dict || has_sinhala || has_productivity)
+      && (_config.editor_config.should_show_candidates_view || has_sinhala || has_productivity)
       && !_config.split_layout;
     if (should_show)
     {
@@ -378,7 +389,17 @@ public class Keyboard2 extends InputMethodService
   public void onFinishInputView(boolean finishingInput)
   {
     super.onFinishInputView(finishingInput);
+    if (_keyeventhandler != null)
+      _keyeventhandler.finish_composing();
     _keyboard_layout_view.reset();
+  }
+
+  @Override
+  public void onFinishInput()
+  {
+    super.onFinishInput();
+    if (_keyeventhandler != null)
+      _keyeventhandler.finish_composing();
   }
 
   @Override

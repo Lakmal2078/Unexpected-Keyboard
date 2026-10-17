@@ -233,33 +233,32 @@ public final class KeyEventHandler
       _next_last_action = LastAction.SUGGESTION_ENTERED;
       return;
     }
-    if (_config.sinhala_transliteration && _sinhala_buffer.length() == 0 && conn != null && _suggestions.count > 0)
-    {
-      String rawText = text.trim();
-      if (add_space_after)
-        text = text + " ";
-      conn.commitText(text, 1);
-      _suggestions.clear();
-      java.util.List<String> nextWords = SinhalaTransliterator.getNextWordPredictions(rawText);
-      if (!nextWords.isEmpty() && _config.suggestions_enabled)
-      {
-        _suggestions.set_predictions(nextWords);
-      }
-      else
-      {
-        _recv.set_suggestions(_suggestions);
-      }
-      _typedword.typed(text);
-      _next_last_action = LastAction.SUGGESTION_ENTERED;
-      return;
-    }
+    String rawText = text.trim();
     if (add_space_after)
       text = text + " ";
     String old = _typedword.get();
     int cur_rel = _typedword.cursor_relative();
-    replace_surrounding_text(old.length() + cur_rel, -cur_rel, text);
-    last_replaced_word = old;
-    last_replacement_word_len = text.length();
+    if (old.length() > 0)
+    {
+      replace_surrounding_text(old.length() + cur_rel, -cur_rel, text);
+      last_replaced_word = old;
+      last_replacement_word_len = text.length();
+    }
+    else if (conn != null)
+    {
+      conn.commitText(text, 1);
+      _typedword.typed(text);
+    }
+    _suggestions.clear();
+    java.util.List<String> nextWords = SinhalaTransliterator.getNextWordPredictions(rawText);
+    if (!nextWords.isEmpty() && _config.suggestions_enabled)
+    {
+      _suggestions.set_predictions(nextWords);
+    }
+    else
+    {
+      _recv.set_suggestions(_suggestions);
+    }
     _next_last_action = LastAction.SUGGESTION_ENTERED;
   }
 
@@ -299,16 +298,6 @@ public final class KeyEventHandler
       sendMetaKeyForModifier(it.next(), true);
     _mods = mods;
   }
-
-  // private void handleDelKey(int before, int after)
-  // {
-  //  CharSequence selection = getCurrentInputConnection().getSelectedText(0);
-
-  //  if (selection != null && selection.length() > 0)
-  //  getCurrentInputConnection().commitText("", 1);
-  //  else
-  //  getCurrentInputConnection().deleteSurroundingText(before, after);
-  // }
 
   void sendMetaKey(int eventCode, int meta_flags, boolean down)
   {

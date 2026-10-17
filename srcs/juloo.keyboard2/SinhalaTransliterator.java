@@ -659,7 +659,8 @@ public final class SinhalaTransliterator
 
       // Special Sinhala phonetic rule: 'n' before h, j, s, c, k turns 'n' to Anusvara (ං)
       // e.g. sinhala -> සිංහල, vyanjana -> ව්‍යංජන, lanka -> ලංකා, sansaara -> සංසාර
-      if (i + 1 < len && (word.charAt(i) == 'n' || word.charAt(i) == 'N'))
+      // Must not happen at the beginning of a word as Anusvara cannot start a word
+      if (i > 0 && out.length() > 0 && i + 1 < len && (word.charAt(i) == 'n' || word.charAt(i) == 'N'))
       {
         char next = Character.toLowerCase(word.charAt(i + 1));
         if (next == 'h' || next == 'j' || next == 's' || next == 'c' || next == 'k')

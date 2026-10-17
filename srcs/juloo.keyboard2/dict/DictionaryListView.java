@@ -168,7 +168,12 @@ public class DictionaryListView extends LinearLayout
   static URL url_of_dictionary(String dict_name)
       throws MalformedURLException
   {
-    int format_version = Cdict.format_version();
+    int format_version = 1;
+    try
+    {
+      format_version = Cdict.format_version();
+    }
+    catch (Throwable t) {}
     return new URL(DICT_REPO_URL + "/v" + format_version + "/" + dict_name
         + ".dict");
   }
