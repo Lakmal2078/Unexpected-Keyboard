@@ -10,6 +10,31 @@ dependencies {
   implementation("androidx.window:window-java:1.4.0")
   implementation("androidx.core:core:1.16.0") // Version 1.17.0 available with sdk 36
   testImplementation("junit:junit:4.13.2")
+  androidTestImplementation("androidx.test:core:1.6.1")
+  androidTestImplementation("androidx.test.ext:junit:1.2.1")
+  androidTestImplementation("androidx.test:runner:1.6.2")
+}
+
+val debugKeystorePassword = System.getenv("DEBUG_KEYSTORE_PASSWORD")?.takeIf { it.isNotBlank() }
+val debugKeyPassword = System.getenv("DEBUG_KEY_PASSWORD")?.takeIf { it.isNotBlank() }
+val isCi = listOf("CI", "GITHUB_ACTIONS").any {
+  System.getenv(it).equals("true", ignoreCase = true)
+}
+
+if (isCi) {
+  val missingPasswords = buildList {
+    if (debugKeystorePassword == null) add("DEBUG_KEYSTORE_PASSWORD")
+    if (debugKeyPassword == null) add("DEBUG_KEY_PASSWORD")
+  }
+  if (missingPasswords.isNotEmpty()) {
+    throw GradleException(
+      "Missing required CI debug signing environment variable(s): ${missingPasswords.joinToString()}"
+    )
+  }
+} else if (debugKeystorePassword == null || debugKeyPassword == null) {
+  logger.warn(
+    "Debug signing passwords are unset; using the local-only default password 'debug0'."
+  )
 }
 
 android {
@@ -22,6 +47,7 @@ android {
     targetSdk { version = release(36) }
     versionCode = 56
     versionName = "2.1.0"
+    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
   sourceSets {
@@ -45,15 +71,11 @@ android {
   // }
 
   signingConfigs {
-    // Debug builds will always be signed. If no environment variables are set, a default
-    // keystore will be initialized by the task initDebugKeystore and used. This keystore
-    // can be uploaded to GitHub secrets by following instructions in CONTRIBUTING.md
-    // in order to always receive correctly signed debug APKs from the CI.
     named("debug") {
       storeFile = file(System.getenv("DEBUG_KEYSTORE") ?: "debug.keystore")
-      storePassword = System.getenv("DEBUG_KEYSTORE_PASSWORD") ?: "debug0"
+      storePassword = debugKeystorePassword ?: "debug0"
       keyAlias = System.getenv("DEBUG_KEY_ALIAS") ?: "debug"
-      keyPassword = System.getenv("DEBUG_KEY_PASSWORD") ?: "debug0"
+      keyPassword = debugKeyPassword ?: "debug0"
     }
 
     create("release") {

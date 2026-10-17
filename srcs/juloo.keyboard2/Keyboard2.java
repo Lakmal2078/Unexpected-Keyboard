@@ -225,6 +225,7 @@ public class Keyboard2 extends InputMethodService
         || _config.clipboard_suggestion_enabled;
     boolean should_show =
       _config.suggestions_enabled
+      && !_config.editor_config.is_sensitive_input
       && (has_dict || has_sinhala || has_productivity)
       && (_config.editor_config.should_show_candidates_view || has_sinhala || has_productivity)
       && !_config.split_layout;

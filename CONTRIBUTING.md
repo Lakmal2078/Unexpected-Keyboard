@@ -36,7 +36,8 @@ Building the debug apk:
 
 Nix users can call gradle directly: `gradle assembleDebug`.
 
-If the build succeeds, the debug apk is located in `build/outputs/apk/debug/app-debug.apk`.
+If the build succeeds, the debug APK is located in
+`build/outputs/apk/debug/Unexpected-Keyboard-debug.apk`.
 
 ## Debugging on your phone
 
@@ -75,20 +76,15 @@ adb uninstall juloo.keyboard2.debug
 ./gradlew installDebug
 ```
 
-## Specifying a debug signing certificate on Github Actions
+## Debug signing
 
-It's possible to specify the signing certificate that the automated build
-should use.
-After you successfully run `./gradlew asssembleDebug`, (thus a debug.keystore
-exists) you can use this second command to generate a base64 stringified
-version of it:
+GitHub Actions generates an ephemeral debug keystore for each workflow run.
+The debug APK signature therefore differs between runs, so uninstall an
+existing debug build before installing an APK from a different run.
 
-```sh
-gpg -c --armor --pinentry-mode loopback --passphrase debug0 --yes "debug.keystore"
-```
-
-This will create the file `debug.keystore.asc`, paste its content into a new
-Github secret named `DEBUG_KEYSTORE`.
+For local builds, set `DEBUG_KEYSTORE` to a keystore file path and provide its
+passwords with `DEBUG_KEYSTORE_PASSWORD` and `DEBUG_KEY_PASSWORD`. Set
+`DEBUG_KEY_ALIAS` when the keystore uses an alias other than `debug`.
 
 ## Guidelines
 

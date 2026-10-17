@@ -1,0 +1,28 @@
+package juloo.keyboard2.suggestions;
+
+import android.text.InputType;
+
+public final class SuggestionPolicy
+{
+  private SuggestionPolicy() {}
+
+  public static boolean is_sensitive_input(int inputType)
+  {
+    int inputClass = inputType & InputType.TYPE_MASK_CLASS;
+    int variation = inputType & InputType.TYPE_MASK_VARIATION;
+    if (inputClass == InputType.TYPE_CLASS_TEXT)
+    {
+      switch (variation)
+      {
+        case InputType.TYPE_TEXT_VARIATION_PASSWORD:
+        case InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD:
+        case InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD:
+          return true;
+        default:
+          return false;
+      }
+    }
+    return inputClass == InputType.TYPE_CLASS_NUMBER
+      && variation == InputType.TYPE_NUMBER_VARIATION_PASSWORD;
+  }
+}

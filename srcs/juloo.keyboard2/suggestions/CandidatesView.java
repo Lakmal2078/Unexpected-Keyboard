@@ -136,36 +136,30 @@ public class CandidatesView extends LinearLayout
   /** Whether the candidates view should be shown for a given editor. */
   public static boolean should_show(EditorInfo info)
   {
-    if (Config.globalConfig() != null && !Config.globalConfig().suggestions_enabled)
+    if (SuggestionPolicy.is_sensitive_input(info.inputType))
       return false;
-    int variation = info.inputType & InputType.TYPE_MASK_VARIATION;
+    Config config = Config.globalConfig();
+    if (config != null && !config.suggestions_enabled)
+      return false;
     int flags = info.inputType & InputType.TYPE_MASK_FLAGS;
     switch (info.inputType & InputType.TYPE_MASK_CLASS)
     {
       case InputType.TYPE_CLASS_TEXT:
-        switch (variation)
-        {
-          case InputType.TYPE_TEXT_VARIATION_PASSWORD:
-          case InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD:
-          case InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD:
-            return false;
-          default:
-            if (Config.globalConfig().sinhala_transliteration
-                || Config.globalConfig().quick_calculator_enabled
-                || Config.globalConfig().smart_snippets_enabled
-                || Config.globalConfig().clipboard_suggestion_enabled)
-              return true;
-            /* Editor requested that we don't show suggestions. Enable
-               suggestions anyway when the flags [NO_SUGGESTIONS] and
-               [AUTO_CORRECT] are present at the same time. This happens with
-               Google Keep. */
-            if ((flags &
-                  (InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-                   | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT))
-                == InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
-              return false;
-            return true;
-        }
+        if (config != null && (config.sinhala_transliteration
+            || config.quick_calculator_enabled
+            || config.smart_snippets_enabled
+            || config.clipboard_suggestion_enabled))
+          return true;
+        /* Editor requested that we don't show suggestions. Enable
+           suggestions anyway when the flags [NO_SUGGESTIONS] and
+           [AUTO_CORRECT] are present at the same time. This happens with
+           Google Keep. */
+        if ((flags &
+              (InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+               | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT))
+            == InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
+          return false;
+        return true;
       case InputType.TYPE_CLASS_NUMBER:
         // Beware of TYPE_NUMBER_VARIATION_PASSWORD
         return false;

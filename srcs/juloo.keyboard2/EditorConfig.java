@@ -6,6 +6,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.inputmethod.EditorInfo;
 import juloo.keyboard2.suggestions.CandidatesView;
+import juloo.keyboard2.suggestions.SuggestionPolicy;
 
 public final class EditorConfig
 {
@@ -39,6 +40,7 @@ public final class EditorConfig
   /** Suggestions. */
   // Doesn't override [_config.suggestions_enabled].
   public boolean should_show_candidates_view;
+  public boolean is_sensitive_input;
 
   public EditorConfig() {}
 
@@ -100,6 +102,7 @@ public final class EditorConfig
     initial_sel_start = info.initialSelStart;
     initial_sel_end = info.initialSelEnd;
     /* Suggestions */
+    is_sensitive_input = SuggestionPolicy.is_sensitive_input(info.inputType);
     should_show_candidates_view = CandidatesView.should_show(info);
   }
 

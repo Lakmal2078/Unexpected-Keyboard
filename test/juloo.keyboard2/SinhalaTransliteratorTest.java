@@ -123,6 +123,30 @@ public class SinhalaTransliteratorTest
   }
 
   @Test
+  public void testNullEmptyAndWhitespaceInputs()
+  {
+    assertNull(SinhalaTransliterator.transliterate(null));
+    assertEquals("", SinhalaTransliterator.transliterate(""));
+    assertEquals("", SinhalaTransliterator.transliterateWord(null));
+    assertTrue(SinhalaTransliterator.getSuggestions(null).isEmpty());
+    assertTrue(SinhalaTransliterator.getSuggestions("").isEmpty());
+    assertTrue(SinhalaTransliterator.getNextWordPredictions(null).isEmpty());
+    assertTrue(SinhalaTransliterator.getNextWordPredictions(" \t\n").isEmpty());
+  }
+
+  @Test
+  public void testCaseWhitespaceAndPunctuationEdges()
+  {
+    assertEquals("අම්මා! 123", SinhalaTransliterator.transliterate("Amma! 123"));
+    assertTrue(SinhalaTransliterator.getNextWordPredictions("  සුබ \t")
+        .contains("උදෑසනක්"));
+    assertTrue(SinhalaTransliterator.getNextWordPredictions("STHUTHI")
+        .contains("බොහොම"));
+    assertTrue(SinhalaTransliterator.getNextWordPredictions("සුබ!")
+        .isEmpty());
+  }
+
+  @Test
   public void testExpandedVocabulary()
   {
     assertEquals("කවදාද", SinhalaTransliterator.transliterate("kawadada"));
@@ -172,4 +196,3 @@ public class SinhalaTransliteratorTest
     }
   }
 }
-

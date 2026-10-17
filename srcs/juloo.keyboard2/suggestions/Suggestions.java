@@ -39,18 +39,22 @@ public final class Suggestions
   public void started()
   {
     _enabled = _config.suggestions_enabled
+      && !_config.editor_config.is_sensitive_input
       && (_config.editor_config.should_show_candidates_view
           || _config.sinhala_transliteration
           || _config.quick_calculator_enabled
           || _config.smart_snippets_enabled
           || _config.clipboard_suggestion_enabled);
     clear();
-    show_clipboard_suggestion();
+    if (_enabled)
+      show_clipboard_suggestion();
+    else
+      _callback.set_suggestions(this);
   }
 
   void show_clipboard_suggestion()
   {
-    if (_config.clipboard_suggestion_enabled)
+    if (_enabled && _config.clipboard_suggestion_enabled)
     {
       String clip = ClipboardHistoryService.get_current_clip();
       if (clip != null && !clip.trim().isEmpty())
