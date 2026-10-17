@@ -186,6 +186,32 @@ public final class KeyEventHandler
   public void suggestion_entered(String text, boolean add_space_after)
   {
     InputConnection conn = _recv.getCurrentInputConnection();
+    if (text.startsWith("📋 ") && conn != null)
+    {
+      String pasteText = (_suggestions.clipboard_full_text != null)
+          ? _suggestions.clipboard_full_text
+          : text.substring(2).trim();
+      conn.commitText(pasteText, 1);
+      _suggestions.clear();
+      _recv.set_suggestions(_suggestions);
+      _next_last_action = LastAction.SUGGESTION_ENTERED;
+      return;
+    }
+    if (text.startsWith("= "))
+    {
+      text = text.substring(2);
+      if (add_space_after)
+        text = text + " ";
+      String old = _typedword.get();
+      int cur_rel = _typedword.cursor_relative();
+      replace_surrounding_text(old.length() + cur_rel, -cur_rel, text);
+      last_replaced_word = old;
+      last_replacement_word_len = text.length();
+      _next_last_action = LastAction.SUGGESTION_ENTERED;
+      _suggestions.clear();
+      _recv.set_suggestions(_suggestions);
+      return;
+    }
     if (_sinhala_buffer.length() > 0 && conn != null)
     {
       String rawText = text.trim();
@@ -418,8 +444,8 @@ public final class KeyEventHandler
       case REPLACE: send_context_menu_action(android.R.id.replaceText); break;
       case ASSIST: send_context_menu_action(android.R.id.textAssist); break;
       case AUTOFILL: send_context_menu_action(android.R.id.autofill); break;
-      case DELETE_WORD: send_key_down_up(KeyEvent.KEYCODE_DEL, KeyEvent.META_CTRL_ON | KeyEvent.META_CTRL_LEFT_ON); break;
-      case FORWARD_DELETE_WORD: send_key_down_up(KeyEvent.KEYCODE_FORWARD_DEL, KeyEvent.META_CTRL_ON | KeyEvent.META_CTRL_LEFT_ON); break;
+      case DELETE_WORD: handle_delete_word(); break;
+      case FORWARD_DELETE_WORD: handle_forward_delete_word(); break;
       case SELECTION_CANCEL: cancel_selection(); break;
       case SPACE_BAR: handle_space_bar(); break;
       case BACKSPACE: handle_backspace(); break;
@@ -703,7 +729,9 @@ public final class KeyEventHandler
         && _last_action == LastAction.OTHER)
     {
       String typed = _typedword.get();
-      if (_config.space_bar_auto_complete && _suggestions.count > 0)
+      if (_config.space_bar_auto_complete && _suggestions.count > 0
+          && _suggestions.suggestions[0] != null
+          && !_suggestions.suggestions[0].startsWith("📋 "))
       {
         // Don't replace the typed word if unecessary to avoid flickering
         String w = _suggestions.suggestions[0];
@@ -715,6 +743,61 @@ public final class KeyEventHandler
       }
     }
     send_text(" ");
+  }
+
+  void handle_delete_word()
+  {
+    InputConnection conn = _recv.getCurrentInputConnection();
+    if (conn != null)
+    {
+      CharSequence before = conn.getTextBeforeCursor(50, 0);
+      if (before != null && before.length() > 0)
+      {
+        int len = before.length();
+        int i = len;
+        // Skip trailing spaces
+        while (i > 0 && Character.isWhitespace(before.charAt(i - 1)))
+          i--;
+        // Skip word characters
+        while (i > 0 && !Character.isWhitespace(before.charAt(i - 1)))
+          i--;
+        int deleteCount = len - i;
+        if (deleteCount > 0)
+        {
+          conn.deleteSurroundingText(deleteCount, 0);
+          _typedword.remove_surrounding_text(deleteCount, 0);
+          return;
+        }
+      }
+    }
+    send_key_down_up(KeyEvent.KEYCODE_DEL, KeyEvent.META_CTRL_ON | KeyEvent.META_CTRL_LEFT_ON);
+  }
+
+  void handle_forward_delete_word()
+  {
+    InputConnection conn = _recv.getCurrentInputConnection();
+    if (conn != null)
+    {
+      CharSequence after = conn.getTextAfterCursor(50, 0);
+      if (after != null && after.length() > 0)
+      {
+        int len = after.length();
+        int i = 0;
+        // Skip leading spaces
+        while (i < len && Character.isWhitespace(after.charAt(i)))
+          i++;
+        // Skip word characters
+        while (i < len && !Character.isWhitespace(after.charAt(i)))
+          i++;
+        if (i > 0)
+        {
+          conn.deleteSurroundingText(0, i);
+          _typedword.remove_surrounding_text(0, i);
+          return;
+        }
+      }
+    }
+    send_key_down_up(KeyEvent.KEYCODE_FORWARD_DEL, KeyEvent.META_CTRL_ON | KeyEvent.META_CTRL_LEFT_ON);
   }
 
   /** Undo the last autocorrect. */

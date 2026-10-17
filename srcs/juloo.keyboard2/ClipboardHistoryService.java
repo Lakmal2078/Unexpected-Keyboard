@@ -83,6 +83,26 @@ public final class ClipboardHistoryService
     return dst;
   }
 
+  public synchronized String get_latest_clip()
+  {
+    if (_history.isEmpty())
+      add_current_clip();
+    if (_history.isEmpty())
+      return null;
+    long now_ms = System.currentTimeMillis();
+    HistoryEntry ent = _history.get(0);
+    if (ent.expiry_timestamp <= now_ms)
+      return null;
+    return ent.content;
+  }
+
+  public static String get_current_clip()
+  {
+    if (_service == null)
+      return null;
+    return _service.get_latest_clip();
+  }
+
   /** This will call [on_clipboard_history_change]. */
   public synchronized void remove_history_entry(String clip)
   {

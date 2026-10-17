@@ -81,6 +81,9 @@ public final class Config
   public boolean physical_keyboard_hide;
   public Typeface custom_font = null;
   public boolean high_contrast_labels;
+  public boolean quick_calculator_enabled;
+  public boolean smart_snippets_enabled;
+  public boolean clipboard_suggestion_enabled;
 
   // Dynamically set
   /** Configuration options implied by the connected editor. */
@@ -210,6 +213,9 @@ public final class Config
     physical_keyboard_hide = _prefs.getString("physical_keyboard_behavior", "hide").equals("hide");
     custom_font = get_custom_font(_prefs.getString("keyboard_font", "default"));
     high_contrast_labels = _prefs.getBoolean("high_contrast_labels", false);
+    quick_calculator_enabled = _prefs.getBoolean("quick_calculator_enabled", true);
+    smart_snippets_enabled = _prefs.getBoolean("smart_snippets_enabled", true);
+    clipboard_suggestion_enabled = _prefs.getBoolean("clipboard_suggestion_enabled", true);
     float screen_width_dp = dm.widthPixels / dm.density;
     wide_screen = screen_width_dp >= WIDE_DEVICE_THRESHOLD;
     split_layout = get_split_layout();

@@ -42,6 +42,13 @@
     <string name="pref_space_bar_auto_complete_summary">Enter the best suggestion by pressing space</string>
     <string name="pref_suggestions_add_space_title">Automatically add a space</string>
     <string name="pref_suggestions_add_space_summary">Add a space character after the selected word</string>
+    <string name="pref_category_productivity">Productivity Features</string>
+    <string name="pref_quick_calculator_title">Quick Calculator</string>
+    <string name="pref_quick_calculator_summary">Show instant math results (e.g. 150*4 = 600) in the candidate bar</string>
+    <string name="pref_smart_snippets_title">Smart Text Expander</string>
+    <string name="pref_smart_snippets_summary">Expand shortcuts (//date, //time, //shrug, //sinhala) on tap</string>
+    <string name="pref_clipboard_suggestion_title">Clipboard Quick Paste</string>
+    <string name="pref_clipboard_suggestion_summary">Show recent clipboard preview in the candidate bar for one-tap paste</string>
     <string name="pref_category_typing">Typing</string>
     <string name="pref_swipe_dist_title">Swiping distance</string>
     <string name="pref_swipe_dist_summary">Distance of characters in the corners of the keys (%s)</string>

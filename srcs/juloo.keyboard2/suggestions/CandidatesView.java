@@ -150,7 +150,10 @@ public class CandidatesView extends LinearLayout
           case InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD:
             return false;
           default:
-            if (Config.globalConfig().sinhala_transliteration)
+            if (Config.globalConfig().sinhala_transliteration
+                || Config.globalConfig().quick_calculator_enabled
+                || Config.globalConfig().smart_snippets_enabled
+                || Config.globalConfig().clipboard_suggestion_enabled)
               return true;
             /* Editor requested that we don't show suggestions. Enable
                suggestions anyway when the flags [NO_SUGGESTIONS] and

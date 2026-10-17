@@ -248,7 +248,13 @@ public final class CurrentlyTypedWord
       returns [true]. */
   public static boolean is_word_char(int c)
   {
-    return Character.isLetterOrDigit(c) || (c == '\'');
+    int type = Character.getType(c);
+    return Character.isLetterOrDigit(c)
+        || type == Character.NON_SPACING_MARK
+        || type == Character.COMBINING_SPACING_MARK
+        || (c == '\'') || (c == '/')
+        || (c == '+') || (c == '-') || (c == '*') || (c == '%') || (c == '^')
+        || (c == '×') || (c == '÷') || (c == '=') || (c == '.') || (c == '(') || (c == ')');
   }
 
   public static interface Callback

@@ -7,6 +7,9 @@ import juloo.keyboard2.dict.Dictionaries;
 import juloo.keyboard2.Config;
 import juloo.keyboard2.ComposeKey;
 import juloo.keyboard2.ComposeKeyData;
+import juloo.keyboard2.ClipboardHistoryService;
+import juloo.keyboard2.QuickCalculator;
+import juloo.keyboard2.SmartSnippets;
 import juloo.keyboard2.SinhalaTransliterator;
 
 /** Keep track of the word being typed and provide suggestions for
@@ -23,6 +26,7 @@ public final class Suggestions
       are not [null]. */
   public int count = 0;
   public String emoji_suggestion = null;
+  public String clipboard_full_text = null;
   /** Number of suggestions in [suggestions]. */
   public static final int MAX_COUNT = 3;
 
@@ -35,8 +39,31 @@ public final class Suggestions
   public void started()
   {
     _enabled = _config.suggestions_enabled
-      && (_config.editor_config.should_show_candidates_view || _config.sinhala_transliteration);
+      && (_config.editor_config.should_show_candidates_view
+          || _config.sinhala_transliteration
+          || _config.quick_calculator_enabled
+          || _config.smart_snippets_enabled
+          || _config.clipboard_suggestion_enabled);
     clear();
+    show_clipboard_suggestion();
+  }
+
+  void show_clipboard_suggestion()
+  {
+    if (_config.clipboard_suggestion_enabled)
+    {
+      String clip = ClipboardHistoryService.get_current_clip();
+      if (clip != null && !clip.trim().isEmpty())
+      {
+        clipboard_full_text = clip;
+        String preview = clip.trim().replace('\n', ' ');
+        if (preview.length() > 20)
+          preview = preview.substring(0, 18) + "...";
+        suggestions[0] = "📋 " + preview;
+        count = 1;
+        _callback.set_suggestions(this);
+      }
+    }
   }
 
   public void set_predictions(List<String> list)
@@ -56,6 +83,36 @@ public final class Suggestions
   {
     if (!_enabled)
       return;
+    if (word == null || word.isEmpty())
+    {
+      clear();
+      show_clipboard_suggestion();
+      return;
+    }
+    if (_config.quick_calculator_enabled)
+    {
+      String mathRes = QuickCalculator.evaluate(word);
+      if (mathRes != null)
+      {
+        clear();
+        suggestions[0] = mathRes;
+        count = 1;
+        _callback.set_suggestions(this);
+        return;
+      }
+    }
+    if (_config.smart_snippets_enabled)
+    {
+      String snippet = SmartSnippets.getSnippet(word);
+      if (snippet != null)
+      {
+        clear();
+        suggestions[0] = snippet;
+        count = 1;
+        _callback.set_suggestions(this);
+        return;
+      }
+    }
     if (_config.sinhala_transliteration && is_ascii_letters(word))
     {
       java.util.List<String> list = SinhalaTransliterator.getSuggestions(word);
@@ -123,6 +180,7 @@ public final class Suggestions
     for (int i = 0; i < MAX_COUNT; i++)
       suggestions[i] = null;
     emoji_suggestion = null;
+    clipboard_full_text = null;
   }
 
   int query_suggestions(String word)
