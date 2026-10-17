@@ -48,6 +48,7 @@ android {
     targetSdk { version = release(36) }
     versionCode = 56
     versionName = "2.1.0"
+    ndk.abiFilters.addAll(listOf("x86", "x86_64", "armeabi-v7a", "arm64-v8a"))
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
