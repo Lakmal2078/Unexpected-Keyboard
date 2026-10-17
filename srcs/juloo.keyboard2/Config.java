@@ -3,6 +3,7 @@ package juloo.keyboard2;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import java.util.ArrayList;
@@ -78,6 +79,8 @@ public final class Config
   public boolean space_bar_auto_complete;
   public boolean sinhala_transliteration;
   public boolean physical_keyboard_hide;
+  public Typeface custom_font = null;
+  public boolean high_contrast_labels;
 
   // Dynamically set
   /** Configuration options implied by the connected editor. */
@@ -205,6 +208,8 @@ public final class Config
     space_bar_auto_complete = _prefs.getBoolean("space_bar_auto_complete", false);
     sinhala_transliteration = _prefs.getBoolean("sinhala_transliteration", true);
     physical_keyboard_hide = _prefs.getString("physical_keyboard_behavior", "hide").equals("hide");
+    custom_font = get_custom_font(_prefs.getString("keyboard_font", "default"));
+    high_contrast_labels = _prefs.getBoolean("high_contrast_labels", false);
     float screen_width_dp = dm.widthPixels / dm.density;
     wide_screen = screen_width_dp >= WIDE_DEVICE_THRESHOLD;
     split_layout = get_split_layout();
@@ -292,11 +297,29 @@ public final class Config
       case "cyberpunk_neon": return R.style.CyberpunkNeon;
       case "amoled_cyan": return R.style.AmoledCyan;
       case "sunset_glow": return R.style.SunsetGlow;
+      case "lanka_maroon": return R.style.LankaMaroon;
+      case "emerald_forest": return R.style.EmeraldForest;
+      case "midnight_purple": return R.style.MidnightPurple;
       default:
       case "system":
         if ((night_mode & Configuration.UI_MODE_NIGHT_NO) != 0)
           return R.style.Light;
         return R.style.Dark;
+    }
+  }
+
+  private static Typeface get_custom_font(String font_name)
+  {
+    switch (font_name)
+    {
+      case "sans_bold": return Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
+      case "serif": return Typeface.create(Typeface.SERIF, Typeface.NORMAL);
+      case "monospace": return Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL);
+      case "rounded":
+        try { return Typeface.create("sans-serif-rounded", Typeface.NORMAL); }
+        catch (Throwable t) { return Typeface.create(Typeface.DEFAULT, Typeface.NORMAL); }
+      case "default":
+      default: return null;
     }
   }
 

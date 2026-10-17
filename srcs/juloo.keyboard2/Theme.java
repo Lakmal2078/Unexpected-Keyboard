@@ -256,6 +256,10 @@ public class Theme
       p.setTextAlign(Paint.Align.CENTER);
       if (font != null)
         p.setTypeface(font);
+      else if (config.custom_font != null)
+        p.setTypeface(config.custom_font);
+      if (config.high_contrast_labels)
+        p.setFakeBoldText(true);
       return p;
     }
   }

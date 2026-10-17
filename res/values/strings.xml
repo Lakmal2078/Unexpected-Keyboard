@@ -96,6 +96,17 @@
     <string name="pref_theme_e_cyberpunk_neon">Cyberpunk Neon</string>
     <string name="pref_theme_e_amoled_cyan">AMOLED Cyan</string>
     <string name="pref_theme_e_sunset_glow">Sunset Glow</string>
+    <string name="pref_theme_e_lanka_maroon">Sri Lanka Maroon &amp; Gold</string>
+    <string name="pref_theme_e_emerald_forest">Emerald Forest</string>
+    <string name="pref_theme_e_midnight_purple">Midnight Purple Nebula</string>
+    <string name="pref_keyboard_font_title">Keyboard font style</string>
+    <string name="pref_font_default">System default</string>
+    <string name="pref_font_sans_bold">Bold Sans-Serif</string>
+    <string name="pref_font_serif">Classic Serif</string>
+    <string name="pref_font_monospace">Monospace (Code)</string>
+    <string name="pref_font_rounded">Rounded Font</string>
+    <string name="pref_high_contrast_title">High contrast key labels</string>
+    <string name="pref_high_contrast_summary">Enhance label thickness and readability under bright sunlight</string>
     <string name="pref_swipe_dist_e_very_short">Very short</string>
     <string name="pref_swipe_dist_e_short">Short</string>
     <string name="pref_swipe_dist_e_default">Normal</string>

@@ -515,4 +515,79 @@
     <item name="emoji_color">#FFF8E1</item>
     <item name="suggestions_background">#1A121E</item>
   </style>
+  <style name="LankaMaroon" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#2A080E</item>
+    <item name="keyboardGradientStart">#3D0C14</item>
+    <item name="keyboardGradientEnd">#1A0509</item>
+    <item name="colorKey">#4A121D</item>
+    <item name="colorKeyActivated">#FFB300</item>
+    <item name="colorKeyAction">#801826</item>
+    <item name="colorKeySpaceBar">#3E0E18</item>
+    <item name="colorLabel">#FFFDF7</item>
+    <item name="colorLabelPressed">#2A080E</item>
+    <item name="colorLabelActivated">#2A080E</item>
+    <item name="colorLabelLocked">#FFD54F</item>
+    <item name="colorSubLabel">#FFC107</item>
+    <item name="keyBorderRadius">7dp</item>
+    <item name="keyBorderWidth">1dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#6B1D2C</item>
+    <item name="keyBorderColorTop">#6B1D2C</item>
+    <item name="keyBorderColorRight">#6B1D2C</item>
+    <item name="keyBorderColorBottom">#6B1D2C</item>
+    <item name="emoji_button_bg">#4A121D</item>
+    <item name="emoji_color">#FFC107</item>
+    <item name="suggestions_background">#2A080E</item>
+  </style>
+  <style name="EmeraldForest" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#051811</item>
+    <item name="keyboardGradientStart">#09261C</item>
+    <item name="keyboardGradientEnd">#030F0A</item>
+    <item name="colorKey">#0E3325</item>
+    <item name="colorKeyActivated">#00E676</item>
+    <item name="colorKeyAction">#18533C</item>
+    <item name="colorKeySpaceBar">#0B2B1F</item>
+    <item name="colorLabel">#E8F5E9</item>
+    <item name="colorLabelPressed">#051811</item>
+    <item name="colorLabelActivated">#051811</item>
+    <item name="colorLabelLocked">#69F0AE</item>
+    <item name="colorSubLabel">#00E676</item>
+    <item name="keyBorderRadius">7dp</item>
+    <item name="keyBorderWidth">1dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#1B5E45</item>
+    <item name="keyBorderColorTop">#1B5E45</item>
+    <item name="keyBorderColorRight">#1B5E45</item>
+    <item name="keyBorderColorBottom">#1B5E45</item>
+    <item name="emoji_button_bg">#0E3325</item>
+    <item name="emoji_color">#00E676</item>
+    <item name="suggestions_background">#051811</item>
+  </style>
+  <style name="MidnightPurple" parent="BaseTheme">
+    <item name="android:isLightTheme">false</item>
+    <item name="colorKeyboard">#0D0B18</item>
+    <item name="keyboardGradientStart">#24123E</item>
+    <item name="keyboardGradientEnd">#0D0B18</item>
+    <item name="colorKey">#1C162E</item>
+    <item name="colorKeyActivated">#D500F9</item>
+    <item name="colorKeyAction">#3D2561</item>
+    <item name="colorKeySpaceBar">#161124</item>
+    <item name="colorLabel">#F3E5F5</item>
+    <item name="colorLabelPressed">#FFFFFF</item>
+    <item name="colorLabelActivated">#0D0B18</item>
+    <item name="colorLabelLocked">#FF4081</item>
+    <item name="colorSubLabel">#E040FB</item>
+    <item name="keyBorderRadius">8dp</item>
+    <item name="keyBorderWidth">1dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#2E2248</item>
+    <item name="keyBorderColorTop">#2E2248</item>
+    <item name="keyBorderColorRight">#2E2248</item>
+    <item name="keyBorderColorBottom">#2E2248</item>
+    <item name="emoji_button_bg">#1C162E</item>
+    <item name="emoji_color">#E040FB</item>
+    <item name="suggestions_background">#0D0B18</item>
+  </style>
 </resources>

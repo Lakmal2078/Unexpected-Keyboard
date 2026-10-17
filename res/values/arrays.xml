@@ -55,6 +55,9 @@
     <item>@string/pref_theme_e_cyberpunk_neon</item>
     <item>@string/pref_theme_e_amoled_cyan</item>
     <item>@string/pref_theme_e_sunset_glow</item>
+    <item>@string/pref_theme_e_lanka_maroon</item>
+    <item>@string/pref_theme_e_emerald_forest</item>
+    <item>@string/pref_theme_e_midnight_purple</item>
   </string-array>
   <string-array name="pref_theme_values">
     <item>system</item>
@@ -83,6 +86,23 @@
     <item>cyberpunk_neon</item>
     <item>amoled_cyan</item>
     <item>sunset_glow</item>
+    <item>lanka_maroon</item>
+    <item>emerald_forest</item>
+    <item>midnight_purple</item>
+  </string-array>
+  <string-array name="pref_keyboard_font_entries">
+    <item>@string/pref_font_default</item>
+    <item>@string/pref_font_sans_bold</item>
+    <item>@string/pref_font_serif</item>
+    <item>@string/pref_font_monospace</item>
+    <item>@string/pref_font_rounded</item>
+  </string-array>
+  <string-array name="pref_keyboard_font_values">
+    <item>default</item>
+    <item>sans_bold</item>
+    <item>serif</item>
+    <item>monospace</item>
+    <item>rounded</item>
   </string-array>
   <string-array name="pref_swipe_dist_entries">
     <item>@string/pref_swipe_dist_e_very_short</item>
