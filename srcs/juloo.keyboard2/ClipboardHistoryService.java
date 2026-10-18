@@ -61,9 +61,16 @@ public final class ClipboardHistoryService
       _paste_callback.paste_from_clipboard_pane(clip);
   }
 
-  public static void on_destroy()
+  public static synchronized void on_destroy()
   {
     _paste_callback = null;
+    if (_service != null)
+    {
+      _service._listener = null;
+      _service.clear_history();
+      _service._cm.removePrimaryClipChangedListener(_service._system_listener);
+      _service = null;
+    }
   }
 
   /** The maximum size limits the amount of user data stored in memory but also
@@ -77,12 +84,14 @@ public final class ClipboardHistoryService
   ClipboardManager _cm;
   List<HistoryEntry> _history;
   OnClipboardHistoryChange _listener = null;
+  private final ClipboardManager.OnPrimaryClipChangedListener _system_listener;
 
   ClipboardHistoryService(Context ctx)
   {
     _history = new ArrayList<HistoryEntry>();
     _cm = (ClipboardManager)ctx.getSystemService(Context.CLIPBOARD_SERVICE);
-    _cm.addPrimaryClipChangedListener(this.new SystemListener());
+    _system_listener = this.new SystemListener();
+    _cm.addPrimaryClipChangedListener(_system_listener);
   }
 
   public synchronized List<String> clear_expired_and_get_history()
@@ -185,12 +194,9 @@ public final class ClipboardHistoryService
     if (clip == null)
       return;
     // On Android 13+ (API 33+), respect EXTRA_IS_SENSITIVE to protect passwords and OTPs
-    if (VERSION.SDK_INT >= 33 && clip.getDescription() != null)
-    {
-      android.os.PersistableBundle extras = clip.getDescription().getExtras();
-      if (extras != null && extras.getBoolean(ClipDescription.EXTRA_IS_SENSITIVE, false))
-        return;
-    }
+    if (shouldRejectSensitiveClip(VERSION.SDK_INT,
+        clip.getDescription() == null ? false : isMarkedSensitive(clip.getDescription())))
+      return;
     int count = clip.getItemCount();
     for (int i = 0; i < count; i++)
     {
@@ -198,6 +204,19 @@ public final class ClipboardHistoryService
       if (text != null)
         add_clip(text.toString());
     }
+  }
+
+  /** True only when the platform exposes and marks a clip as sensitive. */
+  static boolean shouldRejectSensitiveClip(int sdkInt, boolean markedSensitive)
+  {
+    return sdkInt >= 33 && markedSensitive;
+  }
+
+  private static boolean isMarkedSensitive(ClipDescription description)
+  {
+    android.os.PersistableBundle extras = description.getExtras();
+    return extras != null
+        && extras.getBoolean(ClipDescription.EXTRA_IS_SENSITIVE, false);
   }
 
   int get_history_ttl_minutes() {
