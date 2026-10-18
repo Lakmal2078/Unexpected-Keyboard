@@ -12,3 +12,6 @@
 /_build
 /release
 __pycache__
+.env
+.env.*
+!.env.example
