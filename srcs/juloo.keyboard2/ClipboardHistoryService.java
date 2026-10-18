@@ -61,9 +61,15 @@ public final class ClipboardHistoryService
       _paste_callback.paste_from_clipboard_pane(clip);
   }
 
-  public static void on_destroy()
+  public static synchronized void on_destroy()
   {
     _paste_callback = null;
+    if (_service != null)
+    {
+      _service.clear_history();
+      _service._cm.removePrimaryClipChangedListener(_service._system_listener);
+      _service = null;
+    }
   }
 
   /** The maximum size limits the amount of user data stored in memory but also
@@ -77,12 +83,14 @@ public final class ClipboardHistoryService
   ClipboardManager _cm;
   List<HistoryEntry> _history;
   OnClipboardHistoryChange _listener = null;
+  private final ClipboardManager.OnPrimaryClipChangedListener _system_listener;
 
   ClipboardHistoryService(Context ctx)
   {
     _history = new ArrayList<HistoryEntry>();
     _cm = (ClipboardManager)ctx.getSystemService(Context.CLIPBOARD_SERVICE);
-    _cm.addPrimaryClipChangedListener(this.new SystemListener());
+    _system_listener = this.new SystemListener();
+    _cm.addPrimaryClipChangedListener(_system_listener);
   }
 
   public synchronized List<String> clear_expired_and_get_history()
