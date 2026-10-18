@@ -193,12 +193,9 @@ public final class ClipboardHistoryService
     if (clip == null)
       return;
     // On Android 13+ (API 33+), respect EXTRA_IS_SENSITIVE to protect passwords and OTPs
-    if (VERSION.SDK_INT >= 33 && clip.getDescription() != null)
-    {
-      android.os.PersistableBundle extras = clip.getDescription().getExtras();
-      if (extras != null && extras.getBoolean(ClipDescription.EXTRA_IS_SENSITIVE, false))
-        return;
-    }
+    if (shouldRejectSensitiveClip(VERSION.SDK_INT,
+        clip.getDescription() == null ? false : isMarkedSensitive(clip.getDescription())))
+      return;
     int count = clip.getItemCount();
     for (int i = 0; i < count; i++)
     {
@@ -206,6 +203,19 @@ public final class ClipboardHistoryService
       if (text != null)
         add_clip(text.toString());
     }
+  }
+
+  /** True only when the platform exposes and marks a clip as sensitive. */
+  static boolean shouldRejectSensitiveClip(int sdkInt, boolean markedSensitive)
+  {
+    return sdkInt >= 33 && markedSensitive;
+  }
+
+  private static boolean isMarkedSensitive(ClipDescription description)
+  {
+    android.os.PersistableBundle extras = description.getExtras();
+    return extras != null
+        && extras.getBoolean(ClipDescription.EXTRA_IS_SENSITIVE, false);
   }
 
   int get_history_ttl_minutes() {
