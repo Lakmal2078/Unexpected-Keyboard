@@ -39,6 +39,33 @@ https://github.com/Julow/Unexpected-Keyboard/assets/2310568/28f8f6fe-ac13-46f3-8
 
 [<img src="https://hosted.weblate.org/widget/unexpected-keyboard/multi-auto.svg" alt="පරිවර්තන තත්ත්වය" />](https://hosted.weblate.org/engage/unexpected-keyboard/)
 
+## යෙදුම ගොඩනැගීමට අවශ්‍ය මූලික සුදුසුකම් (Build Prerequisites)
+- **OpenJDK 17** (හෝ ඊට අනුකූල JDK)
+- **Android SDK**: Build tools සහ Platform `android-36`
+- **Git submodules**: ශබ්දකෝෂ හා spell-checking සඳහා (`vendor/cdict`):
+  ```sh
+  git submodule update --init --recursive
+  ```
+- **Python 3.x**: Layouts හා xml උත්පාදනය සඳහා (`gen_layouts.py`, `gen_method_xml.py`, `check_layout.py`)
+- **fontforge**: විශේෂ යතුරු අයිකන font ගොඩනැගීම සඳහා
+- **keytool**: Local debug keystore ජනනය කිරීම සඳහා
+- **පරිසර විචල්‍ය (Env Vars)**: `.env.example` බලන්න
+
+### බිල්ඩ් සහ පරීක්ෂණ විධාන
+```sh
+# Debug APK එක බිල්ඩ් කිරීමට
+./gradlew assembleDebug
+
+# Unit tests ධාවනය කිරීමට
+./gradlew test
+```
+
+## පෞද්ගලිකත්වය සහ ක්ලිප්බෝඩ් ආරක්ෂාව (Privacy & Security)
+- **දත්ත ලොග් නොකිරීම (Zero Logging)**: පරිශීලකයා ටයිප් කරන කිසිදු දත්තයක් හෝ පාස්වර්ඩ් සටහන් කර නොගන්නා අතර අන්තර්ජාලයට යවනු නොලැබේ.
+- **මතකයේ පමණක් රඳවාගන්නා ක්ලිප්බෝඩ් ඉතිහාසය (In-Memory Only)**: ක්ලිප්බෝඩ් ඉතිහාසය පෙරනිමියෙන් අක්‍රිය කර ඇත (opt-in). සක්‍රිය කළ විට පවා එය තාවකාලික RAM මතකයේ පමණක් රඳවා තබන අතර, කිසිදු storage හෝ database එකකට ලියනු නොලැබේ.
+- **සංවේදී දත්ත ආරක්ෂාව**: Android 13+ (API 33+) හිදී `ClipDescription.EXTRA_IS_SENSITIVE` ලෙස සලකුණු කළ පාස්වර්ඩ් සහ OTPs කිසිසේත්ම ක්ලිප්බෝඩ් ඉතිහාසයට එකතු නොවේ.
+- **ස්වයංක්‍රීයව ඉවත්වීම**: පරිශීලකයා තෝරාගත් කාල සීමාවෙන් පසු ඉතිහාසය ස්වයංක්‍රීයව මැකී යන අතර, සැකසුම අක්‍රිය කළ වහාම මතකයේ ඇති සියල්ල ක්ෂණිකව ඉවත් වේ.
+
 ## දායකත්වය
 
 යෙදුම ගොඩනැගීමේ උපදෙස් සඳහා [දායකත්ව මාර්ගෝපදේශය](CONTRIBUTING.md) බලන්න.

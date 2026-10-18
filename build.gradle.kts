@@ -63,6 +63,7 @@ android {
 
     named("test") {
       java.srcDirs("test")
+      resources.srcDirs("test/resources")
     }
   }
 
@@ -134,7 +135,10 @@ android {
 // ndk-build errors that occur when submodules are not initialized.
 gradle.projectsEvaluated {
   if (!file("vendor/cdict/java").exists())
-    throw GradleException("Git submodules not initialized. Run 'git submodule update --init'")
+    throw GradleException(
+      "Git submodules are not initialized. Please run: 'git submodule update --init --recursive'\n" +
+      "For more details, see the Build Prerequisites section in README.md and CONTRIBUTING.md."
+    )
 }
 
 val buildKeyboardFont by tasks.registering(Exec::class) {
@@ -203,9 +207,9 @@ tasks.withType(Test::class).configureEach {
 }
 
 val initDebugKeystore by tasks.registering(Exec::class) {
-  doFirst { println("Initializing default debug keystore") }
-  isEnabled = !file("debug.keystore").exists()
-  // A shell script might be needed if this line requires input from the user
+  doFirst { println("Initializing local-only debug keystore (not for production releases)") }
+  // Only auto-generate for local development environments when keystore is missing and not in CI
+  isEnabled = !file("debug.keystore").exists() && !isCi
   commandLine("keytool", "-genkeypair", "-dname", "cn=d, ou=e, o=b, c=ug", "-alias", "debug", "-keypass", "debug0", "-keystore", "debug.keystore", "-keyalg", "rsa", "-storepass", "debug0", "-validity", "10000")
 }
 

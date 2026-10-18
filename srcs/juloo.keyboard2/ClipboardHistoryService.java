@@ -10,6 +10,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Manages in-memory clipboard history.
+ *
+ * Security & Privacy Guarantees:
+ * - Ephemeral / In-Memory only: History entries are stored only in volatile RAM (List<HistoryEntry>)
+ *   and are NEVER written to disk, database, or SharedPreferences.
+ * - Explicit User Opt-In: Clipboard history is disabled by default (clipboard_history_enabled = false).
+ * - Sensitive Data Protection: On Android 13+ (API 33+), clips marked with EXTRA_IS_SENSITIVE
+ *   (passwords, OTPs, auth tokens) are discarded and never added to history.
+ * - Auto-Expiry: Entries expire automatically after the configured retention window (TTL).
+ * - Immediate Purge: Toggling the history setting off immediately clears all in-memory entries.
+ * - Zero Leakage: No clipboard data is ever sent across the network or output to log streams.
+ */
 public final class ClipboardHistoryService
 {
   /** Start the service on startup and start listening to clipboard changes. */

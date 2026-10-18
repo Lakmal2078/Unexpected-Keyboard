@@ -15,7 +15,7 @@ import juloo.keyboard2.prefs.CustomExtraKeysPreference;
 import juloo.keyboard2.prefs.ExtraKeysPreference;
 import juloo.keyboard2.prefs.LayoutsPreference;
 
-public final class Config
+public class Config
 {
   /**
    * Width of the Android phones is around 300-600dp in portrait, 600-1400dp in landscape,
@@ -109,6 +109,17 @@ public final class Config
   int current_layout_wide;
   /** Whether to automatically split the layout. */
   public boolean split_layout;
+
+  /** Package-private constructor for testing and proxy subclassing */
+  Config()
+  {
+    _prefs = null;
+    marginTop = 0f;
+    keyPadding = 0f;
+    labelTextSize = 0.33f;
+    sublabelTextSize = 0.22f;
+    editor_config = new EditorConfig();
+  }
 
   private Config(SharedPreferences prefs, Resources res,
       Boolean foldableUnfolded, Dictionaries dicts)

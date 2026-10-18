@@ -44,6 +44,37 @@ Improve the application translations [using Weblate](https://hosted.weblate.org/
 
 [<img src="https://hosted.weblate.org/widget/unexpected-keyboard/multi-auto.svg" alt="État de la traduction" />](https://hosted.weblate.org/engage/unexpected-keyboard/)
 
+## Build Prerequisites
+
+To build and test Unexpected Keyboard locally:
+- **OpenJDK 17** (or compatible JDK)
+- **Android SDK**: Build tools and platform `android-36`
+- **Git submodules**: Required for dictionary/spell-checking (`vendor/cdict`). Initialize with:
+  ```sh
+  git submodule update --init --recursive
+  ```
+- **Python 3.x**: Required for generator scripts (`gen_layouts.py`, `gen_method_xml.py`, `check_layout.py`, compose compiler).
+- **fontforge**: Required if compiling the special keyboard icon font (`buildKeyboardFont` task).
+- **keytool**: (Bundled with JDK) used to generate local development debug keystores.
+- **Signing configuration**: See `.env.example` for required environment variables.
+
+### Building & Testing
+```sh
+# Build debug APK
+./gradlew assembleDebug
+
+# Run unit tests
+./gradlew test
+```
+
+## Privacy & Clipboard Security
+
+Unexpected Keyboard follows strict privacy and data protection principles:
+- **Zero Logging & Telemetry**: Keystrokes, passwords, and user input are never logged or transmitted.
+- **In-Memory Clipboard History**: The clipboard history is strictly **opt-in** (disabled by default in Settings). When enabled, clips are held only in temporary RAM and are **never** persisted to disk or database.
+- **Sensitive Data Safeguard**: On Android 13+ (API 33+), clips flagged as `ClipDescription.EXTRA_IS_SENSITIVE` (such as passwords, tokens, and 2FA OTPs) are discarded immediately and never added to history.
+- **Auto-Expiration & Instant Clear**: Clipboard history automatically expires according to the user-selected TTL, and unchecking clipboard history immediately purges all stored items from memory.
+
 ## Contributing
 
 For instructions on building the application, see

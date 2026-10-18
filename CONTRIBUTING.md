@@ -7,15 +7,18 @@ Thanks for contributing :)
 The application uses Gradle and can be used with Android Studio, but using
 Android Studio is not required. The build dependencies are:
 - OpenJDK 17
-- Android SDK: build tools, platform `36`
-
-Python 3 is required to update generated files but not to build the app.
+- Android SDK: build tools, platform `android-36`
+- Python 3.x (required for `gen_layouts.py`, `gen_method_xml.py`, `check_layout.py`, compose compiler)
+- fontforge (required for compiling special font icons in `srcs/special_font`)
+- keytool (from JDK, used to generate local debug keystore)
 
 Make sure the Git submodules are initialized and point to the right revision:
 
 ```sh
-git submodule update --init
+git submodule update --init --recursive
 ```
+
+See `.env.example` for environment variable options when signing debug and release APKs.
 
 For Android Studio users, no more setup is needed.
 
