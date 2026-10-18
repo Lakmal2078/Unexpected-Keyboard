@@ -227,7 +227,7 @@ public class Config
     high_contrast_labels = _prefs.getBoolean("high_contrast_labels", false);
     quick_calculator_enabled = _prefs.getBoolean("quick_calculator_enabled", true);
     smart_snippets_enabled = _prefs.getBoolean("smart_snippets_enabled", true);
-    clipboard_suggestion_enabled = _prefs.getBoolean("clipboard_suggestion_enabled", true);
+    clipboard_suggestion_enabled = _prefs.getBoolean("clipboard_suggestion_enabled", false);
     show_quick_toolbar = _prefs.getBoolean("show_quick_toolbar", true);
     float screen_width_dp = dm.widthPixels / dm.density;
     wide_screen = screen_width_dp >= WIDE_DEVICE_THRESHOLD;

@@ -1,10 +1,7 @@
-name: Build and release APK
+name: Build and release signed APK
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - master
     tags:
       - "v*"
 
@@ -60,47 +57,73 @@ jobs:
             echo "DEBUG_KEY_PASSWORD=$debug_password"
           } >> "$GITHUB_ENV"
 
+      - name: Prepare release signing key
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: |
+          if [ -z "$RELEASE_KEYSTORE_BASE64" ]; then
+            echo "::error::Missing RELEASE_KEYSTORE_BASE64 secret"
+            exit 1
+          fi
+          if [ -z "$RELEASE_KEYSTORE_PASSWORD" ]; then
+            echo "::error::Missing RELEASE_KEYSTORE_PASSWORD secret"
+            exit 1
+          fi
+          if [ -z "$RELEASE_KEY_ALIAS" ]; then
+            echo "::error::Missing RELEASE_KEY_ALIAS secret"
+            exit 1
+          fi
+          if [ -z "$RELEASE_KEY_PASSWORD" ]; then
+            echo "::error::Missing RELEASE_KEY_PASSWORD secret"
+            exit 1
+          fi
+          release_keystore="$RUNNER_TEMP/release.keystore"
+          printf '%s' "$RELEASE_KEYSTORE_BASE64" | base64 --decode > "$release_keystore"
+          chmod 600 "$release_keystore"
+          echo "RELEASE_KEYSTORE=$release_keystore" >> "$GITHUB_ENV"
+
       - name: Run unit tests
         run: ./gradlew test
 
-      - name: Build debug APK
-        run: ./gradlew assembleDebug
+      - name: Build signed release APK
+        env:
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: ./gradlew assembleRelease
 
-      - name: Upload debug APK
+      - name: Upload signed release APK
         uses: actions/upload-artifact@v4
         with:
-          name: unexpected-keyboard-debug
-          path: build/outputs/apk/debug/Unexpected-Keyboard-debug.apk
-          retention-days: 30
+          name: unexpected-keyboard-release
+          path: build/outputs/apk/release/Unexpected-Keyboard-release.apk
+          retention-days: 7
+
+      - name: Remove release signing key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/release.keystore"
 
   release:
-    name: Publish GitHub release
-    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
+    name: Publish signed GitHub release
     needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Download debug APK
+      - name: Download signed release APK
         uses: actions/download-artifact@v4
         with:
-          name: unexpected-keyboard-debug
+          name: unexpected-keyboard-release
           path: dist
 
       - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: "Unexpected Keyboard - Sinhala Edition (Latest Build)"
-          body: |
-            ### Unexpected Keyboard - Sinhala Edition
-
-            **නවතම APK එක මෙතැනින් download කරගන්න:**
-            - [Unexpected-Keyboard-debug.apk](https://github.com/${{ github.repository }}/releases/download/latest/Unexpected-Keyboard-debug.apk)
-
-            - Singlish to Sinhala transliteration
-            - Static next-word suggestions for a limited set of common Sinhala phrases
-            - Haptic feedback on supported devices
-          files: dist/Unexpected-Keyboard-debug.apk
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          files: dist/Unexpected-Keyboard-release.apk
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}

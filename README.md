@@ -72,6 +72,7 @@ To build and test Unexpected Keyboard locally:
 Unexpected Keyboard follows strict privacy and data protection principles:
 - **Zero Logging & Telemetry**: Keystrokes, passwords, and user input are never logged or transmitted.
 - **In-Memory Clipboard History**: The clipboard history is strictly **opt-in** (disabled by default in Settings). When enabled, clips are held only in temporary RAM and are **never** persisted to disk or database.
+- **Clipboard Quick Paste**: The clipboard preview in the candidate bar is disabled by default. Enable it in Settings to show the current clipboard item for one-tap pasting.
 - **Sensitive Data Safeguard**: On Android 13+ (API 33+), clips flagged as `ClipDescription.EXTRA_IS_SENSITIVE` (such as passwords, tokens, and 2FA OTPs) are discarded immediately and never added to history.
 - **Auto-Expiration & Instant Clear**: Clipboard history automatically expires according to the user-selected TTL, and unchecking clipboard history immediately purges all stored items from memory.
 
