@@ -45,6 +45,22 @@ jobs:
           sed -i '/android.aapt2FromMavenOverride/d' gradle.properties || true
           chmod +x gradlew
 
+      - name: Prepare ephemeral debug signing key
+        run: |
+          debug_password="$(openssl rand -hex 24)"
+          keytool -genkeypair -noprompt \
+            -dname "cn=Debug Build" \
+            -alias debug \
+            -keypass "$debug_password" \
+            -keystore debug.keystore \
+            -keyalg RSA \
+            -storepass "$debug_password" \
+            -validity 1
+          {
+            echo "DEBUG_KEYSTORE_PASSWORD=$debug_password"
+            echo "DEBUG_KEY_PASSWORD=$debug_password"
+          } >> "$GITHUB_ENV"
+
       - name: Inspect Gradle dependencies
         run: ./gradlew dependencies --configuration debugRuntimeClasspath
 

@@ -34,3 +34,9 @@ Actually, if modifiers don't change between draws (e.g. key pressed animation), 
   }
 ```
 Even simpler: `KeyModifier.modify` caches internally? No, modifiers are specific to the view. Caching in Keyboard2View is perfect.
+## 2024-05-24 - Identifying Key Optimization
+**Learning:** The CI workflow  is failing because the  file checks for  and  if the  or  environment variable is set to true. The workflow doesn't provide these variables or create a temporary keystore like the main  workflow does.
+**Action:** Update  to include the key generation and environment variable setup for the debug keystore.
+## 2024-05-24 - Identifying Key Optimization
+**Learning:** The CI workflow `security-scan.yml` is failing because the `build.gradle.kts` file checks for `DEBUG_KEYSTORE_PASSWORD` and `DEBUG_KEY_PASSWORD` if the `CI` or `GITHUB_ACTIONS` environment variable is set to true. The workflow doesnt provide these variables or create a temporary keystore like the main `android.yml` workflow does.
+**Action:** Update `security-scan.yml` to include the key generation and environment variable setup for the debug keystore.
