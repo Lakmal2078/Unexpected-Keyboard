@@ -58,6 +58,19 @@ jobs:
             echo "DEBUG_KEY_PASSWORD=$debug_password"
           } >> "$GITHUB_ENV"
 
+      - name: Install Android NDK
+        run: sdkmanager "ndk;27.2.12479018"
+
+      - name: Build x86_64 native dictionary library
+        run: |
+          "$ANDROID_HOME/ndk/27.2.12479018/ndk-build" \\
+            NDK_PROJECT_PATH=. \\
+            APP_BUILD_SCRIPT=vendor/Android.mk \\
+            APP_ABI=x86_64 \\
+            APP_PLATFORM=android-21 \\
+            NDK_LIBS_OUT=libs
+          test -f libs/x86_64/libcdict_java.so
+
       - name: Run unit tests
         run: ./gradlew test
 
@@ -65,7 +78,7 @@ jobs:
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: 35
-          arch: arm64-v8a
+          arch: x86_64
           target: default
           script: ./gradlew connectedDebugAndroidTest
 
