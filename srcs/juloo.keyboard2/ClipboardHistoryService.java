@@ -66,6 +66,7 @@ public final class ClipboardHistoryService
     _paste_callback = null;
     if (_service != null)
     {
+      _service._listener = null;
       _service.clear_history();
       _service._cm.removePrimaryClipChangedListener(_service._system_listener);
       _service = null;
