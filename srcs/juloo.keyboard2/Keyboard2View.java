@@ -13,6 +13,11 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.accessibility.AccessibilityEvent;
+import android.os.Bundle;
+import androidx.customview.widget.ExploreByTouchHelper;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import java.util.ArrayList;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
@@ -52,6 +57,8 @@ public class Keyboard2View extends View
 
   private Theme _theme;
   private Theme.Computed _tc;
+  private final KeyboardAccessibilityHelper _accessibilityHelper;
+  private static final int ACCESSIBILITY_POINTER_ID = 0x7ffffffe;
 
   private static RectF _tmpRect = new RectF();
 
@@ -68,6 +75,9 @@ public class Keyboard2View extends View
     _theme = new Theme(getContext(), attrs);
     _config = Config.globalConfig();
     _pointers = new Pointers(this, _config);
+    _accessibilityHelper = new KeyboardAccessibilityHelper(this);
+    setFocusable(true);
+    setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
     refresh_navigation_bar(context);
     setHapticFeedbackEnabled(true);
     setOnTouchListener(this);
@@ -108,6 +118,7 @@ public class Keyboard2View extends View
   public void setKeyboard(KeyboardData kw)
   {
     _keyboard = kw;
+    _accessibilityHelper.invalidateRoot();
     _shift_key = _keyboard.findKeyWithValue(KeyValue.SHIFT);
     _compose_key = _keyboard.findKeyWithValue(KeyValue.COMPOSE);
     KeyModifier.set_modmap(_keyboard.modmap);
@@ -229,8 +240,9 @@ public class Keyboard2View extends View
     float y = _config.marginTop;
     if (ty < y)
       return null;
-    for (KeyboardData.Row row : _keyboard.rows)
+    for (int i = 0; i < _keyboard.rows.size(); i++)
     {
+      KeyboardData.Row row = _keyboard.rows.get(i);
       y += (row.shift + row.height) * _tc.row_height;
       if (ty < y)
         return row;
@@ -244,8 +256,9 @@ public class Keyboard2View extends View
     float x = _marginLeft;
     if (row == null || tx < x)
       return null;
-    for (KeyboardData.Key key : row.keys)
+    for (int i = 0; i < row.keys.size(); i++)
     {
+      KeyboardData.Key key = row.keys.get(i);
       float xLeft = x + key.shift * _keyWidth;
       float xRight = xLeft + key.width * _keyWidth;
       if (tx < xLeft)
@@ -286,6 +299,7 @@ public class Keyboard2View extends View
       (int)(_tc.row_height * _keyboard.keysHeight
           + _config.marginTop + _marginBottom);
     setMeasuredDimension(width, height);
+    _accessibilityHelper.invalidateRoot();
   }
 
   Rect _cached_exclusion_rect = new Rect();
@@ -352,13 +366,15 @@ public class Keyboard2View extends View
     }
 
     float y = _tc.margin_top;
-    for (KeyboardData.Row row : _keyboard.rows)
+    for (int rowIndex = 0; rowIndex < _keyboard.rows.size(); rowIndex++)
     {
+      KeyboardData.Row row = _keyboard.rows.get(rowIndex);
       y += row.shift * _tc.row_height;
       float x = _marginLeft + _tc.margin_left;
       float keyH = row.height * _tc.row_height - _tc.vertical_margin;
-      for (KeyboardData.Key k : row.keys)
+      for (int keyIndex = 0; keyIndex < row.keys.size(); keyIndex++)
       {
+        KeyboardData.Key k = row.keys.get(keyIndex);
         x += k.shift * _keyWidth;
         float keyW = _keyWidth * k.width - _tc.horizontal_margin;
         boolean isKeyDown = _pointers.isKeyDown(k);
@@ -387,6 +403,170 @@ public class Keyboard2View extends View
       }
       y += row.height * _tc.row_height;
     }
+  }
+
+  /** Number of virtual key nodes exposed to accessibility services. */
+  int accessibilityKeyCount()
+  {
+    if (_keyboard == null)
+      return 0;
+    int count = 0;
+    for (int i = 0; i < _keyboard.rows.size(); i++)
+      count += _keyboard.rows.get(i).keys.size();
+    return count;
+  }
+
+  KeyboardData.Key accessibilityKeyAt(int index)
+  {
+    if (_keyboard == null || index < 0)
+      return null;
+    for (int i = 0; i < _keyboard.rows.size(); i++)
+    {
+      List<KeyboardData.Key> keys = _keyboard.rows.get(i).keys;
+      if (index < keys.size())
+        return keys.get(index);
+      index -= keys.size();
+    }
+    return null;
+  }
+
+  /** Set virtual key bounds in this view's local coordinates. */
+  void accessibilityBounds(int keyIndex, Rect out)
+  {
+    if (_keyboard == null || _tc == null || keyIndex < 0)
+    {
+      out.setEmpty();
+      return;
+    }
+    int index = 0;
+    float y = _tc.margin_top;
+    for (int rowIndex = 0; rowIndex < _keyboard.rows.size(); rowIndex++)
+    {
+      KeyboardData.Row row = _keyboard.rows.get(rowIndex);
+      y += row.shift * _tc.row_height;
+      float x = _marginLeft + _tc.margin_left;
+      float keyH = row.height * _tc.row_height - _tc.vertical_margin;
+      for (int keyIndexInRow = 0; keyIndexInRow < row.keys.size(); keyIndexInRow++)
+      {
+        KeyboardData.Key key = row.keys.get(keyIndexInRow);
+        x += key.shift * _keyWidth;
+        float keyW = _keyWidth * key.width - _tc.horizontal_margin;
+        if (index == keyIndex)
+        {
+          out.set((int)Math.floor(x), (int)Math.floor(y),
+              (int)Math.ceil(x + keyW), (int)Math.ceil(y + keyH));
+          return;
+        }
+        index++;
+        x += _keyWidth * key.width;
+      }
+      y += row.height * _tc.row_height;
+    }
+    out.setEmpty();
+  }
+
+  boolean performAccessibilityClick(int keyIndex)
+  {
+    KeyboardData.Key key = accessibilityKeyAt(keyIndex);
+    if (key == null || key.keys[0] == null)
+      return false;
+    Rect bounds = new Rect();
+    accessibilityBounds(keyIndex, bounds);
+    if (bounds.isEmpty())
+      return false;
+    float x = (bounds.left + bounds.right) / 2f;
+    float y = (bounds.top + bounds.bottom) / 2f;
+    _pointers.onTouchDown(x, y, ACCESSIBILITY_POINTER_ID, key);
+    _pointers.onTouchUp(ACCESSIBILITY_POINTER_ID);
+    return true;
+  }
+
+  static String accessibilityLabelForKey(KeyboardData.Key key)
+  {
+    if (key == null)
+      return "Keyboard key";
+    KeyValue value = key.keys[0];
+    if (value == null)
+    {
+      for (int i = 1; i < key.keys.length; i++)
+      {
+        if (key.keys[i] != null)
+        {
+          value = key.keys[i];
+          break;
+        }
+      }
+    }
+    if (value == null)
+      return "Empty key";
+
+    switch (value.getKind())
+    {
+      case Editing:
+        switch (value.getEditing())
+        {
+          case BACKSPACE: return "Backspace";
+          case FORWARD_DELETE_WORD: return "Forward delete word";
+          case DELETE_WORD: return "Delete word";
+          case SPACE_BAR: return "Space";
+          case COPY: return "Copy";
+          case CUT: return "Cut";
+          case PASTE: return "Paste";
+          case PASTE_PLAIN: return "Paste as plain text";
+          case SELECT_ALL: return "Select all";
+          case UNDO: return "Undo";
+          case REDO: return "Redo";
+          default: return humanize(value.getEditing().name());
+        }
+      case Modifier:
+        switch (value.getModifier())
+        {
+          case SHIFT: return "Shift";
+          case CTRL: return "Control";
+          case ALT: return "Alt";
+          case META: return "Meta";
+          case FN: return "Function";
+          default: return humanize(value.getModifier().name());
+        }
+      case Event:
+        switch (value.getEvent())
+        {
+          case HIDE_SELF: return "Hide keyboard";
+          case CHANGE_METHOD_PICKER: return "Change keyboard";
+          case SWITCH_TEXT: return "Switch to text layout";
+          case SWITCH_NUMERIC: return "Switch to numeric layout";
+          case SWITCH_EMOJI: return "Open emoji keyboard";
+          case SWITCH_CLIPBOARD: return "Open clipboard history";
+          case SWITCH_VOICE_TYPING: return "Voice typing";
+          default: return humanize(value.getEvent().name());
+        }
+      default:
+        String label = value.getString();
+        return (label == null || label.length() == 0)
+            ? humanize(value.getKind().name()) : label;
+    }
+  }
+
+  private static String humanize(String value)
+  {
+    String lower = value.replace('_', ' ').toLowerCase(java.util.Locale.ROOT);
+    if (lower.length() == 0)
+      return "Keyboard key";
+    return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
+  }
+
+  @Override
+  public boolean dispatchHoverEvent(MotionEvent event)
+  {
+    return _accessibilityHelper.dispatchHoverEvent(event)
+        || super.dispatchHoverEvent(event);
+  }
+
+  @Override
+  public void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect)
+  {
+    super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+    _accessibilityHelper.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
   }
 
   @Override
@@ -503,5 +683,68 @@ public class Keyboard2View extends View
     float smaller_font = k.hasFlagsAny(KeyValue.FLAG_SMALLER_FONT) ? 0.75f : 1.f;
     float label_size = main_label ? _mainLabelSize : _subLabelSize;
     return label_size * smaller_font;
+  }
+
+  /** Exposes each drawn key as a focusable virtual node for TalkBack. */
+  private static final class KeyboardAccessibilityHelper extends ExploreByTouchHelper
+  {
+    private final Keyboard2View _host;
+    private final Rect _bounds = new Rect();
+
+    KeyboardAccessibilityHelper(Keyboard2View host)
+    {
+      super(host);
+      _host = host;
+    }
+
+    @Override
+    protected int getVirtualViewAt(float x, float y)
+    {
+      int count = _host.accessibilityKeyCount();
+      for (int i = 0; i < count; i++)
+      {
+        _host.accessibilityBounds(i, _bounds);
+        if (_bounds.contains((int)x, (int)y))
+          return i;
+      }
+      return INVALID_ID;
+    }
+
+    @Override
+    protected void getVisibleVirtualViews(List<Integer> virtualViewIds)
+    {
+      int count = _host.accessibilityKeyCount();
+      for (int i = 0; i < count; i++)
+        virtualViewIds.add(i);
+    }
+
+    @Override
+    protected void onPopulateNodeForVirtualView(int virtualViewId,
+        AccessibilityNodeInfoCompat node)
+    {
+      KeyboardData.Key key = _host.accessibilityKeyAt(virtualViewId);
+      _host.accessibilityBounds(virtualViewId, _bounds);
+      node.setBoundsInParent(_bounds);
+      node.setClassName("android.widget.Button");
+      node.setText(Keyboard2View.accessibilityLabelForKey(key));
+      node.setContentDescription(Keyboard2View.accessibilityLabelForKey(key));
+      node.setClickable(true);
+      node.setFocusable(true);
+      node.setEnabled(key != null && key.keys[0] != null);
+      node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK);
+    }
+
+    @Override
+    protected boolean onPerformActionForVirtualView(int virtualViewId,
+        int action, Bundle arguments)
+    {
+      if (action == AccessibilityNodeInfoCompat.ACTION_CLICK
+          && _host.performAccessibilityClick(virtualViewId))
+      {
+        sendEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_CLICKED);
+        return true;
+      }
+      return false;
+    }
   }
 }
