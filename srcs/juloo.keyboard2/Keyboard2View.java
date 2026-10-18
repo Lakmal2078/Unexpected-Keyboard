@@ -17,7 +17,6 @@ import android.view.accessibility.AccessibilityEvent;
 import android.os.Bundle;
 import androidx.customview.widget.ExploreByTouchHelper;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import java.util.ArrayList;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
@@ -468,17 +467,35 @@ public class Keyboard2View extends View
   boolean performAccessibilityClick(int keyIndex)
   {
     KeyboardData.Key key = accessibilityKeyAt(keyIndex);
-    if (key == null || key.keys[0] == null)
+    if (key == null)
       return false;
-    Rect bounds = new Rect();
-    accessibilityBounds(keyIndex, bounds);
-    if (bounds.isEmpty())
-      return false;
-    float x = (bounds.left + bounds.right) / 2f;
-    float y = (bounds.top + bounds.bottom) / 2f;
-    _pointers.onTouchDown(x, y, ACCESSIBILITY_POINTER_ID, key);
-    _pointers.onTouchUp(ACCESSIBILITY_POINTER_ID);
-    return true;
+    if (key.keys[0] != null)
+    {
+      Rect bounds = new Rect();
+      accessibilityBounds(keyIndex, bounds);
+      if (bounds.isEmpty())
+        return false;
+      float x = (bounds.left + bounds.right) / 2f;
+      float y = (bounds.top + bounds.bottom) / 2f;
+      _pointers.onTouchDown(x, y, ACCESSIBILITY_POINTER_ID, key);
+      _pointers.onTouchUp(ACCESSIBILITY_POINTER_ID);
+      return true;
+    }
+    // Some custom layouts define a key only through a directional/sublabel value.
+    // Activate its first defined value instead of exposing an inert virtual button.
+    for (int i = 1; i < key.keys.length; i++)
+    {
+      if (key.keys[i] != null)
+      {
+        KeyValue value = modifyKey(key.keys[i], _mods);
+        if (value == null)
+          return false;
+        onPointerDown(value, false);
+        onPointerUp(value, _mods);
+        return true;
+      }
+    }
+    return false;
   }
 
   static String accessibilityLabelForKey(KeyboardData.Key key)
@@ -730,8 +747,11 @@ public class Keyboard2View extends View
       node.setContentDescription(Keyboard2View.accessibilityLabelForKey(key));
       node.setClickable(true);
       node.setFocusable(true);
-      node.setEnabled(key != null && key.keys[0] != null);
-      node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK);
+      node.setEnabled(key != null
+          && !"Empty key".equals(Keyboard2View.accessibilityLabelForKey(key)));
+      if (key != null
+          && !"Empty key".equals(Keyboard2View.accessibilityLabelForKey(key)))
+        node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK);
     }
 
     @Override
