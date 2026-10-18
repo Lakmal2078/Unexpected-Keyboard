@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.os.Bundle;
 import androidx.customview.widget.ExploreByTouchHelper;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.Window;
 import android.view.WindowInsets;
@@ -75,6 +76,7 @@ public class Keyboard2View extends View
     _config = Config.globalConfig();
     _pointers = new Pointers(this, _config);
     _accessibilityHelper = new KeyboardAccessibilityHelper(this);
+    ViewCompat.setAccessibilityDelegate(this, _accessibilityHelper);
     setFocusable(true);
     setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
     refresh_navigation_bar(context);
@@ -487,11 +489,12 @@ public class Keyboard2View extends View
     {
       if (key.keys[i] != null)
       {
-        KeyValue value = modifyKey(key.keys[i], _mods);
+        Pointers.Modifiers mods = _mods;
+        KeyValue value = modifyKey(key.keys[i], mods);
         if (value == null)
           return false;
         onPointerDown(value, false);
-        onPointerUp(value, _mods);
+        onPointerUp(value, mods);
         return true;
       }
     }
