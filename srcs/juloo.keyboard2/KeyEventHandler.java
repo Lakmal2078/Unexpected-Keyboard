@@ -697,11 +697,16 @@ public final class KeyEventHandler
     if (_sinhala_buffer.length() > 0 && conn != null)
     {
       String committedSinhala = SinhalaTransliterator.transliterateWord(_sinhala_buffer.toString());
-      conn.finishComposingText();
-      conn.commitText(" ", 1);
+      if (_config.space_bar_auto_complete && _suggestions.count > 0
+          && _suggestions.suggestions[0] != null
+          && !_suggestions.suggestions[0].equals(_sinhala_buffer.toString()))
+      {
+        committedSinhala = _suggestions.suggestions[0];
+      }
+      conn.commitText(committedSinhala + " ", 1);
       _sinhala_buffer.setLength(0);
       _suggestions.clear();
-      java.util.List<String> nextWords = SinhalaTransliterator.getNextWordPredictions(committedSinhala);
+      java.util.List<String> nextWords = SinhalaTransliterator.getNextWordPredictions(committedSinhala.trim());
       if (!nextWords.isEmpty() && _config.suggestions_enabled)
       {
         _suggestions.set_predictions(nextWords);

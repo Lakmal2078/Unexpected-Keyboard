@@ -200,6 +200,50 @@ public class SinhalaTransliteratorTest
     assertEquals("කොහොමද", SinhalaTransliterator.transliterate("kohomadha"));
   }
 
+  @Test
+  public void testInitialCapitalLetters()
+  {
+    assertEquals("මම", SinhalaTransliterator.transliterate("Mama"));
+    assertEquals("කොහොමද", SinhalaTransliterator.transliterate("Kohomada"));
+    assertEquals("ලංකා", SinhalaTransliterator.transliterate("Lanka"));
+    assertEquals("සුබ", SinhalaTransliterator.transliterate("Suba"));
+    assertEquals("අපි", SinhalaTransliterator.transliterate("Api"));
+    assertEquals("ඔයා", SinhalaTransliterator.transliterate("Oya"));
+    assertEquals("ම්", SinhalaTransliterator.transliterate("M"));
+    assertEquals("ක්", SinhalaTransliterator.transliterate("K"));
+    assertEquals("ම", SinhalaTransliterator.transliterate("Ma"));
+    assertEquals("ක", SinhalaTransliterator.transliterate("Ka"));
+  }
+
+  @Test
+  public void testAedaPillaAndPhonetics()
+  {
+    assertEquals("සැ", SinhalaTransliterator.transliterate("sae"));
+    assertEquals("සෑ", SinhalaTransliterator.transliterate("saae"));
+    assertEquals("සැප", SinhalaTransliterator.transliterate("saepa"));
+    assertEquals("සැක", SinhalaTransliterator.transliterate("saeka"));
+    assertEquals("සැලසුම", SinhalaTransliterator.transliterate("saelasuma"));
+
+    java.util.List<String> sepaSug = SinhalaTransliterator.getSuggestions("sepa");
+    assertTrue("sepa should suggest සැප", sepaSug.contains("සැප"));
+
+    java.util.List<String> saeSug = SinhalaTransliterator.getSuggestions("sae");
+    assertEquals("සැ", saeSug.get(0));
+  }
+
+  @Test
+  public void testPrefixSuggestionsForPlacesAndCountries()
+  {
+    java.util.List<String> colomSug = SinhalaTransliterator.getSuggestions("colom");
+    assertTrue("colom should suggest කොළඹ", colomSug.contains("කොළඹ"));
+
+    java.util.List<String> lankSug = SinhalaTransliterator.getSuggestions("lank");
+    assertTrue("lank should suggest ලංකාව", lankSug.contains("ලංකාව"));
+
+    java.util.List<String> gampSug = SinhalaTransliterator.getSuggestions("gamp");
+    assertTrue("gamp should suggest ගම්පහ", gampSug.contains("ගම්පහ"));
+  }
+
   public static void main(String[] args)
   {
     SinhalaTransliteratorTest test = new SinhalaTransliteratorTest();

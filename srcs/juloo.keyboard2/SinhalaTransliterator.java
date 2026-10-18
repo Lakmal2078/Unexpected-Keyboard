@@ -121,15 +121,210 @@ public final class SinhalaTransliterator
     COMMON_WORDS.put("mahela", "මහේල");
     COMMON_WORDS.put("kumar", "කුමාර්");
 
-    // Common places
+    // Common places, towns, and villages
     COMMON_WORDS.put("colombo", "කොළඹ");
+    COMMON_WORDS.put("kolamba", "කොළඹ");
     COMMON_WORDS.put("kandy", "මහනුවර");
+    COMMON_WORDS.put("mahanuwara", "මහනුවර");
+    COMMON_WORDS.put("nuwara", "නුවර");
     COMMON_WORDS.put("galle", "ගාල්ල");
     COMMON_WORDS.put("jaffna", "යාපනය");
+    COMMON_WORDS.put("yapane", "යාපනය");
     COMMON_WORDS.put("matara", "මාතර");
     COMMON_WORDS.put("kurunegala", "කුරුණෑගල");
     COMMON_WORDS.put("gampaha", "ගම්පහ");
-    COMMON_WORDS.put("anuradhapura", "අනුරාධපුර");
+    COMMON_WORDS.put("kalutara", "කළුතර");
+    COMMON_WORDS.put("negombo", "මීගමුව");
+    COMMON_WORDS.put("meegamuwa", "මීගමුව");
+    COMMON_WORDS.put("anuradhapura", "අනුරාධපුරය");
+    COMMON_WORDS.put("anuradhapuraya", "අනුරාධපුරය");
+    COMMON_WORDS.put("polonnaruwa", "පොළොන්නරුව");
+    COMMON_WORDS.put("badulla", "බදුල්ල");
+    COMMON_WORDS.put("bandarawela", "බණ්ඩාරවෙල");
+    COMMON_WORDS.put("ratnapura", "රත්නපුර");
+    COMMON_WORDS.put("kegalle", "කෑගල්ල");
+    COMMON_WORDS.put("trincomalee", "ත්‍රිකුණාමලය");
+    COMMON_WORDS.put("thrikunamalaya", "ත්‍රිකුණාමලය");
+    COMMON_WORDS.put("batticaloa", "මඩකලපුව");
+    COMMON_WORDS.put("madakalapuwa", "මඩකලපුව");
+    COMMON_WORDS.put("ampara", "අම්පාර");
+    COMMON_WORDS.put("matale", "මාතලේ");
+    COMMON_WORDS.put("nuwaraeliya", "නුවරඑළිය");
+    COMMON_WORDS.put("monaragala", "මොනරාගල");
+    COMMON_WORDS.put("puttalam", "පුත්තලම");
+    COMMON_WORDS.put("puththalama", "පුත්තලම");
+    COMMON_WORDS.put("mannar", "මන්නාරම");
+    COMMON_WORDS.put("mannarama", "මන්නාරම");
+    COMMON_WORDS.put("vavuniya", "වවුනියාව");
+    COMMON_WORDS.put("kilinochchi", "කිලිනොච්චිය");
+    COMMON_WORDS.put("mullaitivu", "මුලතිව්");
+    COMMON_WORDS.put("moratuwa", "මොරටුව");
+    COMMON_WORDS.put("panadura", "පානදුර");
+    COMMON_WORDS.put("horana", "හොරණ");
+    COMMON_WORDS.put("maharagama", "මහරගම");
+    COMMON_WORDS.put("nugegoda", "නුගේගොඩ");
+    COMMON_WORDS.put("kottawa", "කොට්ටාව");
+    COMMON_WORDS.put("homagama", "හෝමාගම");
+    COMMON_WORDS.put("kaduwela", "කඩුවෙල");
+    COMMON_WORDS.put("malabe", "මාලබේ");
+    COMMON_WORDS.put("battaramulla", "බත්තරමුල්ල");
+    COMMON_WORDS.put("dehiwala", "දෙහිවල");
+    COMMON_WORDS.put("mountlavinia", "ගල්කිස්ස");
+    COMMON_WORDS.put("galkissa", "ගල්කිස්ස");
+    COMMON_WORDS.put("wattala", "වත්තල");
+    COMMON_WORDS.put("jaela", "ජාඇල");
+    COMMON_WORDS.put("chilaw", "හලාවත");
+    COMMON_WORDS.put("halawatha", "හලාවත");
+    COMMON_WORDS.put("tangalle", "තංගල්ල");
+    COMMON_WORDS.put("avissawella", "අවිස්සාවේල්ල");
+    COMMON_WORDS.put("beruwala", "බේරුවල");
+    COMMON_WORDS.put("aluthgama", "අලුත්ගම");
+    COMMON_WORDS.put("balangoda", "බලන්ගොඩ");
+    COMMON_WORDS.put("embilipitiya", "ඇඹිලිපිටිය");
+    COMMON_WORDS.put("kuliyapitiya", "කුලියපිටිය");
+    COMMON_WORDS.put("katunayake", "කටුනායක");
+    COMMON_WORDS.put("dambulla", "දඹුල්ල");
+    COMMON_WORDS.put("sigiriya", "සීගිරිය");
+    COMMON_WORDS.put("ella", "ඇල්ල");
+    COMMON_WORDS.put("mirissa", "මිරිස්ස");
+    COMMON_WORDS.put("unawatuna", "උණවටුන");
+    COMMON_WORDS.put("hikkaduwa", "හික්කඩුව");
+    COMMON_WORDS.put("bentota", "බෙන්තොට");
+    COMMON_WORDS.put("peradeniya", "පේරාදෙණිය");
+    COMMON_WORDS.put("weligama", "වැලිගම");
+
+    // Countries & Regions
+    COMMON_WORDS.put("srilanka", "ශ්‍රී ලංකාව");
+    COMMON_WORDS.put("india", "ඉන්දියාව");
+    COMMON_WORDS.put("indiyawa", "ඉන්දියාව");
+    COMMON_WORDS.put("america", "ඇමරිකාව");
+    COMMON_WORDS.put("amerikawa", "ඇමරිකාව");
+    COMMON_WORDS.put("england", "එංගලන්තය");
+    COMMON_WORDS.put("englanthaya", "එංගලන්තය");
+    COMMON_WORDS.put("australia", "ඕස්ට්‍රේලියාව");
+    COMMON_WORDS.put("ostreliyawa", "ඕස්ට්‍රේලියාව");
+    COMMON_WORDS.put("canada", "කැනඩාව");
+    COMMON_WORDS.put("kanadawa", "කැනඩාව");
+    COMMON_WORDS.put("japan", "ජපානය");
+    COMMON_WORDS.put("japanaya", "ජපානය");
+    COMMON_WORDS.put("china", "චීනය");
+    COMMON_WORDS.put("chinaya", "චීනය");
+    COMMON_WORDS.put("russia", "රුසියාව");
+    COMMON_WORDS.put("rushiyawa", "රුසියාව");
+    COMMON_WORDS.put("dubai", "ඩුබායි");
+    COMMON_WORDS.put("italy", "ඉතාලිය");
+    COMMON_WORDS.put("ithaliya", "ඉතාලිය");
+    COMMON_WORDS.put("france", "ප්‍රංශය");
+    COMMON_WORDS.put("pranshaya", "ප්‍රංශය");
+    COMMON_WORDS.put("germany", "ජර්මනිය");
+    COMMON_WORDS.put("jarmaniya", "ජර්මනිය");
+    COMMON_WORDS.put("singapore", "සිංගප්පූරුව");
+    COMMON_WORDS.put("singappuruwa", "සිංගප්පූරුව");
+    COMMON_WORDS.put("malaysia", "මැලේසියාව");
+    COMMON_WORDS.put("maleshiyawa", "මැලේසියාව");
+    COMMON_WORDS.put("korea", "කොරියාව");
+    COMMON_WORDS.put("koriyawa", "කොරියාව");
+    COMMON_WORDS.put("pakistan", "පාකිස්ථානය");
+    COMMON_WORDS.put("pakisthanaya", "පාකිස්ථානය");
+    COMMON_WORDS.put("bangladesh", "බංග්ලාදේශය");
+    COMMON_WORDS.put("saudi", "සවුදි අරාබිය");
+    COMMON_WORDS.put("saudiya", "සවුදි අරාබිය");
+    COMMON_WORDS.put("qatar", "කටාර්");
+    COMMON_WORDS.put("kuwait", "කුවේට්");
+    COMMON_WORDS.put("oman", "ඕමානය");
+    COMMON_WORDS.put("newzealand", "නවසීලන්තය");
+    COMMON_WORDS.put("switzerland", "ස්විට්සර්ලන්තය");
+    COMMON_WORDS.put("thailand", "තායිලන්තය");
+    COMMON_WORDS.put("maldives", "මාලදිවයින");
+
+    // Additional popular personal names
+    COMMON_WORDS.put("nadeeka", "නදීකා");
+    COMMON_WORDS.put("sanduni", "සඳුනි");
+    COMMON_WORDS.put("anusha", "අනුෂා");
+    COMMON_WORDS.put("dilani", "දිලානි");
+    COMMON_WORDS.put("chathurika", "චතුරිකා");
+    COMMON_WORDS.put("ishara", "ඉෂාරා");
+    COMMON_WORDS.put("malsha", "මල්ෂා");
+    COMMON_WORDS.put("kavindi", "කාවින්දි");
+    COMMON_WORDS.put("dinithi", "දිනිති");
+    COMMON_WORDS.put("oshadi", "ඔෂධී");
+    COMMON_WORDS.put("chamari", "චමරි");
+    COMMON_WORDS.put("thilini", "තිළිණි");
+    COMMON_WORDS.put("piyumi", "පියුමි");
+    COMMON_WORDS.put("hasini", "හසිනි");
+    COMMON_WORDS.put("chalani", "චලනි");
+    COMMON_WORDS.put("kavinda", "කාවින්ද");
+    COMMON_WORDS.put("sachin", "සචින්");
+    COMMON_WORDS.put("akila", "අකිල");
+    COMMON_WORDS.put("malinda", "මලින්ද");
+    COMMON_WORDS.put("ashan", "අශාන්");
+    COMMON_WORDS.put("tharaka", "තාරක");
+    COMMON_WORDS.put("madhava", "මාධව");
+    COMMON_WORDS.put("sanka", "සංඛ");
+    COMMON_WORDS.put("harsha", "හර්ෂ");
+    COMMON_WORDS.put("indika", "ඉන්දික");
+    COMMON_WORDS.put("janaka", "ජනක");
+    COMMON_WORDS.put("manoj", "මනෝජ්");
+    COMMON_WORDS.put("asanka", "අසංක");
+    COMMON_WORDS.put("suranga", "සුරංග");
+    COMMON_WORDS.put("gayan", "ගයාන්");
+    COMMON_WORDS.put("chanaka", "චානක");
+    COMMON_WORDS.put("nadeesh", "නදීෂ්");
+    COMMON_WORDS.put("supun", "සුපුන්");
+    COMMON_WORDS.put("hasitha", "හසිත");
+
+    // Frequent words with 'සැ' / 'සෑ' / 'ැ' / 'ෑ'
+    COMMON_WORDS.put("sae", "සැ");
+    COMMON_WORDS.put("saae", "සෑ");
+    COMMON_WORDS.put("saepa", "සැප");
+    COMMON_WORDS.put("sepa", "සැප");
+    COMMON_WORDS.put("saepak", "සැපක්");
+    COMMON_WORDS.put("sepak", "සැපක්");
+    COMMON_WORDS.put("saema", "සැම");
+    COMMON_WORDS.put("sema", "සැම");
+    COMMON_WORDS.put("saemata", "සැමට");
+    COMMON_WORDS.put("semata", "සැමට");
+    COMMON_WORDS.put("saemiya", "සැමියා");
+    COMMON_WORDS.put("semiya", "සැමියා");
+    COMMON_WORDS.put("saemiyage", "සැමියාගේ");
+    COMMON_WORDS.put("semiyage", "සැමියාගේ");
+    COMMON_WORDS.put("saera", "සැර");
+    COMMON_WORDS.put("sera", "සැර");
+    COMMON_WORDS.put("saerayak", "සැරයක්");
+    COMMON_WORDS.put("serayak", "සැරයක්");
+    COMMON_WORDS.put("saeka", "සැක");
+    COMMON_WORDS.put("seka", "සැක");
+    COMMON_WORDS.put("saekayak", "සැකයක්");
+    COMMON_WORDS.put("sekayak", "සැකයක්");
+    COMMON_WORDS.put("saelasuma", "සැලසුම");
+    COMMON_WORDS.put("selasuma", "සැලසුම");
+    COMMON_WORDS.put("saelasum", "සැලසුම්");
+    COMMON_WORDS.put("selasum", "සැලසුම්");
+    COMMON_WORDS.put("saehenna", "සෑහෙන්න");
+    COMMON_WORDS.put("sehenna", "සෑහෙන්න");
+    COMMON_WORDS.put("saehena", "සෑහෙන");
+    COMMON_WORDS.put("sehena", "සෑහෙන");
+    COMMON_WORDS.put("saehaellu", "සැහැල්ලු");
+    COMMON_WORDS.put("sehallu", "සැහැල්ලු");
+    COMMON_WORDS.put("saendawa", "සැන්දෑව");
+    COMMON_WORDS.put("sendawa", "සැන්දෑව");
+    COMMON_WORDS.put("saepthembar", "සැප්තැම්බර්");
+    COMMON_WORDS.put("september", "සැප්තැම්බර්");
+    COMMON_WORDS.put("waeda", "වැඩ");
+    COMMON_WORDS.put("waedak", "වැඩක්");
+    COMMON_WORDS.put("baehari", "බැහැරි");
+    COMMON_WORDS.put("baeri", "බැරි");
+    COMMON_WORDS.put("baeha", "බැහැ");
+    COMMON_WORDS.put("naeha", "නැහැ");
+    COMMON_WORDS.put("aethi", "ඇති");
+    COMMON_WORDS.put("aethak", "ඈතක්");
+    COMMON_WORDS.put("aetha", "ඈත");
+    COMMON_WORDS.put("paeni", "පැණි");
+    COMMON_WORDS.put("paeththe", "පැත්තේ");
+    COMMON_WORDS.put("paeththa", "පැත්ත");
+    COMMON_WORDS.put("haema", "හැම");
+    COMMON_WORDS.put("haemoma", "හැමෝම");
+    COMMON_WORDS.put("daen", "දැන්");
 
     // Everyday pronouns, verbs, and nouns
     COMMON_WORDS.put("mama", "මම");
@@ -414,6 +609,8 @@ public final class SinhalaTransliterator
     {"aae", "\u0D88"}, // ඈ
     {"aau", "\u0D96"}, // ඖ
     {"ae", "\u0D87"},  // ඇ
+    {"æ", "\u0D87"},   // ඇ
+    {"ǣ", "\u0D88"},   // ඈ
     {"aa", "\u0D86"},  // ආ
     {"A", "\u0D86"},   // ආ
     {"ii", "\u0D8A"},  // ඊ
@@ -441,6 +638,8 @@ public final class SinhalaTransliterator
     {"aae", "\u0DD1"}, // ෑ
     {"aau", "\u0DDE"}, // ෞ
     {"ae", "\u0DD0"},  // ැ
+    {"æ", "\u0DD0"},   // ැ
+    {"ǣ", "\u0DD1"},   // ෑ
     {"aa", "\u0DCF"},  // ා
     {"A", "\u0DCF"},   // ා
     {"ii", "\u0DD3"},  // ී
@@ -473,16 +672,21 @@ public final class SinhalaTransliterator
     {"mmb", "\u0DB9"},  // ඹ
     {"nnd", "\u0DAC"},  // ඬ
     {"kh", "\u0D9B"},  // ඛ
+    {"Kh", "\u0D9B"},  // ඛ
     {"gh", "\u0D9D"},  // ඝ
+    {"Gh", "\u0D9D"},  // ඝ
     {"Ch", "\u0DA1"},  // ඡ
     {"ch", "\u0DA0"},  // ච
     {"jh", "\u0DA3"},  // ඣ
+    {"Jh", "\u0DA3"},  // ඣ
     {"Th", "\u0DAE"},  // ථ
     {"Dh", "\u0DAA"},  // ඪ
     {"th", "\u0DAD"},  // ත
     {"dh", "\u0DB0"},  // ධ
     {"ph", "\u0DB5"},  // ඵ
+    {"Ph", "\u0DB5"},  // ඵ
     {"bh", "\u0DB7"},  // භ
+    {"Bh", "\u0DB7"},  // භ
     {"sh", "\u0DC1"},  // ශ
     {"Sh", "\u0DC2"},  // ෂ
     {"ny", "\u0DA4"},  // ඤ
@@ -494,9 +698,13 @@ public final class SinhalaTransliterator
     {"mb", "\u0DB9"},  // ඹ
     {"ng", "\u0D9F"},  // ඟ
     {"k", "\u0D9A"},   // ක
+    {"K", "\u0D9A"},   // ක
     {"g", "\u0D9C"},   // ග
+    {"G", "\u0D9C"},   // ග
     {"c", "\u0DA0"},   // ච
+    {"C", "\u0DA0"},   // ච
     {"j", "\u0DA2"},   // ජ
+    {"J", "\u0DA2"},   // ජ
     {"T", "\u0DA8"},   // ඨ
     {"t", "\u0DA7"},   // ට
     {"D", "\u0DA9"},   // ඩ
@@ -504,19 +712,29 @@ public final class SinhalaTransliterator
     {"N", "\u0DAB"},   // ණ
     {"n", "\u0DB1"},   // න
     {"p", "\u0DB4"},   // ප
+    {"P", "\u0DB4"},   // ප
     {"b", "\u0DB6"},   // බ
+    {"B", "\u0DB6"},   // බ
     {"m", "\u0DB8"},   // ම
+    {"M", "\u0DB8"},   // ම
     {"y", "\u0DBA"},   // ය
+    {"Y", "\u0DBA"},   // ය
     {"r", "\u0DBB"},   // ර
+    {"R", "\u0DBB"},   // ර
     {"L", "\u0DC5"},   // ළ
     {"l", "\u0DBD"},   // ල
     {"v", "\u0DC0"},   // ව
+    {"V", "\u0DC0"},   // ව
     {"w", "\u0DC0"},   // ව
+    {"W", "\u0DC0"},   // ව
     {"s", "\u0DC3"},   // ස
     {"S", "\u0DC2"},   // ෂ
     {"h", "\u0DC4"},   // හ
+    {"H", "\u0DC4"},   // හ
     {"f", "\u0DC6"},   // ෆ
-    {"x", "\u0D82"}    // ං (Anusvaraya)
+    {"F", "\u0DC6"},   // ෆ
+    {"x", "\u0D82"},   // ං (Anusvaraya)
+    {"X", "\u0D82"}    // ං (Anusvaraya)
   };
 
   private static final String VIRAMA = "\u0DCA"; // ්
@@ -577,14 +795,25 @@ public final class SinhalaTransliterator
       return COMMON_WORDS.get(lower);
     }
 
+    // Handle initial capital letter caused by autocapitalisation (e.g. Mama, Kohomada, Lanka, Api, Oya, Suba)
+    if (word.length() > 1 && Character.isUpperCase(word.charAt(0)) && Character.isLowerCase(word.charAt(1)))
+    {
+      String lowerFirst = Character.toLowerCase(word.charAt(0)) + word.substring(1);
+      if (COMMON_WORDS.containsKey(lowerFirst.toLowerCase()))
+      {
+        return COMMON_WORDS.get(lowerFirst.toLowerCase());
+      }
+      return parsePhonetic(lowerFirst);
+    }
+
     return parsePhonetic(word);
   }
 
   /**
-   * Return up to 3 candidate suggestions for a typed word (Helakuru-like):
-   * 0: Best transliteration (e.g. ලක්මාල් for lakmal)
-   * 1: Alternative phonetic variation (e.g. ලක්මල්)
-   * 2: Original typed English word (e.g. lakmal)
+   * Return candidate suggestions for a typed word (Helakuru-like):
+   * 0: Best prefix completion or primary transliteration (e.g. කොළඹ for colom, ලංකාව for lank)
+   * 1: Phonetic variation or literal typed transliteration (e.g. සැ for sae, සෑ for saae)
+   * 2: Original typed English word (e.g. colom, sae)
    */
   public static java.util.List<String> getSuggestions(String word)
   {
@@ -592,64 +821,108 @@ public final class SinhalaTransliterator
     if (word == null || word.isEmpty())
       return list;
 
-    String primary = transliterateWord(word);
-    list.add(primary);
+    String trimmed = word.trim();
+    String lower = trimmed.toLowerCase();
 
-    String phonetic = parsePhonetic(word);
-    if (!phonetic.isEmpty() && !phonetic.equals(primary) && !list.contains(phonetic))
+    // If word starts with capital letter, also consider lowercased version for suggestions
+    String lowerFirst = (trimmed.length() > 1 && Character.isUpperCase(trimmed.charAt(0)))
+        ? Character.toLowerCase(trimmed.charAt(0)) + trimmed.substring(1)
+        : null;
+
+    // 1. Direct match in COMMON_WORDS
+    if (COMMON_WORDS.containsKey(lower))
+    {
+      list.add(COMMON_WORDS.get(lower));
+    }
+
+    // 2. Direct transliteration (primary interpretation)
+    String primary = transliterateWord(trimmed);
+    if (!list.contains(primary))
+    {
+      list.add(primary);
+    }
+
+    // 3. Prefix autocompletion from dictionary for places, countries, names, and frequent words
+    // e.g. "colom" -> "කොළඹ", "lank" -> "ලංකාව", "kand" -> "මහනුවර", "saep" -> "සැප"
+    if (lower.length() >= 2)
+    {
+      for (Map.Entry<String, String> entry : COMMON_WORDS.entrySet())
+      {
+        String k = entry.getKey();
+        if (k.length() > lower.length() && k.startsWith(lower))
+        {
+          String cand = entry.getValue();
+          if (!list.contains(cand))
+          {
+            // If prefix matches a full word, give it prominent placement
+            if (list.size() == 1 && !COMMON_WORDS.containsKey(lower))
+            {
+              list.add(0, cand);
+            }
+            else
+            {
+              list.add(cand);
+            }
+          }
+          if (list.size() >= 4)
+            break;
+        }
+      }
+    }
+
+    // 4. Phonetic alternative variations
+    String phonetic = parsePhonetic(trimmed);
+    if (!phonetic.isEmpty() && !list.contains(phonetic))
     {
       list.add(phonetic);
     }
-    else
+    if (lowerFirst != null)
     {
-      String alt = null;
-      if (primary.equals("\u0D85")) // අ -> ආ
+      String phoneticLower = parsePhonetic(lowerFirst);
+      if (!phoneticLower.isEmpty() && !list.contains(phoneticLower))
       {
-        alt = "\u0D86";
-      }
-      else if (primary.equals("\u0D86")) // ආ -> අ
-      {
-        alt = "\u0D85";
-      }
-      else if (primary.equals("\u0D87")) // ඇ -> ඈ
-      {
-        alt = "\u0D88";
-      }
-      else if (primary.equals("\u0D89")) // ඉ -> ඊ
-      {
-        alt = "\u0D8A";
-      }
-      else if (primary.equals("\u0D8B")) // උ -> ඌ
-      {
-        alt = "\u0D8C";
-      }
-      else if (primary.equals("\u0D91")) // එ -> ඒ
-      {
-        alt = "\u0D92";
-      }
-      else if (primary.equals("\u0D94")) // ඔ -> ඕ
-      {
-        alt = "\u0D95";
-      }
-      else if (primary.endsWith("\u0DCF")) // ends with ා
-      {
-        alt = primary.substring(0, primary.length() - 1);
-      }
-      else if (!primary.endsWith("\u0DCA")
-          && !(primary.length() > 0 && isVowelDiacritic(primary.charAt(primary.length() - 1)))
-          && !(primary.length() > 0 && isIndependentVowel(primary.charAt(primary.length() - 1))))
-      {
-        alt = primary + "\u0DCF";
-      }
-      if (alt != null && !alt.isEmpty() && !alt.equals(primary) && !list.contains(alt))
-      {
-        list.add(alt);
+        list.add(phoneticLower);
       }
     }
 
-    if (!list.contains(word))
+    // Special vowel variations for 'ැ' / 'ෑ' (e.g. sae -> සැ / සෑ, se -> සෙ / සැ)
+    if (primary.contains("\u0DD0")) // contains ැ
     {
-      list.add(word);
+      String altAe = primary.replace("\u0DD0", "\u0DD1"); // replace ැ with ෑ
+      if (!list.contains(altAe))
+        list.add(altAe);
+    }
+    else if (primary.contains("\u0DD9")) // contains ෙ
+    {
+      String altE = primary.replace("\u0DD9", "\u0DD0"); // suggest ැ variant (e.g. sepa -> සැප)
+      if (!list.contains(altE))
+        list.add(altE);
+    }
+    else if (primary.equals("\u0D85")) // අ -> ආ
+    {
+      if (!list.contains("\u0D86")) list.add("\u0D86");
+    }
+    else if (primary.equals("\u0D86")) // ආ -> අ
+    {
+      if (!list.contains("\u0D85")) list.add("\u0D85");
+    }
+    else if (primary.equals("\u0D87")) // ඇ -> ඈ
+    {
+      if (!list.contains("\u0D88")) list.add("\u0D88");
+    }
+    else if (primary.equals("\u0DB8\u0DCA")) // ම් -> ම
+    {
+      if (!list.contains("\u0DB8")) list.add(0, "\u0DB8");
+    }
+    else if (primary.equals("\u0D9A\u0DCA")) // ක් -> ක
+    {
+      if (!list.contains("\u0D9A")) list.add(0, "\u0D9A");
+    }
+
+    // 5. Always include original typed English word if not present
+    if (!list.contains(trimmed))
+    {
+      list.add(trimmed);
     }
 
     return list;
