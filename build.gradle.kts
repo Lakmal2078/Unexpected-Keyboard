@@ -23,7 +23,21 @@ val isCi = listOf("CI", "GITHUB_ACTIONS").any {
   System.getenv(it).equals("true", ignoreCase = true)
 }
 
-if (isCi) {
+// Dependency inspection, unit tests, and lint do not sign APKs and must remain
+// runnable in CI without signing secrets. Require CI credentials only for tasks
+// that package an APK/AAB using the debug signing config.
+val requestedTasks = gradle.startParameter.taskNames.map { it.substringAfterLast(":") }
+val needsDebugSigning = requestedTasks.any { task ->
+  task.equals("assemble", ignoreCase = true)
+      || task.equals("build", ignoreCase = true)
+      || (task.contains("debug", ignoreCase = true)
+          && (task.contains("assemble", ignoreCase = true)
+              || task.contains("package", ignoreCase = true)
+              || task.contains("bundle", ignoreCase = true)
+              || task.contains("install", ignoreCase = true)))
+}
+
+if (isCi && needsDebugSigning) {
   val missingPasswords = buildList {
     if (debugKeystorePassword == null) add("DEBUG_KEYSTORE_PASSWORD")
     if (debugKeyPassword == null) add("DEBUG_KEY_PASSWORD")
@@ -33,7 +47,7 @@ if (isCi) {
       "Missing required CI debug signing environment variable(s): ${missingPasswords.joinToString()}"
     )
   }
-} else if (debugKeystorePassword == null || debugKeyPassword == null) {
+} else if (!isCi && (debugKeystorePassword == null || debugKeyPassword == null)) {
   logger.warn(
     "Debug signing passwords are unset; using the local-only default password 'debug0'."
   )
