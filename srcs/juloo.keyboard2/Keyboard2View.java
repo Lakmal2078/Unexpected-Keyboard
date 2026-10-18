@@ -55,6 +55,8 @@ public class Keyboard2View extends View
 
   private static RectF _tmpRect = new RectF();
 
+  private final java.util.HashMap<KeyValue, KeyValue> _modifiedKeyCache = new java.util.HashMap<>();
+
   enum Vertical
   {
     TOP,
@@ -152,6 +154,17 @@ public class Keyboard2View extends View
 
   public KeyValue modifyKey(KeyValue k, Pointers.Modifiers mods)
   {
+    if (k == null)
+      return null;
+    if (mods == _mods)
+    {
+      KeyValue cached = _modifiedKeyCache.get(k);
+      if (cached != null || _modifiedKeyCache.containsKey(k))
+        return cached;
+      KeyValue modified = KeyModifier.modify(k, mods);
+      _modifiedKeyCache.put(k, modified);
+      return modified;
+    }
     return KeyModifier.modify(k, mods);
   }
 
@@ -188,8 +201,13 @@ public class Keyboard2View extends View
 
   private void updateFlags()
   {
-    _mods = _pointers.getModifiers();
-    _config.handler.mods_changed(_mods);
+    Pointers.Modifiers newMods = _pointers.getModifiers();
+    if (!java.util.Objects.equals(_mods, newMods))
+    {
+      _modifiedKeyCache.clear();
+      _mods = newMods;
+      _config.handler.mods_changed(_mods);
+    }
   }
 
   @Override
