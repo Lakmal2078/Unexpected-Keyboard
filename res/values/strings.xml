@@ -225,4 +225,6 @@
     <string name="pref_split_layout_never">Never</string>
     <string name="pref_split_layout_landscape">In landscape orientation</string>
     <string name="pref_split_layout_wide">On wide screens</string>
+    <string name="pref_show_quick_toolbar_title">Quick-Action Toolbar</string>
+    <string name="pref_show_quick_toolbar_summary">Show top shortcut bar with apps, keyboard switcher, translate, settings, clipboard, and theme buttons</string>
 </resources>

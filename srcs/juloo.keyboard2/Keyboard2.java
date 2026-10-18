@@ -40,6 +40,8 @@ public class Keyboard2 extends InputMethodService
   private ViewGroup _keyboard_container_view;
   private Keyboard2View _keyboard_layout_view;
   private CandidatesView _candidates_view;
+  private ViewGroup _quick_toolbar;
+  private boolean _has_active_suggestions = false;
   private Suggestions _suggestions;
   private KeyEventHandler _keyeventhandler;
   /** If not 'null', the layout to use instead of [_config.current_layout]. */
@@ -170,6 +172,191 @@ public class Keyboard2 extends InputMethodService
     _keyboard_container_view = (ViewGroup)inflate_view(R.layout.keyboard);
     _keyboard_layout_view = (Keyboard2View)_keyboard_container_view.findViewById(R.id.keyboard_view);
     _candidates_view = (CandidatesView)_keyboard_container_view.findViewById(R.id.candidates_view);
+    _quick_toolbar = (ViewGroup)_keyboard_container_view.findViewById(R.id.quick_toolbar);
+    setup_quick_toolbar();
+  }
+
+  private void setup_quick_toolbar()
+  {
+    if (_quick_toolbar == null)
+      return;
+    View btnApps = _quick_toolbar.findViewById(R.id.toolbar_btn_apps);
+    if (btnApps != null)
+    {
+      btnApps.setOnClickListener(new View.OnClickListener()
+      {
+        @Override
+        public void onClick(View v)
+        {
+          if (_emojiPane == null)
+            _emojiPane = (ViewGroup)inflate_view(R.layout.emoji_pane);
+          setInputView(_emojiPane);
+        }
+      });
+      btnApps.setOnLongClickListener(new View.OnLongClickListener()
+      {
+        @Override
+        public boolean onLongClick(View v)
+        {
+          incrTextLayout(1);
+          return true;
+        }
+      });
+    }
+
+    View btnKeyboard = _quick_toolbar.findViewById(R.id.toolbar_btn_keyboard);
+    if (btnKeyboard != null)
+    {
+      btnKeyboard.setOnClickListener(new View.OnClickListener()
+      {
+        @Override
+        public void onClick(View v)
+        {
+          get_imm().showInputMethodPicker();
+        }
+      });
+      btnKeyboard.setOnLongClickListener(new View.OnLongClickListener()
+      {
+        @Override
+        public boolean onLongClick(View v)
+        {
+          incrTextLayout(1);
+          return true;
+        }
+      });
+    }
+
+    View btnTranslate = _quick_toolbar.findViewById(R.id.toolbar_btn_translate);
+    if (btnTranslate != null)
+    {
+      btnTranslate.setOnClickListener(new View.OnClickListener()
+      {
+        @Override
+        public void onClick(View v)
+        {
+          launch_translate();
+        }
+      });
+      btnTranslate.setOnLongClickListener(new View.OnLongClickListener()
+      {
+        @Override
+        public boolean onLongClick(View v)
+        {
+          try
+          {
+            SharedPreferences prefs = DirectBootAwarePreferences.get_shared_preferences(Keyboard2.this);
+            boolean nextState = !_config.sinhala_transliteration;
+            prefs.edit().putBoolean("sinhala_transliteration", nextState).apply();
+          }
+          catch (Exception e) {}
+          return true;
+        }
+      });
+    }
+
+    View btnSettings = _quick_toolbar.findViewById(R.id.toolbar_btn_settings);
+    if (btnSettings != null)
+    {
+      btnSettings.setOnClickListener(new View.OnClickListener()
+      {
+        @Override
+        public void onClick(View v)
+        {
+          Intent intent = new Intent(Keyboard2.this, SettingsActivity.class);
+          intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+          startActivity(intent);
+        }
+      });
+    }
+
+    View btnClipboard = _quick_toolbar.findViewById(R.id.toolbar_btn_clipboard);
+    if (btnClipboard != null)
+    {
+      btnClipboard.setOnClickListener(new View.OnClickListener()
+      {
+        @Override
+        public void onClick(View v)
+        {
+          if (_clipboard_pane == null)
+            _clipboard_pane = (ViewGroup)inflate_view(R.layout.clipboard_pane);
+          setInputView(_clipboard_pane);
+        }
+      });
+    }
+
+    View btnTheme = _quick_toolbar.findViewById(R.id.toolbar_btn_theme);
+    if (btnTheme != null)
+    {
+      btnTheme.setOnClickListener(new View.OnClickListener()
+      {
+        @Override
+        public void onClick(View v)
+        {
+          cycle_next_theme();
+        }
+      });
+      btnTheme.setOnLongClickListener(new View.OnLongClickListener()
+      {
+        @Override
+        public boolean onLongClick(View v)
+        {
+          Intent intent = new Intent(Keyboard2.this, SettingsActivity.class);
+          intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+          startActivity(intent);
+          return true;
+        }
+      });
+    }
+  }
+
+  private void launch_translate()
+  {
+    try
+    {
+      CharSequence selected = null;
+      InputConnection ic = getCurrentInputConnection();
+      if (ic != null)
+        selected = ic.getSelectedText(0);
+      Intent intent = getPackageManager().getLaunchIntentForPackage("com.google.android.apps.translate");
+      if (intent != null && (selected == null || selected.length() == 0))
+      {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        return;
+      }
+      String query = (selected != null && selected.length() > 0)
+          ? android.net.Uri.encode(selected.toString()) : "";
+      String url = query.isEmpty()
+          ? "https://translate.google.com/"
+          : "https://translate.google.com/?sl=auto&tl=si&text=" + query + "&op=translate";
+      Intent webIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url));
+      webIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      startActivity(webIntent);
+    }
+    catch (Exception e) {}
+  }
+
+  private void cycle_next_theme()
+  {
+    try
+    {
+      SharedPreferences prefs = DirectBootAwarePreferences.get_shared_preferences(this);
+      String current = prefs.getString("theme", "graphite_pro");
+      String[] themes = getResources().getStringArray(R.array.pref_theme_values);
+      if (themes == null || themes.length == 0)
+        return;
+      int idx = 0;
+      for (int i = 0; i < themes.length; i++)
+      {
+        if (themes[i].equals(current))
+        {
+          idx = (i + 1) % themes.length;
+          break;
+        }
+      }
+      prefs.edit().putString("theme", themes[idx]).apply();
+    }
+    catch (Exception e) {}
   }
 
   InputMethodManager get_imm()
@@ -216,25 +403,66 @@ public class Keyboard2 extends InputMethodService
     refresh_candidates_view();
   }
 
-  private void refresh_candidates_view()
+  private boolean should_show_candidates()
   {
     boolean has_dict = _config.current_dictionary != null;
     boolean has_sinhala = _config.sinhala_transliteration;
     boolean has_productivity = _config.quick_calculator_enabled
         || _config.smart_snippets_enabled
         || _config.clipboard_suggestion_enabled;
-    boolean should_show =
-      _config.suggestions_enabled
+    return _config.suggestions_enabled
       && !_config.editor_config.is_sensitive_input
       && (has_dict || has_sinhala || has_productivity)
       && (_config.editor_config.should_show_candidates_view || has_sinhala || has_productivity)
       && !_config.split_layout;
-    if (should_show)
+  }
+
+  private void update_top_bar_visibility()
+  {
+    boolean can_show_candidates = should_show_candidates();
+    boolean show_toolbar = _config.show_quick_toolbar && !_config.split_layout;
+    if (show_toolbar)
+    {
+      if (can_show_candidates && _has_active_suggestions)
+      {
+        _candidates_view.setVisibility(View.VISIBLE);
+        if (_quick_toolbar != null)
+          _quick_toolbar.setVisibility(View.GONE);
+      }
+      else
+      {
+        if (_quick_toolbar != null)
+          _quick_toolbar.setVisibility(View.VISIBLE);
+        _candidates_view.setVisibility(View.GONE);
+      }
+    }
+    else
+    {
+      if (_quick_toolbar != null)
+        _quick_toolbar.setVisibility(View.GONE);
+      _candidates_view.setVisibility(can_show_candidates ? View.VISIBLE : View.GONE);
+    }
+  }
+
+  private void refresh_candidates_view()
+  {
+    _has_active_suggestions = false;
+    float row_height = _config.keyboard_rows_height_pixels * (1 - _config.key_vertical_margin);
+    if (_quick_toolbar != null)
+    {
+      ViewGroup.LayoutParams lp = _quick_toolbar.getLayoutParams();
+      if (lp != null)
+      {
+        lp.height = (int)row_height;
+        _quick_toolbar.setLayoutParams(lp);
+      }
+    }
+    if (should_show_candidates())
     {
       _candidates_view.refresh_config(_config);
       _keyeventhandler.dictionary_changed();
     }
-    _candidates_view.setVisibility(should_show ? View.VISIBLE : View.GONE);
+    update_top_bar_visibility();
   }
 
   /** Might re-create the keyboard view. [_keyboard_layout_view.setKeyboard()] and
@@ -579,7 +807,10 @@ public class Keyboard2 extends InputMethodService
 
     public void set_suggestions(Suggestions suggestions)
     {
+      _has_active_suggestions = (suggestions != null)
+          && (suggestions.count > 0 || suggestions.emoji_suggestion != null);
       _candidates_view.set_candidates(suggestions);
+      update_top_bar_visibility();
     }
 
     public String provide_stateful_key_symbol(KeyValue.Stateful q)
