@@ -67,11 +67,11 @@ android {
     }
   }
 
-  // externalNativeBuild {
-  //   ndkBuild {
-  //     path = file("vendor/Android.mk")
-  //   }
-  // }
+  externalNativeBuild {
+    ndkBuild {
+      path = file("vendor/Android.mk")
+    }
+  }
 
   signingConfigs {
     named("debug") {
@@ -126,6 +126,7 @@ android {
   packaging {
     jniLibs {
       keepDebugSymbols.add("**/*.so")
+      pickFirsts.add("lib/arm64-v8a/libcdict_java.so")
     }
   }
 }
