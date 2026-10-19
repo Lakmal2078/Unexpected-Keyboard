@@ -9,7 +9,7 @@
     <Button android:id="@+id/launcher_button_imepicker" style="@style/paragraph" android:minHeight="48dp" android:text="@string/launcher_button_imepicker" android:onClick="launch_imepicker"/>
     <TextView style="@style/paragraph" android:text="@string/launcher_test_heading" android:textStyle="bold" android:textSize="20sp"/>
     <TextView android:id="@+id/launcher_typing_status" style="@style/paragraph" android:accessibilityLiveRegion="polite" android:text="@string/launcher_status_typing_initial" android:textSize="16sp"/>
-    <juloo.keyboard2.TypingTestEditText android:id="@+id/launcher_tryhere_area" style="@style/paragraph" android:layout_width="match_parent" android:minHeight="96dp" android:gravity="top|start" android:inputType="textCapSentences|textMultiLine" android:hint="@string/launcher_tryhere_hint" android:importantForAutofill="no" android:accessibilityHint="@string/launcher_test_accessibility_hint"/>
+    <juloo.keyboard2.TypingTestEditText android:id="@+id/launcher_tryhere_area" style="@style/paragraph" android:layout_width="match_parent" android:minHeight="96dp" android:gravity="top|start" android:inputType="textCapSentences|textMultiLine" android:hint="@string/launcher_tryhere_hint" android:importantForAutofill="no"/>
     <Button style="@style/paragraph" android:minHeight="48dp" android:text="@string/launcher_button_clear_test" android:onClick="clear_typing_test"/>
     <Button style="@style/paragraph" android:minHeight="48dp" android:text="@string/launcher_button_dictionaries" android:onClick="launch_dictionaries_activity"/>
     <TextView style="@style/paragraph" android:text="@string/launcher_howto_heading" android:textStyle="bold" android:textSize="20sp"/>
