@@ -61,8 +61,8 @@ android {
     applicationId = "juloo.keyboard2"
     minSdk = 21
     targetSdk { version = release(36) }
-    versionCode = 57
-    versionName = "2.1.1"
+    versionCode = 58
+    versionName = "2.1.2"
     ndk.abiFilters.addAll(listOf("x86_64", "arm64-v8a"))
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
