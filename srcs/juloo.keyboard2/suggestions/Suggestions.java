@@ -65,9 +65,9 @@ public final class Suggestions
           preview = preview.substring(0, 18) + "...";
         suggestions[0] = "📋 " + preview;
         count = 1;
-        _callback.set_suggestions(this);
       }
     }
+    _callback.set_suggestions(this);
   }
 
   public void set_predictions(List<String> list)
@@ -128,12 +128,24 @@ public final class Suggestions
         {
           suggestions[i] = list.get(i);
         }
+        // Keep the literal spelling reachable even for ambiguous prefixes.
+        if (!Arrays.asList(suggestions).contains(word))
+        {
+          if (count < MAX_COUNT)
+            suggestions[count++] = word;
+          else
+            suggestions[count - 1] = word;
+        }
         emoji_suggestion = query_emoji(word);
         _callback.set_suggestions(this);
         return;
       }
     }
-    if (word.length() < 2 || _config.current_dictionary == null)
+    // Math punctuation belongs to the calculator. Dictionary distance search
+    // could otherwise suggest deleting punctuation from ordinary prose.
+    if (word.length() < 2 || _config.current_dictionary == null
+        || word.indexOf('(') >= 0 || word.indexOf(')') >= 0
+        || word.indexOf(',') >= 0)
       clear();
     else
       query_suggestions(word);
@@ -151,31 +163,6 @@ public final class Suggestions
         return false;
     }
     return true;
-  }
-
-  void append_dict_suggestions(String word)
-  {
-    Cdict dict = _config.current_dictionary;
-    if (dict == null) return;
-    boolean first_char_upper = Character.isUpperCase(word.charAt(0));
-    word = apply_substitutions(word);
-    Cdict.Result r = dict.find(word);
-    int i = 1;
-    if (r.found && i < MAX_COUNT)
-      suggestions[i++] = dict.word(r.index);
-    int[] suffixes = dict.suffixes(r, MAX_COUNT);
-    int[] dist = (word.length() < 3 || i + 1 >= MAX_COUNT) ? NO_RESULTS :
-      dict.distance(word, 1, MAX_COUNT);
-    for (int j = 0; j < MAX_COUNT && i < MAX_COUNT; j++)
-    {
-      if (suffixes.length > j)
-        suggestions[i++] = dict.word(suffixes[j]);
-      if (dist.length > j && i < MAX_COUNT)
-        suggestions[i++] = dict.word(dist[j]);
-    }
-    if (first_char_upper)
-      capitalize_results(suggestions, i);
-    count = i;
   }
 
   public void clear()

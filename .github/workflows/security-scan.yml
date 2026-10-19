@@ -49,7 +49,7 @@ jobs:
         run: ./gradlew dependencies --configuration debugRuntimeClasspath
 
       - name: Run Android Lint analysis
-        run: ./gradlew lintDebug || true
+        run: ./gradlew lintDebug
 
       - name: Upload Lint Report
         if: always()
@@ -57,4 +57,4 @@ jobs:
         with:
           name: lint-report
           path: build/reports/lint-results-debug.html
-          if-no-files-found: ignore
+          if-no-files-found: error

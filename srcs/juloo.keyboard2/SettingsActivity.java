@@ -1,11 +1,8 @@
 package juloo.keyboard2;
 
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 
 public class SettingsActivity extends PreferenceActivity
 {
@@ -13,12 +10,12 @@ public class SettingsActivity extends PreferenceActivity
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    // The preferences can't be read when in direct-boot mode. Avoid crashing
-    // and don't allow changing the settings.
-    // Run the config migration on this prefs as it might be different from the
-    // one used by the keyboard, which have been migrated.
+    // Migrate once, then let Settings and the keyboard share the same store.
     try
     {
+      DirectBootAwarePreferences.get_shared_preferences(this);
+      if (Build.VERSION.SDK_INT >= 24)
+        getPreferenceManager().setStorageDeviceProtected();
       Config.migrate(getPreferenceManager().getSharedPreferences());
     }
     catch (Exception _e) { fallbackEncrypted(); return; }
@@ -39,11 +36,4 @@ public class SettingsActivity extends PreferenceActivity
     finish();
   }
 
-  protected void onStop()
-  {
-    DirectBootAwarePreferences
-      .copy_preferences_to_protected_storage(this,
-          getPreferenceManager().getSharedPreferences());
-    super.onStop();
-  }
 }

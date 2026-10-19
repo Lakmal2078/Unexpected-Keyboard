@@ -254,7 +254,8 @@ public final class CurrentlyTypedWord
         || type == Character.COMBINING_SPACING_MARK
         || (c == '\'') || (c == '/')
         || (c == '+') || (c == '-') || (c == '*') || (c == '%') || (c == '^')
-        || (c == '×') || (c == '÷') || (c == '=') || (c == '.');
+        || (c == '×') || (c == '÷') || (c == '=') || (c == '.')
+        || (c == '(') || (c == ')') || (c == ',');
   }
 
   public static interface Callback

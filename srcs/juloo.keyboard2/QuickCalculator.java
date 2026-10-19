@@ -31,6 +31,17 @@ public final class QuickCalculator
     return false;
   }
 
+  static boolean isFunction(String name)
+  {
+    switch (name.toLowerCase(Locale.ROOT))
+    {
+      case "sqrt": case "cbrt": case "abs": case "round":
+      case "sin": case "cos": case "tan": case "log": case "ln":
+        return true;
+      default: return false;
+    }
+  }
+
   public static String evaluate(String input)
   {
     if (input == null) return null;
@@ -62,8 +73,10 @@ public final class QuickCalculator
         s = s.replace(',', '.');
     }
 
-    // Check if it's just a signed number like "+12" or "-5"
-    if (s.matches("^[+-]?[0-9]+(\\.[0-9]+)?$"))
+    // Brackets alone do not make a number a calculation: preserve numbered
+    // lists and citations such as (1) and (2023) when space auto-completes.
+    String unwrapped = s.replaceAll("[()\\s]", "");
+    if (unwrapped.matches("^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)$"))
       return null;
 
     // Quick sanity check on allowed characters
