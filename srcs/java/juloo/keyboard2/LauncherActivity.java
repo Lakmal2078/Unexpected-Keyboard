@@ -134,12 +134,6 @@ public class LauncherActivity extends Activity implements Handler.Callback
     findViewById(R.id.launcher_button_imepicker).setEnabled(enabled);
   }
 
-  public void launch_settings_search(View v)
-  {
-    Intent intent = new Intent(this, SettingsSearchActivity.class);
-    startActivity(intent);
-  }
-
   public void clear_typing_test(View v)
   {
     _restoring_text = true;
