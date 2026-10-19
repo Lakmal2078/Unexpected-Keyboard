@@ -4,6 +4,8 @@ import android.os.Parcelable;
 import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.test.core.app.ActivityScenario;
@@ -16,6 +18,29 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class LauncherDashboardTest
 {
+  @Test
+  public void imeListenerObservesTextAfterItIsInserted()
+  {
+    try (ActivityScenario<LauncherActivity> scenario = ActivityScenario.launch(LauncherActivity.class))
+    {
+      scenario.onActivity(activity -> {
+        TypingTestEditText editor = activity.findViewById(R.id.launcher_tryhere_area);
+        int[] notifications = { 0 };
+        editor.setOnImeInputListener(text -> {
+          assertEquals(text.toString(), editor.getText().toString());
+          notifications[0]++;
+        });
+        InputConnection connection = editor.onCreateInputConnection(new EditorInfo());
+        assertNotNull(connection);
+        assertTrue(connection.commitText("committed", 1));
+        assertEquals(1, notifications[0]);
+        editor.setText("");
+        assertTrue(connection.setComposingText("composing", 1));
+        assertEquals(2, notifications[0]);
+      });
+    }
+  }
+
   @Test
   public void typingTextIsExcludedFromSavedViewState()
   {

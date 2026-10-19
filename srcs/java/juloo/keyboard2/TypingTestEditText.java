@@ -29,15 +29,17 @@ public class TypingTestEditText extends EditText
       @Override
       public boolean commitText(CharSequence text, int newCursorPosition)
       {
-        if (listener != null && text != null && text.length() > 0) listener.onImeInput(text);
-        return super.commitText(text, newCursorPosition);
+        boolean accepted = super.commitText(text, newCursorPosition);
+        if (accepted && listener != null && text != null && text.length() > 0) listener.onImeInput(text);
+        return accepted;
       }
 
       @Override
       public boolean setComposingText(CharSequence text, int newCursorPosition)
       {
-        if (listener != null && text != null && text.length() > 0) listener.onImeInput(text);
-        return super.setComposingText(text, newCursorPosition);
+        boolean accepted = super.setComposingText(text, newCursorPosition);
+        if (accepted && listener != null && text != null && text.length() > 0) listener.onImeInput(text);
+        return accepted;
       }
     };
   }
