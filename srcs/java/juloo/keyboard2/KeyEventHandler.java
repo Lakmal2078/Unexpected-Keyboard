@@ -88,6 +88,9 @@ public final class KeyEventHandler
     _move_cursor_force_fallback =
       _config.editor_config.should_move_cursor_force_fallback;
     _last_action = null;
+    _next_last_action = null;
+    last_replaced_word = null;
+    last_replacement_word_len = 0;
   }
 
   /** Selection has been updated. */
@@ -181,17 +184,21 @@ public final class KeyEventHandler
   public void suggestion_entered(String text)
   {
     suggestion_entered(text, _config.suggestions_add_space);
+    _last_action = _next_last_action;
   }
 
   public void suggestion_entered(String text, boolean add_space_after)
   {
+    last_replaced_word = null;
+    last_replacement_word_len = 0;
+    _next_last_action = LastAction.OTHER;
     InputConnection conn = _recv.getCurrentInputConnection();
     if (text.startsWith("📋 ") && conn != null)
     {
       String pasteText = (_suggestions.clipboard_full_text != null)
           ? _suggestions.clipboard_full_text
           : text.substring(2).trim();
-      conn.commitText(pasteText, 1);
+      paste_from_clipboard_pane(pasteText);
       _suggestions.clear();
       _recv.set_suggestions(_suggestions);
       _next_last_action = LastAction.SUGGESTION_ENTERED;
@@ -219,6 +226,7 @@ public final class KeyEventHandler
         text = text + " ";
       conn.commitText(text, 1);
       _sinhala_buffer.setLength(0);
+      _typedword.typed(text);
       _suggestions.clear();
       java.util.List<String> nextWords = SinhalaTransliterator.getNextWordPredictions(rawText);
       if (!nextWords.isEmpty() && _config.suggestions_enabled)
@@ -229,7 +237,6 @@ public final class KeyEventHandler
       {
         _recv.set_suggestions(_suggestions);
       }
-      _typedword.typed(text);
       _next_last_action = LastAction.SUGGESTION_ENTERED;
       return;
     }
@@ -265,7 +272,16 @@ public final class KeyEventHandler
   @Override
   public void paste_from_clipboard_pane(String content)
   {
-    send_text(content);
+    InputConnection conn = _recv.getCurrentInputConnection();
+    if (conn == null)
+      return;
+    finish_composing();
+    conn.commitText(content, 1);
+    _autocap.typed(content);
+    _typedword.typed(content);
+    last_replaced_word = null;
+    last_replacement_word_len = 0;
+    _last_action = _next_last_action = LastAction.OTHER;
   }
 
   @Override
@@ -377,7 +393,21 @@ public final class KeyEventHandler
     boolean is_sinhala = _config.sinhala_transliteration
         && (_meta_state & (KeyEvent.META_CTRL_ON | KeyEvent.META_ALT_ON | KeyEvent.META_META_ON)) == 0;
 
-    if (is_sinhala && is_ascii_letters(text))
+    String tracked = _typedword.get();
+    boolean snippet = _config.smart_snippets_enabled
+        && (tracked.startsWith("//") || tracked.startsWith(".."));
+    // A function name is composed as Sinhala until the opening bracket makes
+    // its calculator intent explicit. Restore its literal spelling then.
+    if (is_sinhala && _config.quick_calculator_enabled && text.equals("(")
+        && QuickCalculator.isFunction(_sinhala_buffer.toString()))
+    {
+      String function = _sinhala_buffer.toString();
+      conn.commitText(function, 1);
+      _sinhala_buffer.setLength(0);
+      _typedword.typed(function);
+    }
+
+    if (is_sinhala && !snippet && is_ascii_letters(text))
     {
       _sinhala_buffer.append(text);
       String transliterated = SinhalaTransliterator.transliterateWord(_sinhala_buffer.toString());
@@ -705,6 +735,7 @@ public final class KeyEventHandler
       }
       conn.commitText(committedSinhala + " ", 1);
       _sinhala_buffer.setLength(0);
+      _typedword.typed(committedSinhala + " ");
       _suggestions.clear();
       java.util.List<String> nextWords = SinhalaTransliterator.getNextWordPredictions(committedSinhala.trim());
       if (!nextWords.isEmpty() && _config.suggestions_enabled)

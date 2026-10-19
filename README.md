@@ -30,7 +30,7 @@ This application contains no ads and is open source.
 
 ## Sinhala suggestions
 
-The transliterator in `srcs/juloo.keyboard2/SinhalaTransliterator.java` provides Singlish-to-Sinhala word candidates and next-word suggestions. Next-word suggestions use a fixed list keyed by the previous word, covering a limited set of common Sinhala phrases. They do not learn from typed text or use broader sentence context, so suggestions may be missing or unsuitable for other wording.
+The transliterator in `srcs/java/juloo/keyboard2/SinhalaTransliterator.java` provides Singlish-to-Sinhala word candidates and next-word suggestions. Next-word suggestions use a fixed list keyed by the previous word, covering a limited set of common Sinhala phrases. They do not learn from typed text or use broader sentence context, so suggestions may be missing or unsuitable for other wording.
 
 Usage: to apply the symbols located in the corners of each key, slide your finger in the direction of the symbols. For example, the Settings are opened by sliding in the left down corner.
 

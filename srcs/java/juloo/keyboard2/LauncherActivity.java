@@ -59,6 +59,16 @@ public class LauncherActivity extends Activity implements Handler.Callback
   }
 
   @Override
+  public void onStop()
+  {
+    _handler.removeMessages(0);
+    for (Animatable anim : _animations)
+      anim.stop();
+    _animations.clear();
+    super.onStop();
+  }
+
+  @Override
   public boolean handleMessage(Message _msg)
   {
     for (Animatable anim : _animations)
@@ -109,6 +119,7 @@ public class LauncherActivity extends Activity implements Handler.Callback
     return (Animatable)img.getDrawable();
   }
 
+  @androidx.annotation.RequiresApi(28)
   final class Tryhere_OnUnhandledKeyEventListener implements View.OnUnhandledKeyEventListener
   {
     public boolean onUnhandledKeyEvent(View v, KeyEvent ev)

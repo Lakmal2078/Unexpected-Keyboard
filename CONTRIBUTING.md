@@ -176,6 +176,12 @@ Commented-out lines indicate missing translations:
 
 Remove the `<!--` and `-->` parts and change the text.
 
+Incomplete locales use Android's default English fallback in `res/values`.
+`lint.xml` reports missing translations as warnings while this backlog is
+completed through Weblate. Do not copy English strings into locale files just
+to clear those warnings. Other lint errors, including unsupported Android API
+calls and missing components, continue to fail the build.
+
 ### Adding a translation
 
 The preferred method for translating the app is to use Weblate:

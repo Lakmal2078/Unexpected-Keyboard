@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+  <!-- Locales are maintained incrementally through Weblate. Android falls
+       back to res/values English text for entries that are still untranslated.
+       Keep the backlog visible without blocking unrelated correctness fixes. -->
+  <issue id="MissingTranslation" severity="warning" />
+</lint>

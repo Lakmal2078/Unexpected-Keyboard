@@ -928,16 +928,6 @@ public final class SinhalaTransliterator
     return list;
   }
 
-  private static boolean isVowelDiacritic(char c)
-  {
-    return (c >= 0x0DCF && c <= 0x0DDF) || (c >= 0x0DF2 && c <= 0x0DF3);
-  }
-
-  private static boolean isIndependentVowel(char c)
-  {
-    return (c >= 0x0D85 && c <= 0x0D96);
-  }
-
   /**
    * Pure systematic phonetic parser (independent of common word dictionary).
    */

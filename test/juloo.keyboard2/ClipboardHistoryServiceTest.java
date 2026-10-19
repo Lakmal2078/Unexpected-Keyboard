@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.os.Handler;
 import java.lang.reflect.Field;
 import java.util.List;
 import org.junit.After;
@@ -16,6 +17,7 @@ import static org.mockito.Mockito.*;
 public class ClipboardHistoryServiceTest
 {
   private ClipboardManager clipboard;
+  private Handler handler;
   private ClipboardHistoryService service;
   private ClipboardManager.OnPrimaryClipChangedListener systemListener;
   private ClipboardHistoryService.OnClipboardHistoryChange historyListener;
@@ -40,7 +42,8 @@ public class ClipboardHistoryServiceTest
     clipboard = mock(ClipboardManager.class);
     Context context = mock(Context.class);
     when(context.getSystemService(Context.CLIPBOARD_SERVICE)).thenReturn(clipboard);
-    service = new ClipboardHistoryService(context);
+    handler = mock(Handler.class);
+    service = new ClipboardHistoryService(context, handler);
     ClipboardHistoryService._service = service;
     pasteCallback = mock(ClipboardHistoryService.ClipboardPasteCallback.class);
     ClipboardHistoryService._paste_callback = pasteCallback;
@@ -171,7 +174,8 @@ public class ClipboardHistoryServiceTest
     service.add_current_clip();
 
     assertEquals(1, service.clear_expired_and_get_history().size());
-    verify(description).getExtras();
+    // Host tests expose SDK_INT=0: legacy Android must never link getExtras.
+    verifyNoInteractions(description);
   }
 
   @Test
@@ -194,6 +198,78 @@ public class ClipboardHistoryServiceTest
 
     assertEquals(1, service.clear_expired_and_get_history().size());
     verifyNoInteractions(historyListener);
+  }
+
+  @Test
+  public void previewReadsSystemClipboardWithoutRetainingHistory()
+  {
+    Config.globalConfig().clipboard_history_enabled = false;
+    ClipData currentClip = textClip();
+    when(clipboard.getPrimaryClip()).thenReturn(currentClip);
+    systemListener.onPrimaryClipChanged();
+
+    assertEquals("synthetic clipboard entry", ClipboardHistoryService.get_current_clip());
+    assertTrue(service._history.isEmpty());
+    verifyNoInteractions(historyListener);
+  }
+
+  @Test
+  public void previewNeverFallsBackToStaleHistory()
+  {
+    service.add_clip("old history");
+    ClipData currentClip = textClip();
+    when(clipboard.getPrimaryClip()).thenReturn(currentClip);
+    assertEquals("synthetic clipboard entry", ClipboardHistoryService.get_current_clip());
+    when(clipboard.getPrimaryClip()).thenReturn(null);
+    assertNull(ClipboardHistoryService.get_current_clip());
+  }
+
+  @Test
+  public void expiryCallbackPurgesAndRefreshesAnOpenPane()
+  {
+    service._history.add(new ClipboardHistoryService.HistoryEntry("expired", 0));
+    service._history.add(new ClipboardHistoryService.HistoryEntry("retained", Long.MAX_VALUE));
+
+    service._expire_history.run();
+
+    assertEquals(java.util.Collections.singletonList("retained"), service.clear_expired_and_get_history());
+    assertFalse(service.contains_history_entry("expired"));
+    verify(historyListener).on_clipboard_history_change();
+  }
+
+  @Test
+  public void finiteRetentionSchedulesExpiryAndClearCancelsIt()
+  {
+    Config.globalConfig().clipboard_history_duration = 1;
+    service.add_clip("expires in a minute");
+    verify(handler).postDelayed(same(service._expire_history), longThat(delay -> delay > 0 && delay <= 60000));
+    clearInvocations(handler);
+
+    service.clear_history();
+
+    verify(handler).removeCallbacks(service._expire_history);
+    verifyNoMoreInteractions(handler);
+  }
+
+  @Test
+  public void detachingOldPaneDoesNotUnregisterNewPane()
+  {
+    ClipboardHistoryService.OnClipboardHistoryChange replacement = mock(ClipboardHistoryService.OnClipboardHistoryChange.class);
+    service.set_on_clipboard_history_change(replacement);
+    service.remove_on_clipboard_history_change(historyListener);
+    service.add_clip("new clip");
+    verify(replacement).on_clipboard_history_change();
+  }
+
+  @Test
+  public void removingHistoryDoesNotClearAnUnrelatedCurrentClip()
+  {
+    service.add_clip("old history");
+    ClipData currentClip = textClip();
+    when(clipboard.getPrimaryClip()).thenReturn(currentClip);
+    service.remove_history_entry("old history");
+    verify(clipboard, never()).setText(any());
+    verify(clipboard, never()).clearPrimaryClip();
   }
 
   private static ClipData textClip()

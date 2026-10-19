@@ -33,6 +33,7 @@ public class ProductivityTest
     assertEquals("= 12.35", QuickCalculator.evaluate("10+2.35"));
     assertEquals("= 30", QuickCalculator.evaluate("200*15%"));
     assertEquals("= 0.25", QuickCalculator.evaluate("25%"));
+    assertEquals("= 0.25", QuickCalculator.evaluate("(25%)"));
   }
 
   @Test
@@ -52,6 +53,8 @@ public class ProductivityTest
     assertNull(QuickCalculator.evaluate("+150"));
     assertNull(QuickCalculator.evaluate("-150"));
     assertNull(QuickCalculator.evaluate("3.1415"));
+    for (String literal : new String[] { "(1)", "(2023)", "(-5)", "((2.5))", "(.5)", "(5.)" })
+      assertNull(literal, QuickCalculator.evaluate(literal));
 
     // Incomplete or non-math expressions
     assertNull(QuickCalculator.evaluate("12+"));
@@ -93,8 +96,8 @@ public class ProductivityTest
   @Test
   public void testCurrentlyTypedWordBrackets()
   {
-    assertFalse(CurrentlyTypedWord.is_word_char('('));
-    assertFalse(CurrentlyTypedWord.is_word_char(')'));
+    assertTrue(CurrentlyTypedWord.is_word_char('('));
+    assertTrue(CurrentlyTypedWord.is_word_char(')'));
     assertTrue(CurrentlyTypedWord.is_word_char('a'));
     assertTrue(CurrentlyTypedWord.is_word_char('1'));
   }

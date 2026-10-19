@@ -70,7 +70,7 @@ android {
   sourceSets {
     named("main") {
       manifest.srcFile("AndroidManifest.xml")
-      java.srcDirs("srcs/juloo.keyboard2", "vendor/cdict/java/juloo.cdict")
+      java.srcDirs("srcs/java", "vendor/cdict/java/juloo.cdict")
       res.srcDirs("res", "build/generated-resources")
       assets.srcDirs("assets")
       jniLibs.srcDirs("libs")
@@ -196,7 +196,7 @@ val genMethodXml by tasks.registering(Exec::class) {
 
 val checkKeyboardLayouts by tasks.registering(Exec::class) {
   inputs.dir(projectDir.resolve("srcs/layouts"))
-  inputs.file(projectDir.resolve("srcs/juloo.keyboard2/KeyValue.java"))
+  inputs.file(projectDir.resolve("srcs/java/juloo/keyboard2/KeyValue.java"))
   outputs.file(projectDir.resolve("check_layout.output"))
   doFirst { println("\nChecking layouts") }
   workingDir = projectDir
@@ -205,7 +205,7 @@ val checkKeyboardLayouts by tasks.registering(Exec::class) {
 
 val compileComposeSequences by tasks.registering(Exec::class) {
   val `in` = projectDir.resolve("srcs/compose")
-  val out = projectDir.resolve("srcs/juloo.keyboard2/ComposeKeyData.java")
+  val out = projectDir.resolve("srcs/java/juloo/keyboard2/ComposeKeyData.java")
   inputs.dir(`in`)
   outputs.file(out)
   doFirst { println("\nGenerating $out") }

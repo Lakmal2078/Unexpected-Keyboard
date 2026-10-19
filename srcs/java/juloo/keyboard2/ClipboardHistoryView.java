@@ -27,7 +27,6 @@ public final class ClipboardHistoryView extends NonScrollListView
     _service = ClipboardHistoryService.get_service(ctx);
     if (_service != null)
     {
-      _service.set_on_clipboard_history_change(this);
       _history = _service.clear_expired_and_get_history();
     }
     setAdapter(_adapter);
@@ -37,8 +36,15 @@ public final class ClipboardHistoryView extends NonScrollListView
       the list of pinned clipboards. */
   public void pin_entry(int pos)
   {
-    ClipboardPinView v = (ClipboardPinView)((ViewGroup)getParent().getParent()).findViewById(R.id.clipboard_pin_view);
+    if (_service == null || pos < 0 || pos >= _history.size())
+      return;
     String clip = _history.get(pos);
+    if (!_service.contains_history_entry(clip))
+    {
+      update_data();
+      return;
+    }
+    ClipboardPinView v = (ClipboardPinView)((ViewGroup)getParent().getParent()).findViewById(R.id.clipboard_pin_view);
     v.add_entry(clip);
     _service.remove_history_entry(clip);
   }
@@ -46,7 +52,13 @@ public final class ClipboardHistoryView extends NonScrollListView
   /** Send the specified entry to the editor. */
   public void paste_entry(int pos)
   {
-    ClipboardHistoryService.paste(_history.get(pos));
+    if (_service == null || pos < 0 || pos >= _history.size())
+      return;
+    String clip = _history.get(pos);
+    if (_service.contains_history_entry(clip))
+      ClipboardHistoryService.paste(clip);
+    else
+      update_data();
   }
 
   @Override
@@ -64,9 +76,22 @@ public final class ClipboardHistoryView extends NonScrollListView
 
   void update_data()
   {
+    if (_service == null)
+      return;
     _history = _service.clear_expired_and_get_history();
     _adapter.notifyDataSetChanged();
     invalidate();
+  }
+
+  @Override
+  protected void onAttachedToWindow()
+  {
+    super.onAttachedToWindow();
+    if (_service != null)
+    {
+      _service.set_on_clipboard_history_change(this);
+      update_data();
+    }
   }
 
   @Override
@@ -74,7 +99,7 @@ public final class ClipboardHistoryView extends NonScrollListView
   {
     super.onDetachedFromWindow();
     if (_service != null)
-      _service.set_on_clipboard_history_change(null);
+      _service.remove_on_clipboard_history_change(this);
   }
 
   class ClipboardEntriesAdapter extends BaseAdapter

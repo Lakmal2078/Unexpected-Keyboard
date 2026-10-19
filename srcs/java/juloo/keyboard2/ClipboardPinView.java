@@ -18,7 +18,6 @@ import org.json.JSONException;
 public final class ClipboardPinView extends NonScrollListView
 {
   /** Preference file name that store pinned clipboards. */
-  static final String PERSIST_FILE_NAME = "clipboards";
   /** Preference name for pinned clipboards. */
   static final String PERSIST_PREF = "pinned";
 
