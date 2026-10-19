@@ -1,6 +1,8 @@
 package juloo.keyboard2;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -292,7 +294,7 @@ public class Keyboard2 extends InputMethodService
         @Override
         public void onClick(View v)
         {
-          cycle_next_theme();
+          show_theme_picker();
         }
       });
       btnTheme.setOnLongClickListener(new View.OnLongClickListener()
@@ -311,6 +313,9 @@ public class Keyboard2 extends InputMethodService
 
   private void launch_translate()
   {
+    // Check before reading the selection or constructing an external intent.
+    if (_config == null || _config.editor_config.is_sensitive_input)
+      return;
     try
     {
       CharSequence selected = null;
@@ -333,30 +338,26 @@ public class Keyboard2 extends InputMethodService
       webIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       startActivity(webIntent);
     }
-    catch (Exception e) {}
+    catch (ActivityNotFoundException | SecurityException | IllegalArgumentException e)
+    {
+      // Exception messages can include the URL and selected text.
+      Log.w(Logs.TAG, "Unable to launch translation: " + e.getClass().getSimpleName());
+    }
   }
 
-  private void cycle_next_theme()
+  private void show_theme_picker()
   {
     try
     {
       SharedPreferences prefs = DirectBootAwarePreferences.get_shared_preferences(this);
-      String current = prefs.getString("theme", "graphite_pro");
-      String[] themes = getResources().getStringArray(R.array.pref_theme_values);
-      if (themes == null || themes.length == 0)
-        return;
-      int idx = 0;
-      for (int i = 0; i < themes.length; i++)
-      {
-        if (themes[i].equals(current))
-        {
-          idx = (i + 1) % themes.length;
-          break;
-        }
-      }
-      prefs.edit().putString("theme", themes[idx]).apply();
+      AlertDialog dialog = ThemePicker.create(new AlertDialog.Builder(this), getResources(), prefs);
+      Utils.show_dialog_on_ime(dialog, this);
     }
-    catch (Exception e) {}
+    catch (android.content.res.Resources.NotFoundException | ClassCastException
+        | IllegalStateException | SecurityException | WindowManager.BadTokenException e)
+    {
+      Log.w(Logs.TAG, "Unable to open theme picker: " + e.getClass().getSimpleName());
+    }
   }
 
   InputMethodManager get_imm()
@@ -413,12 +414,18 @@ public class Keyboard2 extends InputMethodService
     return _config.suggestions_enabled
       && !_config.editor_config.is_sensitive_input
       && (has_dict || has_sinhala || has_productivity)
-      && (_config.editor_config.should_show_candidates_view || has_sinhala || has_productivity)
+      && _config.editor_config.should_show_candidates_view
       && !_config.split_layout;
   }
 
   private void update_top_bar_visibility()
   {
+    if (_quick_toolbar != null)
+    {
+      View translate = _quick_toolbar.findViewById(R.id.toolbar_btn_translate);
+      if (translate != null)
+        translate.setEnabled(!_config.editor_config.is_sensitive_input);
+    }
     boolean can_show_candidates = should_show_candidates();
     boolean show_toolbar = _config.show_quick_toolbar && !_config.split_layout;
     if (show_toolbar)

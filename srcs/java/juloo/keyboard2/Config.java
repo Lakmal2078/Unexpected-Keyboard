@@ -17,6 +17,9 @@ import juloo.keyboard2.prefs.LayoutsPreference;
 
 public class Config
 {
+  // Keep in sync with the theme preference's default in res/xml/settings.xml.
+  static final String DEFAULT_THEME = "graphite_pro";
+
   /**
    * Width of the Android phones is around 300-600dp in portrait, 600-1400dp in landscape,
    * depending on the user's size settings.
@@ -209,7 +212,7 @@ public class Config
     characterSize =
       _prefs.getFloat("character_size", 1.15f)
       * characterSizeScale;
-    theme = getThemeId(res, _prefs.getString("theme", ""));
+    theme = getThemeId(res, _prefs.getString("theme", DEFAULT_THEME));
     autocapitalisation = _prefs.getBoolean("autocapitalisation", true);
     change_method_key_replacement = get_change_method_key_replacement(_prefs);
     extra_keys_param = ExtraKeysPreference.get_extra_keys(_prefs);

@@ -1,5 +1,6 @@
 package juloo.keyboard2.suggestions;
 
+import android.os.Build.VERSION;
 import java.util.Arrays;
 import java.util.List;
 import juloo.cdict.Cdict;
@@ -40,11 +41,7 @@ public final class Suggestions
   {
     _enabled = _config.suggestions_enabled
       && !_config.editor_config.is_sensitive_input
-      && (_config.editor_config.should_show_candidates_view
-          || _config.sinhala_transliteration
-          || _config.quick_calculator_enabled
-          || _config.smart_snippets_enabled
-          || _config.clipboard_suggestion_enabled);
+      && _config.editor_config.should_show_candidates_view;
     clear();
     if (_enabled)
       show_clipboard_suggestion();
@@ -54,7 +51,8 @@ public final class Suggestions
 
   void show_clipboard_suggestion()
   {
-    if (_enabled && _config.clipboard_suggestion_enabled)
+    // Older platforms cannot expose the clipboard sensitivity metadata.
+    if (_enabled && _config.clipboard_suggestion_enabled && VERSION.SDK_INT >= 24)
     {
       String clip = ClipboardHistoryService.get_current_clip();
       if (clip != null && !clip.trim().isEmpty())

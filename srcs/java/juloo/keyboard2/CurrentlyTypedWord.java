@@ -60,12 +60,15 @@ public final class CurrentlyTypedWord
   public void started(Config conf, InputConnection ic)
   {
     _ic = ic;
-    _enabled = true;
     EditorConfig e = conf.editor_config;
+    _enabled = !e.is_sensitive_input;
+    _refresh_pending = false;
+    _handler.removeCallbacks(delayed_refresh_run);
+    _w.setLength(0);
     _has_selection = e.initial_sel_start != e.initial_sel_end;
     _cursor = e.initial_sel_start;
     _w_cursor = 0;
-    if (!_has_selection)
+    if (_enabled && !_has_selection)
     {
       set_current_word(e.initial_text_before_cursor);
       _w_cursor = (e.initial_text_after_cursor == null) ? 0 :
@@ -87,7 +90,12 @@ public final class CurrentlyTypedWord
     // Avoid the expensive [refresh_current_word] call when [typed] was called
     // before.
     if (!_enabled)
+    {
+      // Selection actions still work in private editors without reading text.
+      _has_selection = newSelStart != newSelEnd;
+      _cursor = newSelStart;
       return;
+    }
     boolean new_has_sel = newSelStart != newSelEnd;
     if (new_has_sel || _has_selection) // Selection was on or is now on.
     {
@@ -189,6 +197,8 @@ public final class CurrentlyTypedWord
   /** Refresh the current word by immediately querying the editor. */
   void refresh_current_word()
   {
+    if (!_enabled)
+      return;
     Logs.debug("Refresh current word");
     _refresh_pending = false;
     _w_cursor = 0;

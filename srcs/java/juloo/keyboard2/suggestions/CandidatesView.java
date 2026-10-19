@@ -136,7 +136,7 @@ public class CandidatesView extends LinearLayout
   /** Whether the candidates view should be shown for a given editor. */
   public static boolean should_show(EditorInfo info)
   {
-    if (SuggestionPolicy.is_sensitive_input(info.inputType))
+    if (SuggestionPolicy.is_sensitive_input(info.inputType, info.imeOptions))
       return false;
     Config config = Config.globalConfig();
     if (config != null && !config.suggestions_enabled)
@@ -145,21 +145,9 @@ public class CandidatesView extends LinearLayout
     switch (info.inputType & InputType.TYPE_MASK_CLASS)
     {
       case InputType.TYPE_CLASS_TEXT:
-        if (config != null && (config.sinhala_transliteration
-            || config.quick_calculator_enabled
-            || config.smart_snippets_enabled
-            || config.clipboard_suggestion_enabled))
-          return true;
-        /* Editor requested that we don't show suggestions. Enable
-           suggestions anyway when the flags [NO_SUGGESTIONS] and
-           [AUTO_CORRECT] are present at the same time. This happens with
-           Google Keep. */
-        if ((flags &
-              (InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-               | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT))
-            == InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
-          return false;
-        return true;
+        // Host privacy settings take precedence over every suggestion source,
+        // including when AUTO_CORRECT is also set.
+        return (flags & InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS) == 0;
       case InputType.TYPE_CLASS_NUMBER:
         // Beware of TYPE_NUMBER_VARIATION_PASSWORD
         return false;

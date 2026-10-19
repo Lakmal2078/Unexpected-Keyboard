@@ -82,8 +82,8 @@ public final class KeyEventHandler
   {
     InputConnection ic = _recv.getCurrentInputConnection();
     _autocap.started(_config, ic);
-    _typedword.started(_config, ic);
     _suggestions.started();
+    _typedword.started(_config, ic);
     _sinhala_buffer.setLength(0);
     _move_cursor_force_fallback =
       _config.editor_config.should_move_cursor_force_fallback;
@@ -391,6 +391,7 @@ public final class KeyEventHandler
       return;
 
     boolean is_sinhala = _config.sinhala_transliteration
+        && !_config.editor_config.is_sensitive_input
         && (_meta_state & (KeyEvent.META_CTRL_ON | KeyEvent.META_ALT_ON | KeyEvent.META_META_ON)) == 0;
 
     String tracked = _typedword.get();

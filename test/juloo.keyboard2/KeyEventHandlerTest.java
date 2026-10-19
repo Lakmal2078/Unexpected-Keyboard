@@ -163,4 +163,29 @@ public class KeyEventHandlerTest
     assertEquals("ශ්‍රී ලංකා සිංහල ", document.toString());
     verify(connection, never()).setComposingText(any(), anyInt());
   }
+
+  @Test
+  public void privateEditorDoesNotTrackOrTransliterateTypedText()
+  {
+    type("old");
+    handler._typedword.delayed_refresh();
+    config.editor_config.is_sensitive_input = true;
+    config.sinhala_transliteration = true;
+    handler.started();
+    clearInvocations(connection);
+
+    type("private");
+    handler._typedword.delayed_refresh_run.run();
+    handler.selection_updated(0, 7, 7, -1, -1);
+    handler.selection_updated(7, 0, 7, -1, -1);
+
+    assertEquals("oldprivate", document.toString());
+    assertEquals("", handler._typedword.get());
+    assertEquals(0, suggestions.count);
+    assertEquals(0, handler._sinhala_buffer.length());
+    assertTrue(handler._typedword.is_selection_not_empty());
+    verify(connection, never()).setComposingText(any(), anyInt());
+    verify(connection, never()).getTextBeforeCursor(anyInt(), anyInt());
+    verify(connection, never()).getSurroundingText(anyInt(), anyInt(), anyInt());
+  }
 }
