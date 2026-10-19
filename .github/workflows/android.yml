@@ -79,6 +79,11 @@ jobs:
       - name: Run unit tests
         run: ./gradlew test
 
+      - name: Enable KVM access for the emulator
+        run: |
+          sudo chmod a+rw /dev/kvm
+          test -r /dev/kvm && test -w /dev/kvm
+
       - name: Run Android UI and device tests
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
