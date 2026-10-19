@@ -5,6 +5,7 @@ import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import java.lang.reflect.Field;
 import java.util.List;
 import org.junit.After;
@@ -176,6 +177,20 @@ public class ClipboardHistoryServiceTest
     assertEquals(1, service.clear_expired_and_get_history().size());
     // Host tests expose SDK_INT=0: legacy Android must never link getExtras.
     verifyNoInteractions(description);
+  }
+
+  @Test
+  public void sensitivityMarkerUsesTheKeySupportedBeforeAndroid13()
+  {
+    ClipDescription description = mock(ClipDescription.class);
+    PersistableBundle extras = mock(PersistableBundle.class);
+    when(description.getExtras()).thenReturn(extras);
+    when(extras.getBoolean("android.content.extra.IS_SENSITIVE", false)).thenReturn(true);
+    assertTrue(ClipboardHistoryService.isMarkedSensitive(description));
+    when(extras.getBoolean("android.content.extra.IS_SENSITIVE", false)).thenReturn(false);
+    assertFalse(ClipboardHistoryService.isMarkedSensitive(description));
+    when(description.getExtras()).thenReturn(null);
+    assertFalse(ClipboardHistoryService.isMarkedSensitive(description));
   }
 
   @Test

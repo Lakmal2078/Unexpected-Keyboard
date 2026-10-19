@@ -94,7 +94,10 @@ public final class EditorConfig
     caps_initially_enabled = (info.initialCapsMode != 0);
     caps_initially_updated = caps_should_update_state(info);
     /* CurrentlyTypedWord */
-    if (VERSION.SDK_INT >= 30)
+    is_sensitive_input = SuggestionPolicy.is_sensitive_input(info.inputType, info.imeOptions);
+    initial_text_before_cursor = null;
+    initial_text_after_cursor = null;
+    if (!is_sensitive_input && VERSION.SDK_INT >= 30)
     {
       initial_text_before_cursor = info.getInitialTextBeforeCursor(20, 0);
       initial_text_after_cursor = info.getInitialTextAfterCursor(20, 0);
@@ -102,7 +105,6 @@ public final class EditorConfig
     initial_sel_start = info.initialSelStart;
     initial_sel_end = info.initialSelEnd;
     /* Suggestions */
-    is_sensitive_input = SuggestionPolicy.is_sensitive_input(info.inputType);
     should_show_candidates_view = CandidatesView.should_show(info);
   }
 

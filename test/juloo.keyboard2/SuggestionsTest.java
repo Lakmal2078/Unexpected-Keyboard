@@ -65,4 +65,43 @@ public class SuggestionsTest
     suggestions.currently_typed_word("2+2");
     assertEquals(0, suggestions.count);
   }
+
+  @Test
+  public void hostOptOutOverridesAllFeaturesAndClearsPreviousCandidates()
+  {
+    suggestions.started();
+    suggestions.currently_typed_word("2+2");
+    assertEquals(1, suggestions.count);
+    config.sinhala_transliteration = true;
+    config.smart_snippets_enabled = true;
+    config.clipboard_suggestion_enabled = true;
+    config.editor_config.should_show_candidates_view = false;
+    suggestions.started();
+    clearInvocations(callback);
+
+    suggestions.currently_typed_word("2+2");
+    suggestions.currently_typed_word("amma");
+    suggestions.currently_typed_word("//lk");
+    suggestions.set_predictions(Arrays.asList("private prediction"));
+
+    assertEquals(0, suggestions.count);
+    assertNull(suggestions.clipboard_full_text);
+    assertNull(suggestions.emoji_suggestion);
+    verifyNoInteractions(callback);
+  }
+
+  @Test
+  public void privateModeDropsExistingCandidatesAndPredictions()
+  {
+    suggestions.started();
+    suggestions.set_predictions(Arrays.asList("previous editor"));
+    config.editor_config.is_sensitive_input = true;
+    suggestions.started();
+    clearInvocations(callback);
+    suggestions.set_predictions(Arrays.asList("private prediction"));
+    suggestions.currently_typed_word("2+2");
+    assertEquals(0, suggestions.count);
+    assertNull(suggestions.suggestions[0]);
+    verifyNoInteractions(callback);
+  }
 }

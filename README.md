@@ -49,6 +49,8 @@ Improve the application translations [using Weblate](https://hosted.weblate.org/
 To build and test Unexpected Keyboard locally:
 - **OpenJDK 17** (or compatible JDK)
 - **Android SDK**: Build tools and platform `android-36`
+- **Android NDK**: `27.2.12479018`. Build both native dictionary libraries from
+  source before assembling APKs; see [native build instructions](CONTRIBUTING.md#building-the-app).
 - **Git submodules**: Required for dictionary/spell-checking (`vendor/cdict`). Initialize with:
   ```sh
   git submodule update --init --recursive
@@ -72,8 +74,9 @@ To build and test Unexpected Keyboard locally:
 Unexpected Keyboard follows strict privacy and data protection principles:
 - **Zero Logging & Telemetry**: Keystrokes, passwords, and user input are never logged or transmitted.
 - **In-Memory Clipboard History**: The clipboard history is strictly **opt-in** (disabled by default in Settings). When enabled, clips are held only in temporary RAM and are **never** persisted to disk or database.
-- **Clipboard Quick Paste**: The clipboard preview in the candidate bar is disabled by default. Enable it in Settings to show the current clipboard item for one-tap pasting.
-- **Sensitive Data Safeguard**: On Android 13+ (API 33+), clips flagged as `ClipDescription.EXTRA_IS_SENSITIVE` (such as passwords, tokens, and 2FA OTPs) are discarded immediately and never added to history.
+- **Clipboard Quick Paste**: The clipboard preview in the candidate bar is disabled by default. Enable it in Settings to show the current clipboard item for one-tap pasting on Android 7+ (API 24+). Previews are unavailable on older versions without clipboard sensitivity metadata.
+- **Sensitive Data Safeguard**: On Android 7+ (API 24+), clips flagged with `android.content.extra.IS_SENSITIVE` (`ClipDescription.EXTRA_IS_SENSITIVE` on API 33+) are excluded from previews and history.
+- **Private Editors**: Password fields and editors requesting `IME_FLAG_NO_PERSONALIZED_LEARNING` disable suggestions, text tracking, and translation. Host `TYPE_TEXT_FLAG_NO_SUGGESTIONS` requests override all candidate sources. Next-word suggestions use fixed data and do not learn from input.
 - **Auto-Expiration & Instant Clear**: Clipboard history automatically expires according to the user-selected TTL, and unchecking clipboard history immediately purges all stored items from memory.
 
 ## Contributing

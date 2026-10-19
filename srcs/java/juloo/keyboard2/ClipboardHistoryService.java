@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * - Ephemeral / In-Memory only: History entries are stored only in volatile RAM (List<HistoryEntry>)
  *   and are NEVER written to disk, database, or SharedPreferences.
  * - Explicit User Opt-In: Clipboard history is disabled by default (clipboard_history_enabled = false).
- * - Sensitive Data Protection: On Android 13+ (API 33+), clips marked with EXTRA_IS_SENSITIVE
+ * - Sensitive Data Protection: On Android 7+ (API 24+), clips marked with EXTRA_IS_SENSITIVE
  *   (passwords, OTPs, auth tokens) are discarded and never added to history.
  * - Auto-Expiry: Entries expire automatically after the configured retention window (TTL).
  * - Immediate Purge: Toggling the history setting off immediately clears all in-memory entries.
@@ -248,8 +248,8 @@ public final class ClipboardHistoryService
     try { clip = _cm.getPrimaryClip(); } catch (Exception _e) {}
     if (clip == null)
       return null;
-    // On Android 13+ (API 33+), respect EXTRA_IS_SENSITIVE to protect passwords and OTPs
-    if (VERSION.SDK_INT >= 33 && clip.getDescription() != null
+    // The sensitivity key also works before API 33 via the literal key in extras.
+    if (VERSION.SDK_INT >= 24 && clip.getDescription() != null
         && shouldRejectSensitiveClip(VERSION.SDK_INT, isMarkedSensitive(clip.getDescription())))
       return null;
     return clip;
@@ -258,15 +258,15 @@ public final class ClipboardHistoryService
   /** True only when the platform exposes and marks a clip as sensitive. */
   static boolean shouldRejectSensitiveClip(int sdkInt, boolean markedSensitive)
   {
-    return sdkInt >= 33 && markedSensitive;
+    return sdkInt >= 24 && markedSensitive;
   }
 
-  @androidx.annotation.RequiresApi(33)
-  private static boolean isMarkedSensitive(ClipDescription description)
+  @androidx.annotation.RequiresApi(24)
+  static boolean isMarkedSensitive(ClipDescription description)
   {
     android.os.PersistableBundle extras = description.getExtras();
     return extras != null
-        && extras.getBoolean(ClipDescription.EXTRA_IS_SENSITIVE, false);
+        && extras.getBoolean("android.content.extra.IS_SENSITIVE", false);
   }
 
   int get_history_ttl_minutes() {
