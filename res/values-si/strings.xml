@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_setup_heading">සකස් කිරීම</string>
+    <string name="launcher_test_heading">ටයිප් කිරීමේ පරීක්ෂාව</string>
+    <string name="launcher_howto_heading">Swipe භාවිත කරන ආකාරය</string>
+    <string name="launcher_status_enabled">Keyboard සක්‍රීයයි: %1$s</string>
+    <string name="launcher_status_selected">Default keyboard තෝරා ඇත: %1$s</string>
+    <string name="launcher_status_typing">ටයිප් කිරීමේ පරීක්ෂාව සම්පූර්ණයි: %1$s</string>
+    <string name="launcher_status_done">සම්පූර්ණයි</string>
+    <string name="launcher_status_needed">තවම නැත</string>
+    <string name="launcher_status_enabled_initial">Keyboard සක්‍රීයද: පරීක්ෂා කරමින්…</string>
+    <string name="launcher_status_selected_initial">Default keyboard තෝරා තිබේද: පරීක්ෂා කරමින්…</string>
+    <string name="launcher_status_typing_initial">ටයිප් පරීක්ෂාව: තවම නැත</string>
+    <string name="launcher_button_settings_search">Settings සොයන්න</string>
+    <string name="launcher_button_clear_test">පරීක්ෂණ පෙළ මකන්න</string>
+    <string name="launcher_test_accessibility_hint">Unexpected Keyboard තෝරා ඇති විට එය භාවිතයෙන් ටයිප් කරන්න.</string>
+    <string name="launcher_anim_swipe_description">Swipe gesture නිරූපණය</string>
+    <string name="launcher_anim_circle_description">වෘත්තාකාර gesture නිරූපණය</string>
+    <string name="launcher_anim_round_trip_description">ආපසු හැරෙන gesture නිරූපණය</string>
+</resources>
