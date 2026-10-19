@@ -49,14 +49,17 @@ public final class ClipboardHistoryView extends NonScrollListView
     _service.remove_history_entry(clip);
   }
 
-  /** Send the specified entry to the editor. */
+  /** Paste the specified entry, then remove it from clipboard history. */
   public void paste_entry(int pos)
   {
     if (_service == null || pos < 0 || pos >= _history.size())
       return;
     String clip = _history.get(pos);
     if (_service.contains_history_entry(clip))
+    {
       ClipboardHistoryService.paste(clip);
+      _service.remove_history_entry(clip);
+    }
     else
       update_data();
   }
