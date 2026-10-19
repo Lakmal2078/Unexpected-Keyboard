@@ -18,8 +18,6 @@
       <meta-data android:name="android.view.im" android:resource="@xml/method"/>
     </service>
 
-    <activity android:name="juloo.keyboard2.SettingsSearchActivity" android:theme="@style/appTheme" android:exported="false" android:directBootAware="true" />
-
     <activity android:name="juloo.keyboard2.SettingsActivity" android:icon="@mipmap/ic_launcher" android:theme="@style/settingsTheme" android:exported="true" android:directBootAware="true" />
 
     <activity android:name="juloo.keyboard2.LauncherActivity" android:icon="@mipmap/ic_launcher" android:theme="@style/appTheme" android:exported="true" android:directBootAware="true">
