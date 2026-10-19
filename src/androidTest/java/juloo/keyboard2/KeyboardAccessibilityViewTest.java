@@ -4,9 +4,8 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
-import androidx.core.view.ViewCompat;
+import android.view.accessibility.AccessibilityNodeProvider;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import androidx.core.view.accessibility.AccessibilityNodeProviderCompat;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -337,12 +336,12 @@ public class KeyboardAccessibilityViewTest
       assertTrue(view.isFocusable());
       assertEquals(android.view.View.IMPORTANT_FOR_ACCESSIBILITY_YES,
           view.getImportantForAccessibility());
-      AccessibilityNodeProviderCompat provider = ViewCompat.getAccessibilityNodeProvider(view);
+      AccessibilityNodeProvider provider = view.getAccessibilityNodeProvider();
       assertNotNull("Install the ExploreByTouchHelper as the view's accessibility delegate", provider);
 
-      AccessibilityNodeInfoCompat host = provider.createAccessibilityNodeInfo(-1);
+      AccessibilityNodeInfoCompat host = AccessibilityNodeInfoCompat.wrap(provider.createAccessibilityNodeInfo(-1));
       assertEquals(2, host.getChildCount());
-      AccessibilityNodeInfoCompat active = provider.createAccessibilityNodeInfo(0);
+      AccessibilityNodeInfoCompat active = AccessibilityNodeInfoCompat.wrap(provider.createAccessibilityNodeInfo(0));
       assertEquals("android.widget.Button", active.getClassName().toString());
       assertEquals("a", active.getText().toString());
       assertEquals("a", active.getContentDescription().toString());
@@ -354,7 +353,7 @@ public class KeyboardAccessibilityViewTest
       assertEquals(bounds(0), nodeBounds);
       assertTrue((active.getActions() & AccessibilityNodeInfoCompat.ACTION_CLICK) != 0);
 
-      AccessibilityNodeInfoCompat empty = provider.createAccessibilityNodeInfo(1);
+      AccessibilityNodeInfoCompat empty = AccessibilityNodeInfoCompat.wrap(provider.createAccessibilityNodeInfo(1));
       assertEquals("Empty key", empty.getText().toString());
       assertFalse(empty.isEnabled());
       assertEquals(0, empty.getActions() & AccessibilityNodeInfoCompat.ACTION_CLICK);

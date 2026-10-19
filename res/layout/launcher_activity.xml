@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:fitsSystemWindows="true">
-  <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical">
-    <TextView style="@style/paragraph" android:text="@string/launcher_description"/>
-    <Button style="@style/paragraph" android:text="@string/launcher_button_imesettings" android:onClick="launch_imesettings" android:layout_width="wrap_content"/>
-    <Button style="@style/paragraph" android:text="@string/launcher_button_imepicker" android:onClick="launch_imepicker" android:layout_width="wrap_content"/>
-    <Button style="@style/paragraph" android:text="@string/launcher_button_dictionaries" android:onClick="launch_dictionaries_activity" android:layout_width="wrap_content"/>
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingBottom="24dp">
+    <TextView style="@style/paragraph" android:text="@string/launcher_description" android:textSize="16sp"/>
+    <TextView style="@style/paragraph" android:text="@string/launcher_setup_heading" android:textStyle="bold" android:textSize="20sp"/>
+    <TextView android:id="@+id/launcher_enabled_status" style="@style/paragraph" android:accessibilityLiveRegion="polite" android:text="@string/launcher_status_enabled_initial" android:textSize="16sp"/>
+    <Button style="@style/paragraph" android:minHeight="48dp" android:text="@string/launcher_button_imesettings" android:onClick="launch_imesettings"/>
+    <TextView android:id="@+id/launcher_selected_status" style="@style/paragraph" android:accessibilityLiveRegion="polite" android:text="@string/launcher_status_selected_initial" android:textSize="16sp"/>
+    <Button android:id="@+id/launcher_button_imepicker" style="@style/paragraph" android:minHeight="48dp" android:text="@string/launcher_button_imepicker" android:onClick="launch_imepicker"/>
+    <TextView style="@style/paragraph" android:text="@string/launcher_test_heading" android:textStyle="bold" android:textSize="20sp"/>
+    <TextView android:id="@+id/launcher_typing_status" style="@style/paragraph" android:accessibilityLiveRegion="polite" android:text="@string/launcher_status_typing_initial" android:textSize="16sp"/>
+    <juloo.keyboard2.TypingTestEditText android:id="@+id/launcher_tryhere_area" style="@style/paragraph" android:layout_width="match_parent" android:minHeight="96dp" android:gravity="top|start" android:inputType="textCapSentences|textMultiLine" android:hint="@string/launcher_tryhere_hint" android:importantForAutofill="no" android:saveEnabled="false"/>
+    <TextView android:id="@+id/launcher_tryhere_text" style="@style/paragraph" android:text="@string/launcher_tryhere"/>
+    <Button style="@style/paragraph" android:minHeight="48dp" android:text="@string/launcher_button_clear_test" android:onClick="clear_typing_test"/>
+    <Button style="@style/paragraph" android:minHeight="48dp" android:text="@string/launcher_button_dictionaries" android:onClick="launch_dictionaries_activity"/>
+    <TextView style="@style/paragraph" android:text="@string/launcher_howto_heading" android:textStyle="bold" android:textSize="20sp"/>
     <LinearLayout style="@style/anim_box">
-      <ImageView style="@style/anim" android:id="@+id/launcher_anim_swipe" android:background="@drawable/doc_key_u" android:src="@drawable/doc_anim_swipe"/>
+      <ImageView style="@style/anim" android:id="@+id/launcher_anim_swipe" android:background="@drawable/doc_key_u" android:src="@drawable/doc_anim_swipe" android:contentDescription="@string/launcher_anim_swipe_description"/>
       <TextView style="@style/anim_text" android:text="@string/launcher_anim_7"/>
     </LinearLayout>
     <LinearLayout style="@style/anim_box">
-      <ImageView style="@style/anim" android:id="@+id/launcher_anim_circle" android:background="@drawable/doc_key_g" android:src="@drawable/doc_anim_circle"/>
+      <ImageView style="@style/anim" android:id="@+id/launcher_anim_circle" android:background="@drawable/doc_key_g" android:src="@drawable/doc_anim_circle" android:contentDescription="@string/launcher_anim_circle_description"/>
       <TextView style="@style/anim_text" android:text="@string/launcher_anim_g"/>
     </LinearLayout>
     <LinearLayout style="@style/anim_box">
-      <ImageView style="@style/anim" android:id="@+id/launcher_anim_round_trip" android:background="@drawable/doc_key_g" android:src="@drawable/doc_anim_round_trip"/>
+      <ImageView style="@style/anim" android:id="@+id/launcher_anim_round_trip" android:background="@drawable/doc_key_g" android:src="@drawable/doc_anim_round_trip" android:contentDescription="@string/launcher_anim_round_trip_description"/>
       <TextView style="@style/anim_text" android:text="@string/launcher_anim_dash"/>
     </LinearLayout>
-    <TextView android:id="@+id/launcher_tryhere_text" style="@style/paragraph" android:text="@string/launcher_tryhere"/>
-    <EditText android:id="@+id/launcher_tryhere_area" style="@style/paragraph" android:inputType="text" android:hint="@string/launcher_tryhere_hint" android:importantForAutofill="no"/>
     <TextView style="@style/paragraph" android:text="@string/launcher_sourcecode"/>
     <TextView style="@style/paragraph" android:text="@string/launcher_repo_url" android:autoLink="web" android:linksClickable="true"/>
   </LinearLayout>
