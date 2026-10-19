@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- The framework DayNight theme was introduced in API 29. -->
+  <style name="appTheme" parent="@android:style/Theme.DeviceDefault.DayNight">
+    <item name="android:colorAccent">#8AB4F8</item>
+  </style>
+</resources>

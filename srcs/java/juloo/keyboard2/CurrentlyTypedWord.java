@@ -213,6 +213,7 @@ public final class CurrentlyTypedWord
   }
 
   /** Like above but take the text after the cursor into account. */
+  @androidx.annotation.RequiresApi(31)
   void set_current_word(SurroundingText st)
   {
     _w.setLength(0);

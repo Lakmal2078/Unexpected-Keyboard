@@ -24,6 +24,7 @@ public final class DirectBootAwarePreferences
   }
 
   /** Load the default preferences. */
+  @androidx.annotation.RequiresApi(24)
   static SharedPreferences get_protected_prefs(Context context)
   {
     String pref_name =

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <declare-styleable name="keyboard">
     <!-- The background of the keyboard -->
     <attr name="colorKeyboard" format="color"/>
@@ -47,10 +47,13 @@
     <attr name="suggestions_background" format="color"/>
     <attr name="suggestions_border_radius" format="dimension"/>
   </declare-styleable>
+  <!-- App-owned lightness works on API 21; platform hints below are ignored
+       by older Android versions that do not define those attributes. -->
+  <attr name="isLightTheme" format="boolean"/>
   <style name="BaseTheme">
-    <item name="android:forceDarkAllowed">false</item>
+    <item name="android:forceDarkAllowed" tools:targetApi="29">false</item>
     <item name="navigationBarColor">?attr/colorKeyboard</item>
-    <item name="windowLightNavigationBar">?attr/android:isLightTheme</item>
+    <item name="windowLightNavigationBar">?attr/isLightTheme</item>
     <item name="keyBorderRadius">5dp</item>
     <item name="keyBorderWidth">0dp</item>
     <item name="keyBorderWidthActivated">0dp</item>
@@ -66,7 +69,8 @@
     <item name="suggestions_border_radius">?attr/keyBorderRadius</item>
   </style>
   <style name="Dark" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#1b1b1b</item>
     <item name="colorKey">#333333</item>
     <item name="colorKeyActivated">#1b1b1b</item>
@@ -85,7 +89,8 @@
     <item name="emoji_color" type="color">#ffffff</item>
   </style>
   <style name="Light" parent="BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#e3e3e3</item>
     <item name="colorKey">#cccccc</item>
     <item name="colorKeyActivated">#e3e3e3</item>
@@ -107,7 +112,8 @@
     <item name="emoji_color">#000000</item>
   </style>
   <style name="Black" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#000000</item>
     <item name="colorKey">#000000</item>
     <item name="colorKeyActivated">#333333</item>
@@ -131,7 +137,8 @@
     <item name="keyBorderWidth">1dp</item>
   </style>
   <style name="White" parent="BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#ffffff</item>
     <item name="colorKey">#ffffff</item>
     <item name="colorKeyAction">#ffffff</item>
@@ -152,7 +159,8 @@
     <item name="clipboard_divider_color" type="color">#eeeeee</item>
   </style>
   <style name="ePaper" parent="BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#ffffff</item>
     <item name="colorKey">#ffffff</item>
     <item name="colorKeyAction">#ffffff</item>
@@ -174,7 +182,8 @@
     <item name="clipboard_divider_height">2dp</item>
   </style>
   <style name="Desert" parent="@style/BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#ffe0b2</item>
     <item name="colorKey">#fff3e0</item>
     <item name="colorKeyActivated">#ffcc80</item>
@@ -194,7 +203,8 @@
     <item name="emoji_color">#000000</item>
   </style>
   <style name="Jungle" parent="@style/BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#4db6ac</item>
     <item name="colorKey">#e0f2f1</item>
     <item name="colorKeyActivated">#00695c</item>
@@ -214,7 +224,8 @@
     <item name="emoji_color">#000000</item>
   </style>
   <style name="MonetLight" parent="@style/BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">@color/system_neutral1_100</item>
     <item name="colorKey">@color/system_neutral1_50</item>
     <item name="colorKeyActivated">?colorKeyboard</item>
@@ -228,7 +239,8 @@
     <item name="emoji_color">?colorKeyboard</item>
   </style>
   <style name="MonetDark" parent="@style/BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">@color/system_neutral1_900</item>
     <item name="colorKey">@color/system_neutral1_800</item>
     <item name="colorKeyActivated">?colorKeyboard</item>
@@ -241,7 +253,8 @@
     <item name="emoji_color">?colorKeyboard</item>
   </style>
   <style name="RosePine" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#191724</item>
     <item name="colorKey">#26233a</item>
     <item name="colorKeyActivated">#403d52</item>
@@ -262,7 +275,8 @@
     <item name="emoji_color">#e0def4</item>
   </style>
   <style name="EverforestLight" parent="BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#f8f5e4</item>
     <item name="colorKey">#e5e2d1</item>
     <item name="colorKeyActivated">#dbe0b6</item>
@@ -277,7 +291,8 @@
     <item name="clipboard_divider_color">?colorKey</item>
  </style>
  <style name="Cobalt" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#000000</item>
     <item name="colorKey">?colorKeyboard</item>
     <item name="colorKeyActivated">#78bfff</item>
@@ -296,7 +311,8 @@
     <item name="clipboard_divider_color">?colorKey</item>
  </style>
  <style name="Pine" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#000000</item>
     <item name="colorKey">?colorKeyboard</item>
     <item name="colorKeyActivated">#74cc8a</item>
@@ -315,7 +331,8 @@
     <item name="clipboard_divider_color">?colorKey</item>
  </style>
  <style name="ePaperBlack" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#000000</item>
     <item name="colorKey">?colorKeyboard</item>
     <item name="colorKeyActivated">#ffffff</item>
@@ -336,7 +353,8 @@
     <item name="clipboard_divider_height">2dp</item>
  </style>
  <style name="Dracula" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#282A36</item>
     <item name="colorKey">#343746</item>
     <item name="colorKeyActivated">#44475A</item>
@@ -353,7 +371,8 @@
     <item name="emoji_color">#F8F8F2</item>
   </style>
   <style name="GradientPurplePink" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#251A3A</item>
     <item name="keyboardGradientStart">#8A2BE2</item>
     <item name="keyboardGradientEnd">#AF6679</item>
@@ -373,7 +392,8 @@
     <item name="emoji_color">#FFFFFF</item>
   </style>
   <style name="CatppuccinMocha" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#1E1E2E</item>
     <item name="colorKey">#313244</item>
     <item name="colorKeyActivated">#45475A</item>
@@ -392,7 +412,8 @@
     <item name="suggestions_background">#1E1E2E</item>
   </style>
   <style name="CatppuccinLatte" parent="BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#EFF1F5</item>
     <item name="colorKey">#E6E9EF</item>
     <item name="colorKeyActivated">#CCD0DA</item>
@@ -411,7 +432,8 @@
     <item name="suggestions_background">#EFF1F5</item>
   </style>
   <style name="TokyoNight" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#1A1B26</item>
     <item name="colorKey">#24283B</item>
     <item name="colorKeyActivated">#414868</item>
@@ -430,7 +452,8 @@
     <item name="suggestions_background">#1A1B26</item>
   </style>
   <style name="Nord" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#2E3440</item>
     <item name="colorKey">#3B4252</item>
     <item name="colorKeyActivated">#4C566A</item>
@@ -449,7 +472,8 @@
     <item name="suggestions_background">#2E3440</item>
   </style>
   <style name="CyberpunkNeon" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#0B0C10</item>
     <item name="colorKey">#1F2833</item>
     <item name="colorKeyActivated">#00F0FF</item>
@@ -472,7 +496,8 @@
     <item name="suggestions_background">#0B0C10</item>
   </style>
   <style name="AmoledCyan" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#000000</item>
     <item name="colorKey">#141416</item>
     <item name="colorKeyActivated">#222228</item>
@@ -495,7 +520,8 @@
     <item name="suggestions_background">#000000</item>
   </style>
   <style name="SunsetGlow" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#1A121E</item>
     <item name="keyboardGradientStart">#B71C1C</item>
     <item name="keyboardGradientEnd">#E65100</item>
@@ -516,7 +542,8 @@
     <item name="suggestions_background">#1A121E</item>
   </style>
   <style name="LankaMaroon" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#2A080E</item>
     <item name="keyboardGradientStart">#3D0C14</item>
     <item name="keyboardGradientEnd">#1A0509</item>
@@ -541,7 +568,8 @@
     <item name="suggestions_background">#2A080E</item>
   </style>
   <style name="EmeraldForest" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#051811</item>
     <item name="keyboardGradientStart">#09261C</item>
     <item name="keyboardGradientEnd">#030F0A</item>
@@ -566,7 +594,8 @@
     <item name="suggestions_background">#051811</item>
   </style>
   <style name="MidnightPurple" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#0D0B18</item>
     <item name="keyboardGradientStart">#24123E</item>
     <item name="keyboardGradientEnd">#0D0B18</item>
@@ -594,7 +623,8 @@
   <!-- Custom themes: Quantum Neon, Midnight Ocean, Graphite Pro,
        Sri Lanka Heritage, and OLED Black. -->
   <style name="QuantumNeon" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#07111F</item>
     <item name="keyboardGradientStart">#0B1E33</item>
     <item name="keyboardGradientEnd">#07111F</item>
@@ -620,7 +650,8 @@
   </style>
 
   <style name="MidnightOcean" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#071B2C</item>
     <item name="keyboardGradientStart">#0B2A43</item>
     <item name="keyboardGradientEnd">#061522</item>
@@ -644,7 +675,8 @@
   </style>
 
   <style name="GraphitePro" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="keyBorderRadius">9dp</item>
     <item name="colorKeyboard">#202124</item>
     <item name="colorKey">#303238</item>
@@ -667,7 +699,8 @@
   </style>
 
   <style name="SinhalaHeritage" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#28151B</item>
     <item name="keyboardGradientStart">#45202A</item>
     <item name="keyboardGradientEnd">#28151B</item>
@@ -691,7 +724,8 @@
   </style>
 
   <style name="OledBlack" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#000000</item>
     <item name="colorKey">#000000</item>
     <item name="colorKeyActivated">#202020</item>
@@ -716,7 +750,8 @@
 
   <!-- Additional themes from the 18-theme palette collection. -->
   <style name="CyberPurple" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#100817</item>
     <item name="keyboardGradientStart">#29103F</item>
     <item name="keyboardGradientEnd">#100817</item>
@@ -739,7 +774,8 @@
   </style>
 
   <style name="MatrixGreen" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#101713</item>
     <item name="keyboardGradientStart">#1A2B20</item>
     <item name="keyboardGradientEnd">#080D0A</item>
@@ -762,7 +798,8 @@
   </style>
 
   <style name="NeonRose" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#1D0C18</item>
     <item name="keyboardGradientStart">#35102D</item>
     <item name="keyboardGradientEnd">#160A16</item>
@@ -785,7 +822,8 @@
   </style>
 
   <style name="ForestMist" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#14251D</item>
     <item name="keyboardGradientStart">#1D382A</item>
     <item name="keyboardGradientEnd">#101C16</item>
@@ -808,7 +846,8 @@
   </style>
 
   <style name="ArcticBlue" parent="BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#EAF4FF</item>
     <item name="colorKey">#FFFFFF</item>
     <item name="colorKeyActivated">#C7E3FF</item>
@@ -829,7 +868,8 @@
   </style>
 
   <style name="Aurora" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#102A35</item>
     <item name="keyboardGradientStart">#174A50</item>
     <item name="keyboardGradientEnd">#211C42</item>
@@ -852,7 +892,8 @@
   </style>
 
   <style name="OceanTeal" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#073B3A</item>
     <item name="keyboardGradientStart">#0A4A48</item>
     <item name="keyboardGradientEnd">#052B2B</item>
@@ -875,7 +916,8 @@
   </style>
 
   <style name="RoyalGold" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#211B13</item>
     <item name="keyboardGradientStart">#3A2B17</item>
     <item name="keyboardGradientEnd">#17120D</item>
@@ -898,7 +940,8 @@
   </style>
 
   <style name="SinhalaSand" parent="BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#FFF4E6</item>
     <item name="colorKey">#FFFFFF</item>
     <item name="colorKeyActivated">#E8C7AE</item>
@@ -919,7 +962,8 @@
   </style>
 
   <style name="SinhalaTech" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#0B1628</item>
     <item name="keyboardGradientStart">#102B47</item>
     <item name="keyboardGradientEnd">#07101D</item>
@@ -942,7 +986,8 @@
   </style>
 
   <style name="SoftLavender" parent="BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#F4F0FF</item>
     <item name="colorKey">#FFFFFF</item>
     <item name="colorKeyActivated">#DDD2F8</item>
@@ -963,7 +1008,8 @@
   </style>
 
   <style name="HighContrast" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#000000</item>
     <item name="colorKey">#000000</item>
     <item name="colorKeyActivated">#FFFF00</item>
@@ -986,7 +1032,8 @@
   </style>
 
   <style name="GruvboxDark" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#282828</item>
     <item name="colorKey">#3C3836</item>
     <item name="colorKeyActivated">#282828</item>
@@ -1004,7 +1051,8 @@
   </style>
 
   <style name="GruvboxLight" parent="BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#FBF1C7</item>
     <item name="colorKey">#EBDBB2</item>
     <item name="colorKeyActivated">#FBF1C7</item>
@@ -1022,7 +1070,8 @@
   </style>
 
   <style name="SolarizedDark" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#002B36</item>
     <item name="colorKey">#073642</item>
     <item name="colorKeyActivated">#002B36</item>
@@ -1040,7 +1089,8 @@
   </style>
 
   <style name="SepiaWarm" parent="BaseTheme">
-    <item name="android:isLightTheme">true</item>
+    <item name="isLightTheme">true</item>
+    <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#F4ECD8</item>
     <item name="colorKey">#E8DEC5</item>
     <item name="colorKeyActivated">#F4ECD8</item>
@@ -1058,7 +1108,8 @@
   </style>
 
   <style name="HighContrastYellow" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#000000</item>
     <item name="colorKey">#121212</item>
     <item name="colorKeyActivated">#2A2A00</item>
@@ -1081,7 +1132,8 @@
   </style>
 
   <style name="LankaBlue" parent="BaseTheme">
-    <item name="android:isLightTheme">false</item>
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#0A1A2F</item>
     <item name="keyboardGradientStart">#0B2040</item>
     <item name="keyboardGradientEnd">#050C16</item>

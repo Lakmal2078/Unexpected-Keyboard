@@ -119,6 +119,7 @@ public class LauncherActivity extends Activity implements Handler.Callback
     return (Animatable)img.getDrawable();
   }
 
+  @androidx.annotation.RequiresApi(28)
   final class Tryhere_OnUnhandledKeyEventListener implements View.OnUnhandledKeyEventListener
   {
     public boolean onUnhandledKeyEvent(View v, KeyEvent ev)
