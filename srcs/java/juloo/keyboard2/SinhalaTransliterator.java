@@ -1,6 +1,8 @@
 package juloo.keyboard2;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -846,7 +848,23 @@ public final class SinhalaTransliterator
     // e.g. "colom" -> "කොළඹ", "lank" -> "ලංකාව", "kand" -> "මහනුවර", "saep" -> "සැප"
     if (lower.length() >= 2)
     {
-      for (Map.Entry<String, String> entry : COMMON_WORDS.entrySet())
+      // HashMap iteration order is unspecified. Sort by shortest matching
+      // key first, then alphabetically, so suggestions are deterministic.
+      java.util.List<Map.Entry<String, String>> entries =
+          new java.util.ArrayList<>(COMMON_WORDS.entrySet());
+      Collections.sort(entries, new Comparator<Map.Entry<String, String>>()
+      {
+        @Override
+        public int compare(Map.Entry<String, String> a, Map.Entry<String, String> b)
+        {
+          int lengthComparison = Integer.compare(a.getKey().length(), b.getKey().length());
+          return lengthComparison != 0
+              ? lengthComparison
+              : a.getKey().compareTo(b.getKey());
+        }
+      });
+
+      for (Map.Entry<String, String> entry : entries)
       {
         String k = entry.getKey();
         if (k.length() > lower.length() && k.startsWith(lower))
