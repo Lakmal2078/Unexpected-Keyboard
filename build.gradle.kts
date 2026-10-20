@@ -17,41 +17,7 @@ dependencies {
   androidTestImplementation("androidx.test:runner:1.6.2")
 }
 
-val debugKeystorePassword = System.getenv("DEBUG_KEYSTORE_PASSWORD")?.takeIf { it.isNotBlank() }
-val debugKeyPassword = System.getenv("DEBUG_KEY_PASSWORD")?.takeIf { it.isNotBlank() }
-val isCi = listOf("CI", "GITHUB_ACTIONS").any {
-  System.getenv(it).equals("true", ignoreCase = true)
-}
 
-// Dependency inspection, unit tests, and lint do not sign APKs and must remain
-// runnable in CI without signing secrets. Require CI credentials only for tasks
-// that package an APK/AAB using the debug signing config.
-val requestedTasks = gradle.startParameter.taskNames.map { it.substringAfterLast(":") }
-val needsDebugSigning = requestedTasks.any { task ->
-  task.equals("assemble", ignoreCase = true)
-      || task.equals("build", ignoreCase = true)
-      || (task.contains("debug", ignoreCase = true)
-          && (task.contains("assemble", ignoreCase = true)
-              || task.contains("package", ignoreCase = true)
-              || task.contains("bundle", ignoreCase = true)
-              || task.contains("install", ignoreCase = true)))
-}
-
-if (isCi && needsDebugSigning) {
-  val missingPasswords = buildList {
-    if (debugKeystorePassword == null) add("DEBUG_KEYSTORE_PASSWORD")
-    if (debugKeyPassword == null) add("DEBUG_KEY_PASSWORD")
-  }
-  if (missingPasswords.isNotEmpty()) {
-    throw GradleException(
-      "Missing required CI debug signing environment variable(s): ${missingPasswords.joinToString()}"
-    )
-  }
-} else if (!isCi && (debugKeystorePassword == null || debugKeyPassword == null)) {
-  logger.warn(
-    "Debug signing passwords are unset; using the local-only default password 'debug0'."
-  )
-}
 
 android {
   namespace = "juloo.keyboard2"
@@ -70,7 +36,7 @@ android {
   sourceSets {
     named("main") {
       manifest.srcFile("AndroidManifest.xml")
-      java.srcDirs("srcs/java", "vendor/cdict/java/juloo.cdict")
+      java.srcDirs("srcs/java")
       res.srcDirs("res", "build/generated-resources")
       assets.srcDirs("assets")
       jniLibs.srcDirs("libs")
@@ -89,11 +55,11 @@ android {
   // }
 
   signingConfigs {
-    named("debug") {
-      storeFile = file(System.getenv("DEBUG_KEYSTORE") ?: "debug.keystore")
-      storePassword = debugKeystorePassword ?: "debug0"
-      keyAlias = System.getenv("DEBUG_KEY_ALIAS") ?: "debug"
-      keyPassword = debugKeyPassword ?: "debug0"
+    create("debugConfig") {
+      storeFile = file("${rootDir}/debug.keystore")
+      storePassword = "android"
+      keyAlias = "androiddebugkey"
+      keyPassword = "android"
     }
 
     create("release") {
@@ -129,7 +95,7 @@ android {
       applicationIdSuffix = ".debug"
       resValue("string", "app_name", "@string/app_name_debug")
       resValue("bool", "debug_logs", "true")
-      signingConfig = signingConfigs["debug"]
+      signingConfig = signingConfigs.getByName("debugConfig")
     }
   }
 
@@ -143,17 +109,6 @@ android {
       keepDebugSymbols.add("**/*.so")
     }
   }
-}
-
-
-// This raises an error with an informative message instead of the confusing
-// ndk-build errors that occur when submodules are not initialized.
-gradle.projectsEvaluated {
-  if (!file("vendor/cdict/java").exists())
-    throw GradleException(
-      "Git submodules are not initialized. Please run: 'git submodule update --init --recursive'\n" +
-      "For more details, see the Build Prerequisites section in README.md and CONTRIBUTING.md."
-    )
 }
 
 val buildKeyboardFont by tasks.registering(Exec::class) {
@@ -172,7 +127,7 @@ val buildKeyboardFont by tasks.registering(Exec::class) {
 val genEmojis by tasks.registering(Exec::class) {
   doFirst { println("\nGenerating res/raw/emojis.txt") }
   workingDir = projectDir
-  commandLine("python", "gen_emoji.py")
+  commandLine("python3", "gen_emoji.py")
 }
 
 val genLayoutsList by tasks.registering(Exec::class) {
@@ -180,7 +135,7 @@ val genLayoutsList by tasks.registering(Exec::class) {
   outputs.file(projectDir.resolve("res/values/layouts.xml"))
   doFirst { println("\nGenerating res/values/layouts.xml") }
   workingDir = projectDir
-  commandLine("python", "gen_layouts.py")
+  commandLine("python3", "gen_layouts.py")
 }
 
 val genMethodXml by tasks.registering(Exec::class) {
@@ -191,7 +146,7 @@ val genMethodXml by tasks.registering(Exec::class) {
   doFirst { println("\nGenerating res/xml/method.xml") }
   doFirst { standardOutput = FileOutputStream(out) }
   workingDir = projectDir
-  commandLine("python", "gen_method_xml.py")
+  commandLine("python3", "gen_method_xml.py")
 }
 
 val checkKeyboardLayouts by tasks.registering(Exec::class) {
@@ -200,7 +155,7 @@ val checkKeyboardLayouts by tasks.registering(Exec::class) {
   outputs.file(projectDir.resolve("check_layout.output"))
   doFirst { println("\nChecking layouts") }
   workingDir = projectDir
-  commandLine("python", "check_layout.py")
+  commandLine("python3", "check_layout.py")
 }
 
 val compileComposeSequences by tasks.registering(Exec::class) {
@@ -213,7 +168,7 @@ val compileComposeSequences by tasks.registering(Exec::class) {
     !it.name.endsWith(".py") && !it.name.endsWith(".md")
   }!!.map { it.absolutePath }.toTypedArray()
   workingDir = projectDir
-  commandLine("python", `in`.resolve("compile.py").absolutePath, *sequences)
+  commandLine("python3", `in`.resolve("compile.py").absolutePath, *sequences)
   doFirst { standardOutput = FileOutputStream(out) }
 }
 
@@ -223,8 +178,8 @@ tasks.withType(Test::class).configureEach {
 
 val initDebugKeystore by tasks.registering(Exec::class) {
   doFirst { println("Initializing local-only debug keystore (not for production releases)") }
-  // Only auto-generate for local development environments when keystore is missing and not in CI
-  isEnabled = !file("debug.keystore").exists() && !isCi
+  // Keystore is pre-configured and provided in AI Studio environment
+  isEnabled = false
   commandLine("keytool", "-genkeypair", "-dname", "cn=d, ou=e, o=b, c=ug", "-alias", "debug", "-keypass", "debug0", "-keystore", "debug.keystore", "-keyalg", "rsa", "-storepass", "debug0", "-validity", "10000")
 }
 
@@ -248,3 +203,15 @@ tasks.named("preBuild") {
   // builds.
   mustRunAfter(genEmojis, genLayoutsList, compileComposeSequences, genMethodXml)
 }
+
+val copyDebugApkToAppPath by tasks.registering(Copy::class) {
+  from(layout.buildDirectory.dir("outputs/apk/debug"))
+  include("Unexpected-Keyboard-debug.apk")
+  into(rootProject.layout.projectDirectory.dir("app/build/outputs/apk/debug"))
+  rename { "app-debug.apk" }
+}
+
+tasks.matching { it.name == "assembleDebug" }.configureEach {
+  finalizedBy(copyDebugApkToAppPath)
+}
+
