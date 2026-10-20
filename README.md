@@ -69,6 +69,78 @@ To build and test Unexpected Keyboard locally:
 ./gradlew test
 ```
 
+### Building Release APK with GitHub Actions
+
+The repository includes automated GitHub Actions workflows to build and release APKs directly on GitHub:
+
+- **`.github/workflows/build-apk.yml`**: Automatically builds a debug APK on every push to `main`/`master`, pull request, or manual trigger (`workflow_dispatch`).
+- **`.github/workflows/make-apk.yml`**: Builds an optimized, signed release APK and publishes a GitHub Release when a version tag (`v*`) is pushed or manually triggered.
+
+#### 1. Generate a Release Keystore
+
+If you do not already have an Android release signing keystore, create one with `keytool` (included with JDK):
+
+```sh
+keytool -genkeypair -v \
+  -keystore release.keystore \
+  -alias my-key-alias \
+  -keyalg RSA \
+  -keysize 2048 \
+  -validity 10000 \
+  -storepass "your_keystore_password" \
+  -keypass "your_key_password"
+```
+
+#### 2. Convert the Keystore to Base64
+
+GitHub Actions secrets store plain text strings. Convert your binary `.keystore` file to Base64:
+
+- **Linux / Git Bash**:
+  ```sh
+  base64 -w 0 release.keystore > keystore_base64.txt
+  ```
+- **macOS**:
+  ```sh
+  base64 -i release.keystore -o keystore_base64.txt
+  ```
+- **Windows (PowerShell)**:
+  ```powershell
+  [Convert]::ToBase64String([IO.File]::ReadAllBytes("release.keystore")) | Out-File -Encoding ascii keystore_base64.txt
+  ```
+
+#### 3. Configure GitHub Repository Secrets
+
+To enable automated release signing, add the following secrets to your GitHub repository:
+
+1. In your repository on GitHub, navigate to **Settings** &gt; **Secrets and variables** &gt; **Actions**.
+2. Click **New repository secret** for each required variable:
+
+| Secret Name | Description | Example / Format |
+|---|---|---|
+| `RELEASE_KEYSTORE_BASE64` | The Base64 string of your `.keystore` / `.jks` file | Entire content of `keystore_base64.txt` (one continuous line) |
+| `RELEASE_KEYSTORE_PASSWORD` | Password used to unlock the keystore file | Value provided for `-storepass` |
+| `RELEASE_KEY_ALIAS` | Alias name for the signing key entry | Value provided for `-alias` (e.g., `my-key-alias`) |
+| `RELEASE_KEY_PASSWORD` | Password used to unlock the specific key entry | Value provided for `-keypass` |
+
+#### 4. Triggering the Release Workflow
+
+Once the secrets are configured, you can build the signed release APK using either of the following methods:
+
+- **Option A: Push a Version Tag (Recommended)**
+  Tag your commit with a `v` prefix and push it to GitHub:
+  ```sh
+  git tag v2.1.2
+  git push origin v2.1.2
+  ```
+  The workflow compiles the code, signs the APK with your release key, generates ProGuard/R8 optimizations, and creates a new entry on your repository's **Releases** page with `Unexpected-Keyboard-release.apk` attached.
+
+- **Option B: Manual Workflow Run via GitHub UI**
+  1. Open the repository on GitHub and click the **Actions** tab.
+  2. In the left workflow list, select **Build and release signed APK**.
+  3. Click **Run workflow**, choose your target branch (e.g. `main`), and confirm.
+  4. Once finished, download the signed APK from the **Artifacts** section of the run summary.
+
+
 ## Privacy & Clipboard Security
 
 Unexpected Keyboard follows strict privacy and data protection principles:
