@@ -177,10 +177,9 @@ tasks.withType(Test::class).configureEach {
 }
 
 val initDebugKeystore by tasks.registering(Exec::class) {
-  doFirst { println("Initializing local-only debug keystore (not for production releases)") }
-  // Keystore is pre-configured and provided in AI Studio environment
-  isEnabled = false
-  commandLine("keytool", "-genkeypair", "-dname", "cn=d, ou=e, o=b, c=ug", "-alias", "debug", "-keypass", "debug0", "-keystore", "debug.keystore", "-keyalg", "rsa", "-storepass", "debug0", "-validity", "10000")
+  // Automatically generate debug keystore if it doesn't exist (e.g. in CI / GitHub Actions)
+  isEnabled = !file("debug.keystore").exists()
+  commandLine("keytool", "-genkeypair", "-noprompt", "-dname", "cn=Debug, ou=Build, o=Android, c=US", "-alias", "androiddebugkey", "-keypass", "android", "-keystore", "debug.keystore", "-keyalg", "RSA", "-storepass", "android", "-validity", "10000")
 }
 
 // latn_qwerty_us is used as a raw resource by the custom layout option.

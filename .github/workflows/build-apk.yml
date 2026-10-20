@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -24,29 +25,44 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          packages: platform-tools platforms;android-36 build-tools;35.0.0
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Prepare environment for runner
+      - name: Install build dependencies (fontforge)
         run: |
+          sudo apt-get update
+          sudo apt-get install -y fontforge
+
+      - name: Accept Android licenses and install Android SDK 36
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" || true
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Prepare debug keystore
+        run: |
+          if [ ! -f debug.keystore ]; then
+            keytool -genkeypair -noprompt \
+              -dname "cn=Debug, ou=Build, o=Android, c=US" \
+              -alias androiddebugkey \
+              -keypass android \
+              -keystore debug.keystore \
+              -keyalg RSA \
+              -storepass android \
+              -validity 10000
+          fi
           chmod +x gradlew
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug --stacktrace
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: unexpected-keyboard-apk
-          path: build/outputs/apk/debug/Unexpected-Keyboard-debug.apk
+          path: build/outputs/apk/debug/*.apk
           retention-days: 14
