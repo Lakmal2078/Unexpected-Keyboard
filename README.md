@@ -61,13 +61,55 @@ To build and test Unexpected Keyboard locally:
 - **Signing configuration**: See `.env.example` for required environment variables.
 
 ### Building & Testing
+
+#### 1. Build Debug APK
+The debug build automatically generates a local debug keystore if one does not exist:
 ```sh
-# Build debug APK
 ./gradlew assembleDebug
+```
+- **Output APK**: `build/outputs/apk/debug/Unexpected-Keyboard-debug.apk`
+- Also copied to: `app/build/outputs/apk/debug/app-debug.apk`
 
-# Build release APK (automatically runs generateReleaseApkReport)
+#### 2. Build Release APK (Signed)
+The release build requires signing environment variables (`RELEASE_KEYSTORE`, `RELEASE_KEYSTORE_PASSWORD`, `RELEASE_KEY_ALIAS`, `RELEASE_KEY_PASSWORD`).
+
+If you have a `.env` file configured:
+```sh
+# Load signing secrets from .env
+set -a && source .env && set +a
+
+# Assemble optimized and signed release APK
 ./gradlew assembleRelease
+```
+- **Output APK**: `build/outputs/apk/release/Unexpected-Keyboard-release.apk`
+- Automatically generates a size and file report (`build/reports/apk-release-report.txt`).
 
+#### 3. Building in Termux / PRoot (Android)
+If building directly on Android via Termux or a PRoot Linux environment:
+1. Ensure the AAPT2 override is configured in `~/.gradle/gradle.properties`:
+   ```properties
+   android.aapt2FromMavenOverride=/data/data/com.termux/files/usr/bin/aapt2
+   ```
+2. Build the APK variant:
+   ```sh
+   # Debug APK
+   ./gradlew assembleDebug
+
+   # Release APK
+   set -a && source .env && set +a
+   ./gradlew assembleRelease
+   ```
+3. Copy the APK to your phone storage / Downloads folder:
+   ```sh
+   # From PRoot environment:
+   cp build/outputs/apk/release/Unexpected-Keyboard-release.apk /sdcard/Download/
+
+   # From Termux native environment:
+   cp build/outputs/apk/release/Unexpected-Keyboard-release.apk ~/storage/shared/Download/
+   ```
+
+#### 4. Additional Tasks
+```sh
 # Generate APK size and output file count report
 ./gradlew generateReleaseApkReport
 

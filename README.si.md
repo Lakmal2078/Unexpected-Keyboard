@@ -51,10 +51,58 @@ https://github.com/Julow/Unexpected-Keyboard/assets/2310568/28f8f6fe-ac13-46f3-8
 - **keytool**: Local debug keystore ජනනය කිරීම සඳහා
 - **පරිසර විචල්‍ය (Env Vars)**: `.env.example` බලන්න
 
-### බිල්ඩ් සහ පරීක්ෂණ විධාන
+### බිල්ඩ් සහ පරීක්ෂණ විධාන (Building & Testing)
+
+#### 1. Debug APK එක බිල්ඩ් කිරීම
+Debug build එකේදී keystore එකක් නොමැති නම් ස්වයංක්‍රීයව debug keystore එකක් ජනනය වේ:
 ```sh
-# Debug APK එක බිල්ඩ් කිරීමට
 ./gradlew assembleDebug
+```
+- **Output APK**: `build/outputs/apk/debug/Unexpected-Keyboard-debug.apk`
+- (මෙන්ම `app/build/outputs/apk/debug/app-debug.apk` වෙතද copy වේ)
+
+#### 2. Release APK එක බිල්ඩ් කිරීම (Signed)
+Release build එක සඳහා signing credentials (`RELEASE_KEYSTORE`, `RELEASE_KEYSTORE_PASSWORD`, `RELEASE_KEY_ALIAS`, `RELEASE_KEY_PASSWORD`) අවශ්‍ය වේ.
+
+ඔබ සතුව `.env` ගොනුවක් ඇත්නම්:
+```sh
+# .env ගොනුවෙන් signing secrets load කරගැනීම
+set -a && source .env && set +a
+
+# Sign කළ Release APK එක assemble කිරීම
+./gradlew assembleRelease
+```
+- **Output APK**: `build/outputs/apk/release/Unexpected-Keyboard-release.apk`
+- Release APK එකෙහි ප්‍රමාණය සහ විස්තර වාර්තාවක් `build/reports/apk-release-report.txt` හි ස්වයංක්‍රීයව ජනනය වේ.
+
+#### 3. Termux / PRoot (Android) හරහා බිල්ඩ් කිරීම
+Android දුරකථනය තුළ Termux හෝ PRoot Linux පරිසරයක සිට build කරන්නේ නම්:
+1. `~/.gradle/gradle.properties` ගොනුව තුළ AAPT2 override සකසා ඇති බව තහවුරු කරගන්න:
+   ```properties
+   android.aapt2FromMavenOverride=/data/data/com.termux/files/usr/bin/aapt2
+   ```
+2. අවශ්‍ය APK වර්ගය build කරන්න:
+   ```sh
+   # Debug APK එක සඳහා
+   ./gradlew assembleDebug
+
+   # Release APK එක සඳහා
+   set -a && source .env && set +a
+   ./gradlew assembleRelease
+   ```
+3. බිල්ඩ් වූ APK එක Phone එකේ Download ෆෝල්ඩරයට copy කරගැනීම:
+   ```sh
+   # PRoot පරිසරයක සිට නම්:
+   cp build/outputs/apk/release/Unexpected-Keyboard-release.apk /sdcard/Download/
+
+   # Termux native පරිසරයක සිට නම්:
+   cp build/outputs/apk/release/Unexpected-Keyboard-release.apk ~/storage/shared/Download/
+   ```
+
+#### 4. වෙනත් විධාන
+```sh
+# APK report එකක් ලබාගැනීමට
+./gradlew generateReleaseApkReport
 
 # Unit tests ධාවනය කිරීමට
 ./gradlew test
