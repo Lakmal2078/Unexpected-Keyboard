@@ -65,6 +65,12 @@ To build and test Unexpected Keyboard locally:
 # Build debug APK
 ./gradlew assembleDebug
 
+# Build release APK (automatically runs generateReleaseApkReport)
+./gradlew assembleRelease
+
+# Generate APK size and output file count report
+./gradlew generateReleaseApkReport
+
 # Run unit tests
 ./gradlew test
 ```

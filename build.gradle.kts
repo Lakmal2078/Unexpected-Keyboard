@@ -1,5 +1,7 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import java.io.FileOutputStream
+import java.util.Date
+import java.util.Locale
 
 plugins {
   id("com.android.application") version "8.13.2"
@@ -213,4 +215,65 @@ val copyDebugApkToAppPath by tasks.registering(Copy::class) {
 tasks.matching { it.name == "assembleDebug" }.configureEach {
   finalizedBy(copyDebugApkToAppPath)
 }
+
+val generateReleaseApkReport by tasks.registering {
+  group = "reporting"
+  description = "Generates a size and file count report for the release APK output."
+
+  val releaseOutputDir = layout.buildDirectory.dir("outputs/apk/release")
+  val reportOutputFile = layout.buildDirectory.file("reports/apk-release-report.txt")
+
+  outputs.upToDateWhen { false }
+
+  doLast {
+    val dir = releaseOutputDir.get().asFile
+    if (!dir.exists() || !dir.isDirectory) {
+      logger.warn("Release output directory does not exist: ${dir.absolutePath}")
+      return@doLast
+    }
+
+    val allFiles = dir.walkTopDown().filter { it.isFile }.toList()
+    val apkFiles = allFiles.filter { it.extension == "apk" }
+
+    val reportFile = reportOutputFile.get().asFile
+    reportFile.parentFile?.mkdirs()
+
+    val reportContent = buildString {
+      appendLine("=========================================")
+      appendLine("        Release APK Build Report         ")
+      appendLine("=========================================")
+      appendLine("Generated At: ${Date()}")
+      appendLine("Output Directory: ${dir.absolutePath}")
+      appendLine("Total Files in Output: ${allFiles.size}")
+      appendLine()
+      appendLine("--- APK Files ---")
+      if (apkFiles.isEmpty()) {
+        appendLine("No APK file found in output directory.")
+      } else {
+        apkFiles.forEach { apk ->
+          val sizeBytes = apk.length()
+          val sizeKb = String.format(Locale.US, "%.2f KB", sizeBytes / 1024.0)
+          val sizeMb = String.format(Locale.US, "%.2f MB", sizeBytes / (1024.0 * 1024.0))
+          appendLine("File: ${apk.name}")
+          appendLine("Size: $sizeBytes bytes ($sizeKb / $sizeMb)")
+        }
+      }
+      appendLine()
+      appendLine("--- All Output Files ---")
+      allFiles.forEach { file ->
+        val relPath = file.relativeTo(dir).path
+        appendLine("- $relPath (${file.length()} bytes)")
+      }
+      appendLine("=========================================")
+    }
+
+    reportFile.writeText(reportContent)
+    println("\n$reportContent\nReport saved to: ${reportFile.absolutePath}")
+  }
+}
+
+tasks.matching { it.name == "assembleRelease" }.configureEach {
+  finalizedBy(generateReleaseApkReport)
+}
+
 
