@@ -196,6 +196,17 @@ public class DictionaryListView extends LinearLayout
     }
     catch (Exception e)
     {
+      // If remote download is unavailable, check if the dictionary is bundled in assets
+      try
+      {
+        java.io.InputStream inp = getContext().getAssets().open("dict/" + dict_name + ".dict");
+        byte[] data = Utils.read_all_bytes(inp);
+        inp.close();
+        Cdict.of_bytes(data);
+        _dictionaries.install(dict_name, data);
+        return true;
+      }
+      catch (Throwable t) {}
       Logs.exn("", e);
       return false;
     }

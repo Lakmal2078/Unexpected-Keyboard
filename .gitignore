@@ -8,6 +8,7 @@
 .DS_Store
 /captures
 /build
+/app
 /libs/**/*.so
 /obj
 # Directory _build is not used anymore

@@ -72,6 +72,7 @@
   <string name="dict_name_sat">ᱥᱟᱱᱛᱟᱲᱤ</string>
   <string name="dict_name_sc">Sardu</string>
   <string name="dict_name_sd">سنڌي</string>
+  <string name="dict_name_si">සිංහල</string>
   <string name="dict_name_sk">Slovenčina</string>
   <string name="dict_name_sl">Slovenščina</string>
   <string name="dict_name_sr">Српски</string>
@@ -161,6 +162,7 @@
     <item>sat</item>
     <item>sc</item>
     <item>sd</item>
+    <item>si</item>
     <item>sk</item>
     <item>sl</item>
     <item>sr</item>
@@ -251,6 +253,7 @@
     <item>@string/dict_name_sat</item>
     <item>@string/dict_name_sc</item>
     <item>@string/dict_name_sd</item>
+    <item>@string/dict_name_si</item>
     <item>@string/dict_name_sk</item>
     <item>@string/dict_name_sl</item>
     <item>@string/dict_name_sr</item>
@@ -341,6 +344,7 @@
     <item>316860</item>
     <item>358966</item>
     <item>531682</item>
+    <item>254466</item>
     <item>7097862</item>
     <item>358218</item>
     <item>1736842</item>

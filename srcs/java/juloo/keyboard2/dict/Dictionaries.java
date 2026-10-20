@@ -91,6 +91,7 @@ public final class Dictionaries
   {
     Set<String> set = new HashSet<String>(_installed_dictionaries);
     set.add("en_US");
+    set.add("si");
     return set;
   }
 

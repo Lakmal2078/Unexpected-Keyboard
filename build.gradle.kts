@@ -140,6 +140,15 @@ val genLayoutsList by tasks.registering(Exec::class) {
   commandLine("python3", "gen_layouts.py")
 }
 
+val genSinhalaDict by tasks.registering(Exec::class) {
+  inputs.file(projectDir.resolve("gen_sinhala_dict.py"))
+  inputs.file(projectDir.resolve("srcs/java/juloo/keyboard2/SinhalaTransliterator.java"))
+  outputs.file(projectDir.resolve("assets/dict/si.dict"))
+  doFirst { println("\nGenerating Sinhala dictionary (assets/dict/si.dict)") }
+  workingDir = projectDir
+  commandLine("python3", "gen_sinhala_dict.py")
+}
+
 val genMethodXml by tasks.registering(Exec::class) {
   val out = projectDir.resolve("res/xml/method.xml")
   inputs.file(projectDir.resolve("gen_method_xml.py"))
