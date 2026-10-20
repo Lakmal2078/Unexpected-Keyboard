@@ -244,6 +244,20 @@ public class SinhalaTransliteratorTest
     assertTrue("gamp should suggest ගම්පහ", gampSug.contains("ගම්පහ"));
   }
 
+  @Test
+  public void testPrefixSuggestionsHaveDeterministicPriority()
+  {
+    java.util.List<String> suggestions = SinhalaTransliterator.getSuggestions("ka");
+    assertEquals(java.util.Arrays.asList("කළා", "ක", "කෑම", "කලින්"),
+        suggestions.subList(0, 4));
+
+    // Repeated lookups must preserve the same ordering.
+    for (int i = 0; i < 20; i++)
+    {
+      assertEquals(suggestions, SinhalaTransliterator.getSuggestions("ka"));
+    }
+  }
+
   public static void main(String[] args)
   {
     SinhalaTransliteratorTest test = new SinhalaTransliteratorTest();
