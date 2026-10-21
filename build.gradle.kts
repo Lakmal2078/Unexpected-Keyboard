@@ -1,3 +1,4 @@
+import buildlogic.InitDebugKeystore
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import java.io.FileOutputStream
 import java.util.Date
@@ -10,7 +11,7 @@ plugins {
 dependencies {
   // Following versions of androidx.window require sdk version 23
   implementation("androidx.window:window-java:1.4.0")
-  implementation("androidx.core:core:1.16.0") // Version 1.17.0 available with sdk 36
+  implementation("androidx.core:core:1.17.0")
   implementation("androidx.customview:customview:1.2.0") // Virtual accessibility nodes for the custom keyboard
   testImplementation("junit:junit:4.13.2")
   testImplementation("org.mockito:mockito-core:5.14.2")
@@ -175,8 +176,8 @@ val compileComposeSequences by tasks.registering(Exec::class) {
   inputs.dir(`in`)
   outputs.file(out)
   doFirst { println("\nGenerating $out") }
-  val sequences = `in`.listFiles { it: File ->
-    !it.name.endsWith(".py") && !it.name.endsWith(".md")
+  val sequences = `in`.listFiles {
+    it: File -> !it.name.endsWith(".py") && !it.name.endsWith(".md")
   }!!.map { it.absolutePath }.toTypedArray()
   workingDir = projectDir
   commandLine("python3", `in`.resolve("compile.py").absolutePath, *sequences)
@@ -187,10 +188,8 @@ tasks.withType(Test::class).configureEach {
   dependsOn(genLayoutsList, checkKeyboardLayouts, compileComposeSequences, genMethodXml)
 }
 
-val initDebugKeystore by tasks.registering(Exec::class) {
-  // Automatically generate debug keystore if it doesn't exist (e.g. in CI / GitHub Actions)
-  isEnabled = !file("debug.keystore").exists()
-  commandLine("keytool", "-genkeypair", "-noprompt", "-dname", "cn=Debug, ou=Build, o=Android, c=US", "-alias", "androiddebugkey", "-keypass", "android", "-keystore", "debug.keystore", "-keyalg", "RSA", "-storepass", "android", "-validity", "10000")
+val initDebugKeystore by tasks.registering(InitDebugKeystore::class) {
+  keystoreFile.set(layout.projectDirectory.file("debug.keystore"))
 }
 
 // latn_qwerty_us is used as a raw resource by the custom layout option.
@@ -208,8 +207,8 @@ val copyLayoutDefinitions by tasks.registering(Copy::class) {
 tasks.named("preBuild") {
   dependsOn(initDebugKeystore, copyRawQwertyUS, copyLayoutDefinitions)
   // 'mustRunAfter' defines ordering between tasks (which is required by
-  // Gradle) but doesn't create a dependency. These rules update files that are
-  // checked in the repository that don't need to be updated during regular
+  // Gradle) but doesn't create a dependency. These rules update files that
+  // are checked in the repository that don't need to be updated during regular
   // builds.
   mustRunAfter(genEmojis, genLayoutsList, compileComposeSequences, genMethodXml)
 }

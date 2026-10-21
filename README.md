@@ -23,8 +23,7 @@ https://github.com/Julow/Unexpected-Keyboard/assets/2310568/28f8f6fe-ac13-46f3-8
 
 The main feature is that you can type more characters by swiping the keys towards the corners.
 
-This application was originally designed for programmers using Termux.
-Now perfect for everyday use.
+This application was originally designed for programmers using Termux, but it is also suitable for everyday use.
 
 This application contains no ads and is open source.
 
