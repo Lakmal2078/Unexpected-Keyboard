@@ -10,7 +10,7 @@ plugins {
 dependencies {
   // Following versions of androidx.window require sdk version 23
   implementation("androidx.window:window-java:1.4.0")
-  implementation("androidx.core:core:1.16.0") // Version 1.17.0 available with sdk 36
+  implementation("androidx.core:core:1.17.0")
   implementation("androidx.customview:customview:1.2.0") // Virtual accessibility nodes for the custom keyboard
   testImplementation("junit:junit:4.13.2")
   testImplementation("org.mockito:mockito-core:5.14.2")
