@@ -37,6 +37,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Check keyboard theme contrast
+        run: python3 check_theme_contrast.py
+
       - name: Install build tools (fontforge)
         run: |
           sudo apt-get update
