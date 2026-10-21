@@ -187,36 +187,8 @@ tasks.withType(Test::class).configureEach {
   dependsOn(genLayoutsList, checkKeyboardLayouts, compileComposeSequences, genMethodXml)
 }
 
-val initDebugKeystore by tasks.registering {
-  // Ensure the debug keystore exists and matches the credentials in debugConfig.
-  // A stale or checked-in keystore may use a different password and break CI packaging.
-  doLast {
-    val keystore = file("debug.keystore")
-    val valid = keystore.exists() && try {
-      ProcessBuilder(
-        "keytool", "-list", "-keystore", keystore.absolutePath,
-        "-storepass", "android", "-alias", "androiddebugkey"
-      ).redirectErrorStream(true).start().waitFor() == 0
-    } catch (_: Exception) {
-      false
-    }
-
-    if (!valid) {
-      if (keystore.exists() && !keystore.delete()) {
-        throw GradleException("Could not remove invalid debug keystore: ${keystore.absolutePath}")
-      }
-      val process = ProcessBuilder(
-        "keytool", "-genkeypair", "-noprompt",
-        "-dname", "cn=Debug, ou=Build, o=Android, c=US",
-        "-alias", "androiddebugkey", "-keypass", "android",
-        "-keystore", keystore.absolutePath, "-keyalg", "RSA",
-        "-storepass", "android", "-validity", "10000"
-      ).inheritIO().start()
-      if (process.waitFor() != 0) {
-        throw GradleException("Failed to generate debug keystore")
-      }
-    }
-  }
+val initDebugKeystore by tasks.registering(InitDebugKeystore::class) {
+  keystoreFile.set(layout.projectDirectory.file("debug.keystore"))
 }
 
 // latn_qwerty_us is used as a raw resource by the custom layout option.
