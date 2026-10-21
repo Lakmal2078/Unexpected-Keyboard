@@ -244,4 +244,8 @@
     <string name="pref_split_layout_wide">On wide screens</string>
     <string name="pref_show_quick_toolbar_title">Quick-Action Toolbar</string>
     <string name="pref_show_quick_toolbar_summary">Show top shortcut bar with apps, keyboard switcher, translate, settings, clipboard, and theme buttons</string>
+    <string name="clipboard_action_paste">Paste clipboard item</string>
+    <string name="clipboard_action_pin">Pin clipboard item</string>
+    <string name="clipboard_action_remove_pin">Remove pinned clipboard item</string>
 </resources>
+
