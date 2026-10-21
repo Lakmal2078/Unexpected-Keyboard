@@ -30,7 +30,8 @@ public class ClipboardAccessibilityTest
   @Test
   public void pinnedActionsHaveSpokenDescriptions()
   {
-    Context context = ApplicationProvider.getApplicationContext();
+    Context context = new ContextThemeWrapper(
+        ApplicationProvider.getApplicationContext(), R.style.Dark);
     View entry = LayoutInflater.from(context)
         .inflate(R.layout.clipboard_pin_entry, null, false);
 
