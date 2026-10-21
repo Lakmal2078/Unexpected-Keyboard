@@ -28,6 +28,8 @@ public final class Suggestions
   public int count = 0;
   public String emoji_suggestion = null;
   public String clipboard_full_text = null;
+  /** Clipboard text whose preview was dismissed by the user after pasting. */
+  private String dismissed_clipboard_text = null;
   /** Number of suggestions in [suggestions]. */
   public static final int MAX_COUNT = 3;
 
@@ -55,7 +57,7 @@ public final class Suggestions
     if (_enabled && _config.clipboard_suggestion_enabled && VERSION.SDK_INT >= 24)
     {
       String clip = ClipboardHistoryService.get_current_clip();
-      if (clip != null && !clip.trim().isEmpty())
+      if (should_show_clipboard_suggestion(clip))
       {
         clipboard_full_text = clip;
         String preview = clip.trim().replace('\n', ' ');
@@ -160,6 +162,25 @@ public final class Suggestions
       if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))
         return false;
     }
+    return true;
+  }
+
+  /** Suppress the current clipboard preview after the user pastes it. */
+  public void dismiss_clipboard_suggestion()
+  {
+    dismissed_clipboard_text = clipboard_full_text != null
+        ? clipboard_full_text : ClipboardHistoryService.get_current_clip();
+  }
+
+  /** Returns false for empty clips and for the clip whose preview was dismissed. */
+  boolean should_show_clipboard_suggestion(String clip)
+  {
+    if (clip == null || clip.trim().isEmpty())
+      return false;
+    if (clip.equals(dismissed_clipboard_text))
+      return false;
+    // A different clipboard value is new content, so it may be previewed.
+    dismissed_clipboard_text = null;
     return true;
   }
 
