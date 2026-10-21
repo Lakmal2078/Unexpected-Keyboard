@@ -105,7 +105,7 @@
     <item name="keyBorderColorRight">#cccccc</item>
     <item name="keyBorderColorBottom">#aaaaaa</item>
     <item name="colorLabel">#000000</item>
-    <item name="colorLabelActivated">#0066cc</item>
+    <item name="colorLabelActivated">#0062C4</item>
     <item name="colorLabelLocked">#33cc33</item>
     <item name="colorSubLabel">#333333</item>
     <item name="emoji_button_bg">#dedede</item>
@@ -126,7 +126,7 @@
     <item name="keyBorderColorRight">#2a2a2a</item>
     <item name="keyBorderColorBottom">#2a2a2a</item>
     <item name="colorLabel">#eeeeee</item>
-    <item name="colorLabelActivated">#009dff</item>
+    <item name="colorLabelActivated">#0EA2FF</item>
     <item name="colorLabelLocked">#00ff26</item>
     <item name="colorSubLabel">#bbbbbb</item>
     <item name="keyBorderRadius">1dp</item>
@@ -190,7 +190,7 @@
     <item name="colorKeyAction">#ffe9c6</item>
     <item name="colorKeySpaceBar">#ffedd0</item>
     <item name="colorLabel">#000000</item>
-    <item name="colorLabelActivated">#ffffff</item>
+    <item name="colorLabelActivated">#8B4513</item>
     <item name="colorLabelLocked">#e65100</item>
     <item name="colorSubLabel">#333333</item>
     <item name="keyBorderWidth">0.0dip</item>
@@ -222,6 +222,7 @@
     <item name="keyBorderColorBottom">#00eeeeee</item>
     <item name="emoji_button_bg">?colorKeyActivated</item>
     <item name="emoji_color">#000000</item>
+      <item name="colorLabelPressed">#FFFFFF</item>
   </style>
   <style name="MonetLight" parent="@style/BaseTheme">
     <item name="isLightTheme">true</item>
@@ -269,7 +270,7 @@
     <item name="colorLabel">#e0def4</item>
     <item name="colorLabelActivated">#c4a7e7</item>
     <item name="colorLabelLocked">#31748f</item>
-    <item name="colorSubLabel">#6e6a86</item>
+    <item name="colorSubLabel">#8E8BA1</item>
     <item name="keyBorderRadius">1dp</item>
     <item name="emoji_button_bg">#26233a</item>
     <item name="emoji_color">#e0def4</item>
@@ -280,16 +281,17 @@
     <item name="colorKeyboard">#f8f5e4</item>
     <item name="colorKey">#e5e2d1</item>
     <item name="colorKeyActivated">#dbe0b6</item>
-    <item name="colorLabel">#5c6a72</item>
-    <item name="colorLabelActivated">#828812</item>
+    <item name="colorLabel">#58656D</item>
+    <item name="colorLabelActivated">#60640D</item>
     <item name="colorLabelLocked">#325e64</item>
-    <item name="colorSubLabel">#7b8478</item>
+    <item name="colorSubLabel">#5E655C</item>
     <item name="keyBorderWidth">0.0dip</item>
     <item name="keyBorderWidthActivated">0.0dip</item>
     <item name="emoji_button_bg">?colorKeyActivated</item>
     <item name="emoji_color">?colorLabel</item>
     <item name="clipboard_divider_color">?colorKey</item>
- </style>
+     <item name="colorLabelPressed">#505C64</item>
+  </style>
  <style name="Cobalt" parent="BaseTheme">
     <item name="isLightTheme">false</item>
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
@@ -309,7 +311,8 @@
     <item name="emoji_button_bg">?colorKeyboard</item>
     <item name="emoji_color">?colorLabel</item>
     <item name="clipboard_divider_color">?colorKey</item>
- </style>
+     <item name="colorLabelPressed">#000000</item>
+  </style>
  <style name="Pine" parent="BaseTheme">
     <item name="isLightTheme">false</item>
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
@@ -329,7 +332,8 @@
     <item name="emoji_button_bg">?colorKeyboard</item>
     <item name="emoji_color">?colorLabel</item>
     <item name="clipboard_divider_color">?colorKey</item>
- </style>
+     <item name="colorLabelPressed">#003B22</item>
+  </style>
  <style name="ePaperBlack" parent="BaseTheme">
     <item name="isLightTheme">false</item>
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
@@ -361,9 +365,9 @@
     <item name="colorKeyAction">#7446A8</item>
     <item name="colorKeySpaceBar">#343746</item>
     <item name="colorLabel">#F8F8F2</item>
-    <item name="colorLabelActivated">#FF79C6</item>
+    <item name="colorLabelActivated">#FF96D2</item>
     <item name="colorLabelLocked">#50FA7B</item>
-    <item name="colorSubLabel">#6272A4</item>
+    <item name="colorSubLabel">#96A1C2</item>
     <item name="keyBorderRadius">8dp</item>
     <item name="keyBorderWidth">0dp</item>
     <item name="keyBorderWidthActivated">0dp</item>
@@ -382,7 +386,7 @@
     <item name="colorKeySpaceBar">#C72D253D</item>
     <item name="colorLabel">#FFFFFFFF</item>
     <item name="colorLabelPressed">#FFFFFFFF</item>
-    <item name="colorLabelActivated">#462563</item>
+    <item name="colorLabelActivated">#D9D2DF</item>
     <item name="colorLabelLocked">#B9F6FF</item>
     <item name="colorSubLabel">#B088D3</item>
     <item name="keyBorderRadius">8dp</item>
@@ -401,7 +405,7 @@
     <item name="colorKeySpaceBar">#313244</item>
     <item name="colorLabel">#CDD6F4</item>
     <item name="colorLabelPressed">#FFFFFF</item>
-    <item name="colorLabelActivated">#CBA6F7</item>
+    <item name="colorLabelActivated">#CDA9F7</item>
     <item name="colorLabelLocked">#A6E3A1</item>
     <item name="colorSubLabel">#89DCEB</item>
     <item name="keyBorderRadius">8dp</item>
@@ -420,10 +424,10 @@
     <item name="colorKeyAction">#BCC0CC</item>
     <item name="colorKeySpaceBar">#E6E9EF</item>
     <item name="colorLabel">#4C4F69</item>
-    <item name="colorLabelPressed">#1E66F5</item>
-    <item name="colorLabelActivated">#1E66F5</item>
+    <item name="colorLabelPressed">#1850C1</item>
+    <item name="colorLabelActivated">#1850C1</item>
     <item name="colorLabelLocked">#40A02B</item>
-    <item name="colorSubLabel">#8839EF</item>
+    <item name="colorSubLabel">#8538EA</item>
     <item name="keyBorderRadius">8dp</item>
     <item name="keyBorderWidth">0dp</item>
     <item name="keyBorderWidthActivated">0dp</item>
@@ -441,7 +445,7 @@
     <item name="colorKeySpaceBar">#24283B</item>
     <item name="colorLabel">#C0CAF5</item>
     <item name="colorLabelPressed">#FFFFFF</item>
-    <item name="colorLabelActivated">#7AA2F7</item>
+    <item name="colorLabelActivated">#9CBAF9</item>
     <item name="colorLabelLocked">#9ECE6A</item>
     <item name="colorSubLabel">#BB9AF7</item>
     <item name="keyBorderRadius">8dp</item>
@@ -460,10 +464,10 @@
     <item name="colorKeyAction">#434C5E</item>
     <item name="colorKeySpaceBar">#3B4252</item>
     <item name="colorLabel">#ECEFF4</item>
-    <item name="colorLabelPressed">#88C0D0</item>
-    <item name="colorLabelActivated">#88C0D0</item>
+    <item name="colorLabelPressed">#ABD3DE</item>
+    <item name="colorLabelActivated">#ABD3DE</item>
     <item name="colorLabelLocked">#A3BE8C</item>
-    <item name="colorSubLabel">#81A1C1</item>
+    <item name="colorSubLabel">#98B2CC</item>
     <item name="keyBorderRadius">8dp</item>
     <item name="keyBorderWidth">0dp</item>
     <item name="keyBorderWidthActivated">0dp</item>
@@ -480,10 +484,10 @@
     <item name="colorKeyAction">#451B38</item>
     <item name="colorKeySpaceBar">#1F2833</item>
     <item name="colorLabel">#66FCF1</item>
-    <item name="colorLabelPressed">#FFFFFF</item>
+    <item name="colorLabelPressed">#003D45</item>
     <item name="colorLabelActivated">#0B0C10</item>
     <item name="colorLabelLocked">#FF007F</item>
-    <item name="colorSubLabel">#FF2A85</item>
+    <item name="colorSubLabel">#FF4393</item>
     <item name="keyBorderRadius">6dp</item>
     <item name="keyBorderWidth">1dp</item>
     <item name="keyBorderWidthActivated">1dp</item>
@@ -604,7 +608,7 @@
     <item name="colorKeyAction">#3D2561</item>
     <item name="colorKeySpaceBar">#161124</item>
     <item name="colorLabel">#F3E5F5</item>
-    <item name="colorLabelPressed">#FFFFFF</item>
+    <item name="colorLabelPressed">#1A0020</item>
     <item name="colorLabelActivated">#0D0B18</item>
     <item name="colorLabelLocked">#FF4081</item>
     <item name="colorSubLabel">#E040FB</item>
@@ -666,12 +670,13 @@
     <item name="keyBorderColorRight">#1C5269</item>
     <item name="keyBorderColorBottom">#0A263A</item>
     <item name="colorLabel">#F0FAFF</item>
-    <item name="colorLabelActivated">#6CEBFF</item>
+    <item name="colorLabelActivated">#F7FEFF</item>
     <item name="colorLabelLocked">#74E0B2</item>
     <item name="colorSubLabel">#B0CEDB</item>
     <item name="emoji_button_bg">#12344A</item>
     <item name="emoji_color">#F0FAFF</item>
     <item name="clipboard_divider_color" type="color">#1C5269</item>
+      <item name="colorLabelPressed">#FFFFFF</item>
   </style>
 
   <style name="GraphitePro" parent="BaseTheme">
@@ -690,7 +695,7 @@
     <item name="keyBorderColorRight">#41454D</item>
     <item name="keyBorderColorBottom">#24262B</item>
     <item name="colorLabel">#F1F3F4</item>
-    <item name="colorLabelActivated">#8AB4F8</item>
+    <item name="colorLabelActivated">#96BCF9</item>
     <item name="colorLabelLocked">#81C995</item>
     <item name="colorSubLabel">#BDC1C6</item>
     <item name="emoji_button_bg">#303238</item>
@@ -766,7 +771,7 @@
     <item name="keyBorderColorRight">#54306C</item>
     <item name="keyBorderColorBottom">#170D22</item>
     <item name="colorLabel">#F8F0FF</item>
-    <item name="colorLabelActivated">#D8B4FE</item>
+    <item name="colorLabelActivated">#F0E1FF</item>
     <item name="colorLabelLocked">#A3E635</item>
     <item name="colorSubLabel">#C4A6D9</item>
     <item name="emoji_button_bg">#241333</item>
@@ -790,7 +795,7 @@
     <item name="keyBorderColorRight">#35563A</item>
     <item name="keyBorderColorBottom">#111A13</item>
     <item name="colorLabel">#E8F5E9</item>
-    <item name="colorLabelActivated">#B6FF00</item>
+    <item name="colorLabelActivated">#DFFF8F</item>
     <item name="colorLabelLocked">#76FF03</item>
     <item name="colorSubLabel">#9BC7A0</item>
     <item name="emoji_button_bg">#202C24</item>
@@ -814,7 +819,7 @@
     <item name="keyBorderColorRight">#633052</item>
     <item name="keyBorderColorBottom">#1B0C19</item>
     <item name="colorLabel">#FFF0FA</item>
-    <item name="colorLabelActivated">#FF8AD8</item>
+    <item name="colorLabelActivated">#FFE2F5</item>
     <item name="colorLabelLocked">#B6FF8A</item>
     <item name="colorSubLabel">#E3A9CF</item>
     <item name="emoji_button_bg">#32182D</item>
@@ -838,7 +843,7 @@
     <item name="keyBorderColorRight">#466A51</item>
     <item name="keyBorderColorBottom">#17291E</item>
     <item name="colorLabel">#F0F7F1</item>
-    <item name="colorLabelActivated">#B4E4C0</item>
+    <item name="colorLabelActivated">#EFF9F2</item>
     <item name="colorLabelLocked">#D3F36B</item>
     <item name="colorSubLabel">#B2CFB9</item>
     <item name="emoji_button_bg">#263D31</item>
@@ -884,7 +889,7 @@
     <item name="keyBorderColorRight">#35636A</item>
     <item name="keyBorderColorBottom">#142A37</item>
     <item name="colorLabel">#F0FFFC</item>
-    <item name="colorLabelActivated">#54E1C1</item>
+    <item name="colorLabelActivated">#F6FDFC</item>
     <item name="colorLabelLocked">#B7F36B</item>
     <item name="colorSubLabel">#B8D9DE</item>
     <item name="emoji_button_bg">#1A3A46</item>
@@ -908,11 +913,12 @@
     <item name="keyBorderColorRight">#23766D</item>
     <item name="keyBorderColorBottom">#062F2E</item>
     <item name="colorLabel">#E8FFFA</item>
-    <item name="colorLabelActivated">#42E8C4</item>
+    <item name="colorLabelActivated">#0B2721</item>
     <item name="colorLabelLocked">#B9FBC0</item>
     <item name="colorSubLabel">#A6DCD4</item>
     <item name="emoji_button_bg">#0E504D</item>
     <item name="emoji_color">#E8FFFA</item>
+      <item name="colorLabelPressed">#0B2721</item>
   </style>
 
   <style name="RoyalGold" parent="BaseTheme">
@@ -932,7 +938,7 @@
     <item name="keyBorderColorRight">#6B532C</item>
     <item name="keyBorderColorBottom">#20180F</item>
     <item name="colorLabel">#FFF8E7</item>
-    <item name="colorLabelActivated">#F5D98B</item>
+    <item name="colorLabelActivated">#F9EABF</item>
     <item name="colorLabelLocked">#B8E986</item>
     <item name="colorSubLabel">#D9C99F</item>
     <item name="emoji_button_bg">#35291B</item>
@@ -954,7 +960,7 @@
     <item name="keyBorderColorRight">#DCC5B2</item>
     <item name="keyBorderColorBottom">#C9AD98</item>
     <item name="colorLabel">#39271F</item>
-    <item name="colorLabelActivated">#795548</item>
+    <item name="colorLabelActivated">#704F43</item>
     <item name="colorLabelLocked">#3E7A4A</item>
     <item name="colorSubLabel">#795548</item>
     <item name="emoji_button_bg">#F2E0D0</item>
@@ -978,7 +984,7 @@
     <item name="keyBorderColorRight">#24516D</item>
     <item name="keyBorderColorBottom">#0A192A</item>
     <item name="colorLabel">#F5FAFF</item>
-    <item name="colorLabelActivated">#32D9FF</item>
+    <item name="colorLabelActivated">#42DCFF</item>
     <item name="colorLabelLocked">#B6FF00</item>
     <item name="colorSubLabel">#B3CDE2</item>
     <item name="emoji_button_bg">#142A43</item>
@@ -1000,7 +1006,7 @@
     <item name="keyBorderColorRight">#D4C8ED</item>
     <item name="keyBorderColorBottom">#C2B3E0</item>
     <item name="colorLabel">#302545</item>
-    <item name="colorLabelActivated">#6F55A6</item>
+    <item name="colorLabelActivated">#684F9B</item>
     <item name="colorLabelLocked">#39734A</item>
     <item name="colorSubLabel">#66587D</item>
     <item name="emoji_button_bg">#E9E1FA</item>
@@ -1045,7 +1051,7 @@
     <item name="colorLabel">#EBDBB2</item>
     <item name="colorLabelActivated">#FE8019</item>
     <item name="colorLabelLocked">#B8BB26</item>
-    <item name="colorSubLabel">#A89984</item>
+    <item name="colorSubLabel">#AFA18E</item>
     <item name="emoji_button_bg">#32302F</item>
     <item name="emoji_color">#EBDBB2</item>
   </style>
@@ -1064,7 +1070,7 @@
     <item name="colorLabel">#3C3836</item>
     <item name="colorLabelActivated">#AF3A03</item>
     <item name="colorLabelLocked">#79740E</item>
-    <item name="colorSubLabel">#7C6F64</item>
+    <item name="colorSubLabel">#695E55</item>
     <item name="emoji_button_bg">#E0D2AE</item>
     <item name="emoji_color">#3C3836</item>
   </style>
@@ -1081,9 +1087,9 @@
     <item name="keyBorderWidthActivated">0dp</item>
     <item name="keyBorderColorBottom">#09495C</item>
     <item name="colorLabel">#93A1A1</item>
-    <item name="colorLabelActivated">#268BD2</item>
+    <item name="colorLabelActivated">#3995D6</item>
     <item name="colorLabelLocked">#859900</item>
-    <item name="colorSubLabel">#657B83</item>
+    <item name="colorSubLabel">#8C9DA2</item>
     <item name="emoji_button_bg">#00212B</item>
     <item name="emoji_color">#93A1A1</item>
   </style>
@@ -1102,7 +1108,7 @@
     <item name="colorLabel">#433422</item>
     <item name="colorLabelActivated">#8C501E</item>
     <item name="colorLabelLocked">#5E7028</item>
-    <item name="colorSubLabel">#76644E</item>
+    <item name="colorSubLabel">#705F4A</item>
     <item name="emoji_button_bg">#DFD3B8</item>
     <item name="emoji_color">#433422</item>
   </style>
@@ -1122,8 +1128,8 @@
     <item name="keyBorderColorRight">#FFFF00</item>
     <item name="keyBorderColorBottom">#FFFF00</item>
     <item name="colorLabel">#FFFF00</item>
-    <item name="colorLabelPressed">#000000</item>
-    <item name="colorLabelActivated">#000000</item>
+    <item name="colorLabelPressed">#FFFF00</item>
+    <item name="colorLabelActivated">#FFFF00</item>
     <item name="colorLabelLocked">#00FF00</item>
     <item name="colorSubLabel">#FFFFAA</item>
     <item name="keyBorderRadius">3dp</item>
@@ -1148,7 +1154,7 @@
     <item name="keyBorderColorRight">#1C4685</item>
     <item name="keyBorderColorBottom">#0A1C36</item>
     <item name="colorLabel">#E8F1FF</item>
-    <item name="colorLabelActivated">#66A3FF</item>
+    <item name="colorLabelActivated">#A2C7FF</item>
     <item name="colorLabelLocked">#A3FFB3</item>
     <item name="colorSubLabel">#99C2FF</item>
     <item name="emoji_button_bg">#112D55</item>
