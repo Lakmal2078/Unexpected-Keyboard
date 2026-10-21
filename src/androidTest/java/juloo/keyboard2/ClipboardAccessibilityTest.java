@@ -1,6 +1,7 @@
 package juloo.keyboard2;
 
 import android.content.Context;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import androidx.test.core.app.ApplicationProvider;
@@ -15,7 +16,8 @@ public class ClipboardAccessibilityTest
   @Test
   public void historyActionsHaveSpokenDescriptions()
   {
-    Context context = ApplicationProvider.getApplicationContext();
+    Context context = new ContextThemeWrapper(
+        ApplicationProvider.getApplicationContext(), R.style.Dark);
     View entry = LayoutInflater.from(context)
         .inflate(R.layout.clipboard_history_entry, null, false);
 
