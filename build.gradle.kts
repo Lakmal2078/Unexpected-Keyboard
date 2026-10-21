@@ -66,13 +66,26 @@ android {
     }
 
     create("release") {
-      val ks = System.getenv("RELEASE_KEYSTORE")
-      if (ks != null) {
-        storeFile = file(ks)
-        storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
-        keyAlias = System.getenv("RELEASE_KEY_ALIAS")
-        keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+      val requiredSigningVars = listOf(
+        "RELEASE_KEYSTORE",
+        "RELEASE_KEYSTORE_PASSWORD",
+        "RELEASE_KEY_ALIAS",
+        "RELEASE_KEY_PASSWORD",
+      )
+      val signingValues = requiredSigningVars.associateWith { name ->
+        System.getenv(name)?.takeIf { it.isNotBlank() }
+          ?: throw GradleException("Required release signing variable '$name' is missing or blank")
       }
+
+      val keystore = file(signingValues.getValue("RELEASE_KEYSTORE"))
+      if (!keystore.exists() || !keystore.isFile) {
+        throw GradleException("Release keystore does not exist or is not a file: ${keystore.absolutePath}")
+      }
+
+      storeFile = keystore
+      storePassword = signingValues.getValue("RELEASE_KEYSTORE_PASSWORD")
+      keyAlias = signingValues.getValue("RELEASE_KEY_ALIAS")
+      keyPassword = signingValues.getValue("RELEASE_KEY_PASSWORD")
     }
   }
 
