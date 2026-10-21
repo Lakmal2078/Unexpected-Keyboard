@@ -4,17 +4,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-import juloo.keyboard2.Config;
-import juloo.keyboard2.EditorConfig;
 
 public class ClipboardSuggestionDismissalTest
 {
   @Test
   public void dismissedClipboardStaysHiddenUntilClipboardContentChanges()
   {
-    Config config = new Config();
-    config.editor_config = new EditorConfig();
-    Suggestions suggestions = new Suggestions(mock(Suggestions.Callback.class), config);
+    Suggestions suggestions = new Suggestions(mock(Suggestions.Callback.class), null);
     suggestions.clipboard_full_text = "copied text";
 
     suggestions.dismiss_clipboard_suggestion();
@@ -27,9 +23,7 @@ public class ClipboardSuggestionDismissalTest
   @Test
   public void emptyClipboardDoesNotShowPreview()
   {
-    Config config = new Config();
-    config.editor_config = new EditorConfig();
-    Suggestions suggestions = new Suggestions(mock(Suggestions.Callback.class), config);
+    Suggestions suggestions = new Suggestions(mock(Suggestions.Callback.class), null);
 
     assertFalse(suggestions.should_show_clipboard_suggestion(null));
     assertFalse(suggestions.should_show_clipboard_suggestion(""));
