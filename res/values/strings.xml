@@ -125,6 +125,7 @@
     <string name="pref_theme_e_high_contrast">High Contrast (Black &amp; White)</string>
     <string name="pref_theme_e_high_contrast_yellow">High Contrast (Yellow)</string>
     <string name="pref_theme_e_lanka_blue">Lanka Blue</string>
+    <string name="pref_theme_e_unexpected_keyboard">Unexpected Keyboard</string>
     <string name="pref_theme_e_gruvbox_dark">Gruvbox Dark</string>
     <string name="pref_theme_e_gruvbox_light">Gruvbox Light</string>
     <string name="pref_theme_e_solarized_dark">Solarized Dark</string>
@@ -173,9 +174,7 @@
     <string name="launcher_status_enabled_initial">Keyboard enabled: checking…</string>
     <string name="launcher_status_selected_initial">Default keyboard selected: checking…</string>
     <string name="launcher_status_typing_initial">Typing test completed: not yet</string>
-    <string name="launcher_button_settings_search">Search settings</string>
     <string name="launcher_button_clear_test">Clear test text</string>
-    <string name="launcher_test_accessibility_hint">Type using Unexpected Keyboard. Typing completion is recorded only when this keyboard is selected and sends text.</string>
     <string name="launcher_anim_swipe_description">Swipe gesture demonstration</string>
     <string name="launcher_anim_circle_description">Circular gesture demonstration</string>
     <string name="launcher_anim_round_trip_description">Return gesture demonstration</string>
@@ -232,8 +231,8 @@
     <string name="dictionaries_download_success">Dictionary installed</string>
     <string name="dictionaries_download_failed">Download failed: Please allow internet access</string>
     <string name="dictionaries_download_button">Download dictionary</string>
+    <string name="dictionary_download_size_format" translatable="false">%1$s MB</string>
     <string name="dictionaries_delete_button">Delete dictionary</string>
-    <string name="candidates_status_click_to_install">Click to install a dictionary for %s</string>
     <string name="dictionary_switcher_title">Change language</string>
     <string name="pref_physical_keyboard_behavior">When a physical keyboard is connected</string>
     <string name="pref_physical_keyboard_behavior_hide">Hide everything</string>

@@ -159,7 +159,6 @@
     <string name="pref_number_entry_layout_number">Zahlenbereich</string>
     <string name="pref_theme_e_everforestlight">Everforest Light</string>
     <string name="pref_slider_sensitivity_title">Leertaste Schieberegler Empfindlichkeit</string>
-    <string name="candidates_status_click_to_install">Tippen, um das Wörterbuch für %s zu installieren</string>
     <string name="pref_physical_keyboard_behavior">Wenn eine physisches Tastatur angeschlossen ist</string>
     <string name="pref_physical_keyboard_behavior_hide">Alles verstecken</string>
     <string name="pref_physical_keyboard_behavior_show">Alles anzeigen</string>

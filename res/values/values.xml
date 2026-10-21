@@ -10,7 +10,6 @@
   <dimen name="candidates_suggestions_padding">4dp</dimen>
   <dimen name="candidates_margin_vertical">8dp</dimen>
   <dimen name="candidates_emoji_width">40dp</dimen>
-  <dimen name="candidates_btn_width">25dp</dimen>
   <dimen name="dictionary_download_item_width">48dp</dimen>
   <!-- Will be overwritten automatically by Gradle for the debug build variant -->
   <bool name="debug_logs">false</bool>
@@ -20,7 +19,6 @@
   <color name="system_accent1_200">#3366ff</color>
   <color name="system_accent1_400">#3399ff</color>
   <color name="system_accent1_600">#33ccff</color>
-  <color name="system_accent1_900">#33ffff</color>
   <!-- accent2 is inverted accent1-->
   <color name="system_accent2_900">#009999</color>
   <color name="system_neutral1_0">#ffffff</color>

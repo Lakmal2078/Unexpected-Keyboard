@@ -331,6 +331,7 @@ public class Config
       case "high_contrast": return R.style.HighContrast;
       case "high_contrast_yellow": return R.style.HighContrastYellow;
       case "lanka_blue": return R.style.LankaBlue;
+      case "unexpected_keyboard": return R.style.UnexpectedKeyboard;
       // Deprecated aliases for backwards compatibility
       case "oled_black":
       case "epaperblack":

@@ -155,7 +155,6 @@
     <string name="dictionaries_from_internet">Tải xuống một từ điển từ Internet</string>
     <string name="dictionaries_download_success">Đã tải từ điển</string>
     <string name="dictionaries_download_failed">Tải xuống thất bại: Vui lòng kiểm tra internet</string>
-    <string name="candidates_status_click_to_install">Nhấn để tải xuống từ điển cho %s</string>
     <string name="dictionary_switcher_title">Thay đổi ngôn ngữ</string>
     <string name="pref_physical_keyboard_behavior">Khi bàn phím vật lí được kết nối</string>
     <string name="pref_physical_keyboard_behavior_hide">Ẩn tất cả</string>

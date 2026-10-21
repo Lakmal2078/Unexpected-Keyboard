@@ -142,7 +142,6 @@
     <string name="key_descr_delete_word">删除一个词</string>
     <string name="key_descr_forward_delete_word">删除右侧的一个词</string>
     <string name="key_descr_gesture">手势</string>
-    <string name="candidates_status_click_to_install">点击为%s安装一个词典</string>
     <string name="pref_slider_sensitivity_medium">中等</string>
     <string name="pref_slider_sensitivity_slow">慢</string>
     <string name="launcher_button_dictionaries">安装词典</string>

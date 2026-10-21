@@ -159,7 +159,6 @@
     <string name="dictionaries_from_internet">Pobierz słownik z internetu</string>
     <string name="dictionaries_download_success">Słownik zainstalowany</string>
     <string name="pref_dialog_edit_text">Własna definicja</string>
-    <string name="candidates_status_click_to_install">Naciśnij, aby zainstalować słownik dla %s</string>
     <string name="dictionaries_download_failed">Błąd pobierania: Brak dostępu do internetu</string>
     <string name="pref_physical_keyboard_behavior">Kiedy podłączono klawiaturę fizyczną</string>
     <string name="pref_physical_keyboard_behavior_hide">Ukryj wszystko</string>

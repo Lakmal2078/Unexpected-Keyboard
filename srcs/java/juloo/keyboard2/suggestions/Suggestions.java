@@ -3,6 +3,7 @@ package juloo.keyboard2.suggestions;
 import android.os.Build.VERSION;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import juloo.cdict.Cdict;
 import juloo.keyboard2.dict.Dictionaries;
 import juloo.keyboard2.Config;
@@ -223,7 +224,7 @@ public final class Suggestions
   static void capitalize_results(String[] s, int count)
   {
     for (int i = 0; i < count; i++)
-      s[i] = s[i].substring(0, 1).toUpperCase() + s[i].substring(1);
+      s[i] = s[i].substring(0, 1).toUpperCase(Locale.getDefault()) + s[i].substring(1);
   }
 
   String query_emoji(String word)

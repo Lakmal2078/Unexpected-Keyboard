@@ -66,6 +66,7 @@
     <item>@string/pref_theme_e_high_contrast</item>
     <item>@string/pref_theme_e_high_contrast_yellow</item>
     <item>@string/pref_theme_e_lanka_blue</item>
+    <item>@string/pref_theme_e_unexpected_keyboard</item>
   </string-array>
   <string-array name="pref_theme_values">
     <item>system</item>
@@ -105,6 +106,7 @@
     <item>high_contrast</item>
     <item>high_contrast_yellow</item>
     <item>lanka_blue</item>
+    <item>unexpected_keyboard</item>
   </string-array>
   <string-array name="pref_keyboard_font_entries">
     <item>@string/pref_font_default</item>

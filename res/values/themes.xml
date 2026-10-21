@@ -1161,4 +1161,30 @@
     <item name="emoji_color">#E8F1FF</item>
   </style>
 
+  <style name="UnexpectedKeyboard" parent="BaseTheme">
+    <item name="isLightTheme">false</item>
+    <item name="android:isLightTheme" tools:targetApi="29">false</item>
+    <item name="colorKeyboard">#111827</item>
+    <item name="keyboardGradientStart">#394B59</item>
+    <item name="keyboardGradientEnd">#111827</item>
+    <item name="colorKey">#394B59</item>
+    <item name="colorKeyActivated">#E0B36A</item>
+    <item name="colorKeyAction">#7C8C72</item>
+    <item name="colorKeySpaceBar">#394B59</item>
+    <item name="keyBorderWidth">0.8dp</item>
+    <item name="keyBorderWidthActivated">1dp</item>
+    <item name="keyBorderColorLeft">#394B59</item>
+    <item name="keyBorderColorTop">#7C8C72</item>
+    <item name="keyBorderColorRight">#394B59</item>
+    <item name="keyBorderColorBottom">#111827</item>
+    <item name="colorLabel">#F2E9DA</item>
+    <item name="colorLabelActivated">#111827</item>
+    <item name="colorLabelPressed">#111827</item>
+    <item name="colorLabelLocked">#E0B36A</item>
+    <item name="colorSubLabel">#F2E9DA</item>
+    <item name="emoji_button_bg">#394B59</item>
+    <item name="emoji_color">#F2E9DA</item>
+    <item name="clipboard_divider_color">#7C8C72</item>
+  </style>
+
 </resources>

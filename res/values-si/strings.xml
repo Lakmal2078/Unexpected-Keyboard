@@ -11,9 +11,7 @@
     <string name="launcher_status_enabled_initial">Keyboard සක්‍රීයද: පරීක්ෂා කරමින්…</string>
     <string name="launcher_status_selected_initial">Default keyboard තෝරා තිබේද: පරීක්ෂා කරමින්…</string>
     <string name="launcher_status_typing_initial">ටයිප් පරීක්ෂාව: තවම නැත</string>
-    <string name="launcher_button_settings_search">Settings සොයන්න</string>
     <string name="launcher_button_clear_test">පරීක්ෂණ පෙළ මකන්න</string>
-    <string name="launcher_test_accessibility_hint">Unexpected Keyboard තෝරා ඇති විට එය භාවිතයෙන් ටයිප් කරන්න.</string>
     <string name="launcher_anim_swipe_description">Swipe gesture නිරූපණය</string>
     <string name="launcher_anim_circle_description">වෘත්තාකාර gesture නිරූපණය</string>
     <string name="launcher_anim_round_trip_description">ආපසු හැරෙන gesture නිරූපණය</string>

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -791,7 +792,7 @@ public final class SinhalaTransliterator
     if (word == null || word.isEmpty())
       return "";
 
-    String lower = word.toLowerCase();
+    String lower = word.toLowerCase(Locale.ROOT);
     if (COMMON_WORDS.containsKey(lower))
     {
       return COMMON_WORDS.get(lower);
@@ -801,9 +802,9 @@ public final class SinhalaTransliterator
     if (word.length() > 1 && Character.isUpperCase(word.charAt(0)) && Character.isLowerCase(word.charAt(1)))
     {
       String lowerFirst = Character.toLowerCase(word.charAt(0)) + word.substring(1);
-      if (COMMON_WORDS.containsKey(lowerFirst.toLowerCase()))
+      if (COMMON_WORDS.containsKey(lowerFirst.toLowerCase(Locale.ROOT)))
       {
-        return COMMON_WORDS.get(lowerFirst.toLowerCase());
+        return COMMON_WORDS.get(lowerFirst.toLowerCase(Locale.ROOT));
       }
       return parsePhonetic(lowerFirst);
     }
@@ -824,7 +825,7 @@ public final class SinhalaTransliterator
       return list;
 
     String trimmed = word.trim();
-    String lower = trimmed.toLowerCase();
+    String lower = trimmed.toLowerCase(Locale.ROOT);
 
     // If word starts with capital letter, also consider lowercased version for suggestions
     String lowerFirst = (trimmed.length() > 1 && Character.isUpperCase(trimmed.charAt(0)))

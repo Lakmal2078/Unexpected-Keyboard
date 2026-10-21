@@ -161,7 +161,6 @@
     <string name="dictionaries_from_internet">இணையத்திலிருந்து ஒரு அகராதியை பதிவிறக்கவும்</string>
     <string name="dictionaries_download_success">அகராதி நிறுவப்பட்டது</string>
     <string name="dictionaries_download_failed">பதிவிறக்கம் தோல்வியுற்றது:தயவுசெய்து இணைய அணுகல் அனுமதி</string>
-    <string name="candidates_status_click_to_install">%sஒரு அகராதியை நிறுவ சொடுக்கு</string>
     <string name="dictionary_switcher_title">மொழியை மாற்று</string>
     <string name="pref_physical_keyboard_behavior">ஒரு விசைப்பலகை இணைத்தால்</string>
     <string name="pref_physical_keyboard_behavior_hide">அனைத்தையும் மறைக்கவும்</string>

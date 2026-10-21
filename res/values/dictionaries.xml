@@ -1,94 +1,94 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-  <string name="dict_name_af">Afrikaans</string>
-  <string name="dict_name_ar">العربية</string>
-  <string name="dict_name_as">অসমীয়া</string>
-  <string name="dict_name_az">Azərbaycan</string>
-  <string name="dict_name_be">Беларуская</string>
-  <string name="dict_name_bg">Български</string>
-  <string name="dict_name_bn">বাংলা</string>
-  <string name="dict_name_bs">Bosanski</string>
-  <string name="dict_name_ca">Català</string>
-  <string name="dict_name_ceb">Cebuano</string>
-  <string name="dict_name_cs">Čeština</string>
-  <string name="dict_name_da">Dansk</string>
-  <string name="dict_name_de">Deutsch</string>
-  <string name="dict_name_de_at">Deutsch (Österreich)</string>
-  <string name="dict_name_de_ch">Deutsch (Schweiz)</string>
-  <string name="dict_name_el">Ελληνικά</string>
-  <string name="dict_name_en_au">English (Australia)</string>
-  <string name="dict_name_en_ca">English (Canada)</string>
-  <string name="dict_name_en_gb">English (United Kingdom)</string>
-  <string name="dict_name_en_us">English (United States)</string>
-  <string name="dict_name_eo">Esperanto</string>
-  <string name="dict_name_es">Español</string>
-  <string name="dict_name_et">Eesti</string>
-  <string name="dict_name_eu">Euskara</string>
-  <string name="dict_name_fa_ir">فارسی (ایران)</string>
-  <string name="dict_name_fi">Suomi</string>
-  <string name="dict_name_fr">Français</string>
-  <string name="dict_name_ga">Gaeilge</string>
-  <string name="dict_name_gl">Galego</string>
-  <string name="dict_name_gom">कोंकणी (देवनागरी, भारत)</string>
-  <string name="dict_name_gu">ગુજરાતી</string>
-  <string name="dict_name_he">עברית</string>
-  <string name="dict_name_hi">हिन्दी</string>
-  <string name="dict_name_hi_zz">हिन्दी (भारत)</string>
-  <string name="dict_name_hr">Hrvatski</string>
-  <string name="dict_name_hu">Magyar</string>
-  <string name="dict_name_hy">Հայերեն</string>
-  <string name="dict_name_hy_east">Հայերեն</string>
-  <string name="dict_name_id">Indonesia</string>
-  <string name="dict_name_is">Íslenska</string>
-  <string name="dict_name_it">Italiano</string>
-  <string name="dict_name_iw">עברית (ישראל)</string>
-  <string name="dict_name_ka">ქართული</string>
-  <string name="dict_name_kab">Taqbaylit</string>
-  <string name="dict_name_kk">Қазақ Тілі</string>
-  <string name="dict_name_km">ខ្មែរ</string>
-  <string name="dict_name_kn">ಕನ್ನಡ</string>
-  <string name="dict_name_ks">کٲشُر</string>
-  <string name="dict_name_la">Latina</string>
-  <string name="dict_name_lb">Lëtzebuergesch</string>
-  <string name="dict_name_lt">Lietuvių</string>
-  <string name="dict_name_lv">Latviešu</string>
-  <string name="dict_name_mai">मैथिली</string>
-  <string name="dict_name_mg">Malagasy</string>
-  <string name="dict_name_mk">Македонски</string>
-  <string name="dict_name_ml">മലയാളം</string>
-  <string name="dict_name_mr">मराठी</string>
-  <string name="dict_name_nb">Norsk Bokmål</string>
-  <string name="dict_name_ne">नेपाली</string>
-  <string name="dict_name_nl">Nederlands</string>
-  <string name="dict_name_nn">Norsk Nynorsk</string>
-  <string name="dict_name_or">ଓଡ଼ିଆ</string>
-  <string name="dict_name_pa">ਪੰਜਾਬੀ</string>
-  <string name="dict_name_pl">Polski</string>
-  <string name="dict_name_pt_br">Português (Brasil)</string>
-  <string name="dict_name_pt_pt">Português (Portugal)</string>
-  <string name="dict_name_ro">Română</string>
-  <string name="dict_name_ru">Русский</string>
-  <string name="dict_name_sa">संस्कृत भाषा</string>
-  <string name="dict_name_sat">ᱥᱟᱱᱛᱟᱲᱤ</string>
-  <string name="dict_name_sc">Sardu</string>
-  <string name="dict_name_sd">سنڌي</string>
-  <string name="dict_name_si">සිංහල</string>
-  <string name="dict_name_sk">Slovenčina</string>
-  <string name="dict_name_sl">Slovenščina</string>
-  <string name="dict_name_sr">Српски</string>
-  <string name="dict_name_sr_zz">Српски (Ћирилица, Србија)</string>
-  <string name="dict_name_sv">Svenska</string>
-  <string name="dict_name_ta">தமிழ்</string>
-  <string name="dict_name_te">తెలుగు</string>
-  <string name="dict_name_th">ไทย</string>
-  <string name="dict_name_tl">Filipino (Pilipinas)</string>
-  <string name="dict_name_tok">Toki Pona</string>
-  <string name="dict_name_tr">Türkçe</string>
-  <string name="dict_name_uk">Українська</string>
-  <string name="dict_name_ur">اردو</string>
-  <string name="dict_name_vi">Tiếng Việt</string>
-  <string name="dict_name_zgh">ⵜⴰⵎⴰⵣⵉⵖⵜ</string>
-  <string name="dict_name_zgh_zz">ⵜⴰⵎⴰⵣⵉⵖⵜ (ⵍⵎⵖⵔⵉⴱ)</string>
+  <string name="dict_name_af" translatable="false">Afrikaans</string>
+  <string name="dict_name_ar" translatable="false">العربية</string>
+  <string name="dict_name_as" translatable="false">অসমীয়া</string>
+  <string name="dict_name_az" translatable="false">Azərbaycan</string>
+  <string name="dict_name_be" translatable="false">Беларуская</string>
+  <string name="dict_name_bg" translatable="false">Български</string>
+  <string name="dict_name_bn" translatable="false">বাংলা</string>
+  <string name="dict_name_bs" translatable="false">Bosanski</string>
+  <string name="dict_name_ca" translatable="false">Català</string>
+  <string name="dict_name_ceb" translatable="false">Cebuano</string>
+  <string name="dict_name_cs" translatable="false">Čeština</string>
+  <string name="dict_name_da" translatable="false">Dansk</string>
+  <string name="dict_name_de" translatable="false">Deutsch</string>
+  <string name="dict_name_de_at" translatable="false">Deutsch (Österreich)</string>
+  <string name="dict_name_de_ch" translatable="false">Deutsch (Schweiz)</string>
+  <string name="dict_name_el" translatable="false">Ελληνικά</string>
+  <string name="dict_name_en_au" translatable="false">English (Australia)</string>
+  <string name="dict_name_en_ca" translatable="false">English (Canada)</string>
+  <string name="dict_name_en_gb" translatable="false">English (United Kingdom)</string>
+  <string name="dict_name_en_us" translatable="false">English (United States)</string>
+  <string name="dict_name_eo" translatable="false">Esperanto</string>
+  <string name="dict_name_es" translatable="false">Español</string>
+  <string name="dict_name_et" translatable="false">Eesti</string>
+  <string name="dict_name_eu" translatable="false">Euskara</string>
+  <string name="dict_name_fa_ir" translatable="false">فارسی (ایران)</string>
+  <string name="dict_name_fi" translatable="false">Suomi</string>
+  <string name="dict_name_fr" translatable="false">Français</string>
+  <string name="dict_name_ga" translatable="false">Gaeilge</string>
+  <string name="dict_name_gl" translatable="false">Galego</string>
+  <string name="dict_name_gom" translatable="false">कोंकणी (देवनागरी, भारत)</string>
+  <string name="dict_name_gu" translatable="false">ગુજરાતી</string>
+  <string name="dict_name_he" translatable="false">עברית</string>
+  <string name="dict_name_hi" translatable="false">हिन्दी</string>
+  <string name="dict_name_hi_zz" translatable="false">हिन्दी (भारत)</string>
+  <string name="dict_name_hr" translatable="false">Hrvatski</string>
+  <string name="dict_name_hu" translatable="false">Magyar</string>
+  <string name="dict_name_hy" translatable="false">Հայերեն</string>
+  <string name="dict_name_hy_east" translatable="false">Հայերեն</string>
+  <string name="dict_name_id" translatable="false">Indonesia</string>
+  <string name="dict_name_is" translatable="false">Íslenska</string>
+  <string name="dict_name_it" translatable="false">Italiano</string>
+  <string name="dict_name_iw" translatable="false">עברית (ישראל)</string>
+  <string name="dict_name_ka" translatable="false">ქართული</string>
+  <string name="dict_name_kab" translatable="false">Taqbaylit</string>
+  <string name="dict_name_kk" translatable="false">Қазақ Тілі</string>
+  <string name="dict_name_km" translatable="false">ខ្មែរ</string>
+  <string name="dict_name_kn" translatable="false">ಕನ್ನಡ</string>
+  <string name="dict_name_ks" translatable="false">کٲشُر</string>
+  <string name="dict_name_la" translatable="false">Latina</string>
+  <string name="dict_name_lb" translatable="false">Lëtzebuergesch</string>
+  <string name="dict_name_lt" translatable="false">Lietuvių</string>
+  <string name="dict_name_lv" translatable="false">Latviešu</string>
+  <string name="dict_name_mai" translatable="false">मैथिली</string>
+  <string name="dict_name_mg" translatable="false">Malagasy</string>
+  <string name="dict_name_mk" translatable="false">Македонски</string>
+  <string name="dict_name_ml" translatable="false">മലയാളം</string>
+  <string name="dict_name_mr" translatable="false">मराठी</string>
+  <string name="dict_name_nb" translatable="false">Norsk Bokmål</string>
+  <string name="dict_name_ne" translatable="false">नेपाली</string>
+  <string name="dict_name_nl" translatable="false">Nederlands</string>
+  <string name="dict_name_nn" translatable="false">Norsk Nynorsk</string>
+  <string name="dict_name_or" translatable="false">ଓଡ଼ିଆ</string>
+  <string name="dict_name_pa" translatable="false">ਪੰਜਾਬੀ</string>
+  <string name="dict_name_pl" translatable="false">Polski</string>
+  <string name="dict_name_pt_br" translatable="false">Português (Brasil)</string>
+  <string name="dict_name_pt_pt" translatable="false">Português (Portugal)</string>
+  <string name="dict_name_ro" translatable="false">Română</string>
+  <string name="dict_name_ru" translatable="false">Русский</string>
+  <string name="dict_name_sa" translatable="false">संस्कृत भाषा</string>
+  <string name="dict_name_sat" translatable="false">ᱥᱟᱱᱛᱟᱲᱤ</string>
+  <string name="dict_name_sc" translatable="false">Sardu</string>
+  <string name="dict_name_sd" translatable="false">سنڌي</string>
+  <string name="dict_name_si" translatable="false">සිංහල</string>
+  <string name="dict_name_sk" translatable="false">Slovenčina</string>
+  <string name="dict_name_sl" translatable="false">Slovenščina</string>
+  <string name="dict_name_sr" translatable="false">Српски</string>
+  <string name="dict_name_sr_zz" translatable="false">Српски (Ћирилица, Србија)</string>
+  <string name="dict_name_sv" translatable="false">Svenska</string>
+  <string name="dict_name_ta" translatable="false">தமிழ்</string>
+  <string name="dict_name_te" translatable="false">తెలుగు</string>
+  <string name="dict_name_th" translatable="false">ไทย</string>
+  <string name="dict_name_tl" translatable="false">Filipino (Pilipinas)</string>
+  <string name="dict_name_tok" translatable="false">Toki Pona</string>
+  <string name="dict_name_tr" translatable="false">Türkçe</string>
+  <string name="dict_name_uk" translatable="false">Українська</string>
+  <string name="dict_name_ur" translatable="false">اردو</string>
+  <string name="dict_name_vi" translatable="false">Tiếng Việt</string>
+  <string name="dict_name_zgh" translatable="false">ⵜⴰⵎⴰⵣⵉⵖⵜ</string>
+  <string name="dict_name_zgh_zz" translatable="false">ⵜⴰⵎⴰⵣⵉⵖⵜ (ⵍⵎⵖⵔⵉⴱ)</string>
   <string-array name="dictionaries_locale">
     <item>af</item>
     <item>ar</item>

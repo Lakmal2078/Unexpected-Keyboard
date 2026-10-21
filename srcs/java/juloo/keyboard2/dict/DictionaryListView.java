@@ -136,7 +136,8 @@ public class DictionaryListView extends LinearLayout
       ((TextView)view.findViewById(R.id.dictionary_download_locale))
         .setText(ds.display_name(dict_index));
       ((TextView)view.findViewById(R.id.dictionary_download_size))
-        .setText(NumberFormat.getInstance().format(size_mb) + "MB");
+        .setText(getContext().getString(R.string.dictionary_download_size_format,
+            NumberFormat.getInstance().format(size_mb)));
       download_button =
         (ImageView)view.findViewById(R.id.dictionary_download_button);
       download_button.setOnClickListener(this);

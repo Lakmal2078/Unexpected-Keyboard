@@ -1,5 +1,6 @@
 package juloo.keyboard2.dict;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -149,6 +150,8 @@ public final class Dictionaries
   SharedPreferences _shared_prefs;
   Map<String, Cdict[]> _loaded_dictionaries;
 
+  // The singleton retains the application context (the fallback is only for unusual Context implementations).
+  @SuppressLint("StaticFieldLeak")
   static Dictionaries _instance = null;
 
   static final String PREF_INSTALLED_DICTS = "installed";

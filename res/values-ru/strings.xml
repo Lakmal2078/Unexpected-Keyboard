@@ -159,7 +159,6 @@
     <string name="dictionaries_from_internet">Загрузить словарь из Интернета</string>
     <string name="dictionaries_download_success">Словарь установлен</string>
     <string name="pref_dialog_edit_text">Собственное определение</string>
-    <string name="candidates_status_click_to_install">Нажмите, чтобы установить словарь для %s</string>
     <string name="pref_physical_keyboard_behavior">Если подключена физическая клавиатура</string>
     <string name="pref_physical_keyboard_behavior_hide">Скрывать все</string>
     <string name="pref_physical_keyboard_behavior_show">Показывать все</string>
