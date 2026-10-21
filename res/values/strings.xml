@@ -138,6 +138,12 @@
     <string name="pref_font_rounded">Rounded Font</string>
     <string name="pref_high_contrast_title">High contrast key labels</string>
     <string name="pref_high_contrast_summary">Enhance label thickness and readability under bright sunlight</string>
+    <string name="pref_custom_colors_title">Custom keyboard colors</string>
+    <string name="pref_custom_colors_summary">Override theme with custom background and key accent colors</string>
+    <string name="pref_custom_bg_color_title">Keyboard background color</string>
+    <string name="pref_custom_bg_color_summary">Choose custom background color for the keyboard</string>
+    <string name="pref_custom_accent_color_title">Key accent color</string>
+    <string name="pref_custom_accent_color_summary">Choose accent color for action keys and highlights</string>
     <string name="pref_swipe_dist_e_very_short">Very short</string>
     <string name="pref_swipe_dist_e_short">Short</string>
     <string name="pref_swipe_dist_e_default">Normal</string>

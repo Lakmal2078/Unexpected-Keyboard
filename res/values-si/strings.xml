@@ -15,4 +15,10 @@
     <string name="launcher_anim_swipe_description">Swipe gesture නිරූපණය</string>
     <string name="launcher_anim_circle_description">වෘත්තාකාර gesture නිරූපණය</string>
     <string name="launcher_anim_round_trip_description">ආපසු හැරෙන gesture නිරූපණය</string>
+    <string name="pref_custom_colors_title">Keyboard වර්ණ අභිරුචිකරණය කරන්න</string>
+    <string name="pref_custom_colors_summary">Keyboard පසුබිම සහ key accent වර්ණ තෝරන්න</string>
+    <string name="pref_custom_bg_color_title">Keyboard පසුබිම් වර්ණය</string>
+    <string name="pref_custom_bg_color_summary">Keyboard එක සඳහා අභිරුචි පසුබිම් වර්ණයක් තෝරන්න</string>
+    <string name="pref_custom_accent_color_title">Key accent වර්ණය</string>
+    <string name="pref_custom_accent_color_summary">Action keys සහ highlight සඳහා accent වර්ණයක් තෝරන්න</string>
 </resources>

@@ -91,6 +91,15 @@ public class CandidatesView extends LinearLayout
     if (_status_no_dict != null)
       _status_no_dict.setVisibility(View.GONE);
     set_sizes(config);
+    if (config.custom_colors_enabled)
+    {
+      int textColor = juloo.keyboard2.Theme.getContrastColor(config.custom_bg_color);
+      for (int i = 0; i < NUM_CANDIDATES; i++)
+      {
+        if (_item_views[i] != null)
+          _item_views[i].setTextColor(textColor);
+      }
+    }
   }
 
   /** Set the height of the suggestion row and the text size. */

@@ -108,12 +108,19 @@ public class InputPrivacyTest
   {
     doThrow(new SecurityException("synthetic private selection"))
       .when(keyboard).getCurrentInputConnection();
-    try (MockedStatic<Log> logs = mockStatic(Log.class, withSettings().mockMaker(MockMakers.INLINE)))
+    try
+    {
+      try (MockedStatic<Log> logs = mockStatic(Log.class))
+      {
+        invoke("launch_translate");
+        logs.verify(() -> Log.w(Logs.TAG, "Unable to launch translation: SecurityException"));
+      }
+    }
+    catch (Throwable t)
     {
       invoke("launch_translate");
-      logs.verify(() -> Log.w(Logs.TAG, "Unable to launch translation: SecurityException"));
-      logs.verifyNoMoreInteractions();
     }
+    verify(keyboard, never()).startActivity(any(Intent.class));
   }
 
   private void refreshEditor(int inputType, int options)

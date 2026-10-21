@@ -88,6 +88,9 @@ public class Config
   public boolean smart_snippets_enabled;
   public boolean clipboard_suggestion_enabled;
   public boolean show_quick_toolbar;
+  public boolean custom_colors_enabled = false;
+  public int custom_bg_color = 0xFF1E1E2E;
+  public int custom_accent_color = 0xFF3D5AFE;
 
   // Dynamically set
   /** Configuration options implied by the connected editor. */
@@ -232,6 +235,9 @@ public class Config
     smart_snippets_enabled = _prefs.getBoolean("smart_snippets_enabled", true);
     clipboard_suggestion_enabled = _prefs.getBoolean("clipboard_suggestion_enabled", false);
     show_quick_toolbar = _prefs.getBoolean("show_quick_toolbar", true);
+    custom_colors_enabled = _prefs.getBoolean("custom_colors_enabled", false);
+    custom_bg_color = _prefs.getInt("custom_bg_color", 0xFF1E1E2E);
+    custom_accent_color = _prefs.getInt("custom_accent_color", 0xFF3D5AFE);
     float screen_width_dp = dm.widthPixels / dm.density;
     wide_screen = screen_width_dp >= WIDE_DEVICE_THRESHOLD;
     split_layout = get_split_layout();

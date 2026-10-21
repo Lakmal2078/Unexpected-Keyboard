@@ -80,8 +80,51 @@ public class Theme
     s.recycle();
   }
 
+  /** Calculate high contrast text color (dark or light) for a given background color. */
+  public static int getContrastColor(int color)
+  {
+    int r = (color >> 16) & 0xFF;
+    int g = (color >> 8) & 0xFF;
+    int b = color & 0xFF;
+    double lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255.0;
+    return lum > 0.55 ? 0xFF121212 : 0xFFFFFFFF;
+  }
+
+  /** Compute a harmonious keycap color relative to custom background. */
+  public static int computeKeyColor(int bgColor, int fallbackThemeColor)
+  {
+    int r = (bgColor >> 16) & 0xFF;
+    int g = (bgColor >> 8) & 0xFF;
+    int b = bgColor & 0xFF;
+    double lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255.0;
+    if (lum < 0.5)
+      return blend(bgColor, 0xFFFFFFFF, 0.14f);
+    else
+      return blend(bgColor, 0xFF000000, 0.10f);
+  }
+
+  public static int blend(int color1, int color2, float ratio)
+  {
+    float inv = 1f - ratio;
+    int r1 = (color1 >> 16) & 0xFF;
+    int g1 = (color1 >> 8) & 0xFF;
+    int b1 = color1 & 0xFF;
+
+    int r2 = (color2 >> 16) & 0xFF;
+    int g2 = (color2 >> 8) & 0xFF;
+    int b2 = color2 & 0xFF;
+
+    int r = (int)(r1 * inv + r2 * ratio);
+    int g = (int)(g1 * inv + g2 * ratio);
+    int b = (int)(b1 * inv + b2 * ratio);
+    r = Math.min(255, Math.max(0, r));
+    g = Math.min(255, Math.max(0, g));
+    b = Math.min(255, Math.max(0, b));
+    return 0xFF000000 | (r << 16) | (g << 8) | b;
+  }
+
   /** Interpolate the 'value' component toward its opposite by 'alpha'. */
-  static int adjustLight(int color, float alpha)
+  public static int adjustLight(int color, float alpha)
   {
     float[] hsv = new float[3];
     Color.colorToHSV(color, hsv);
@@ -136,14 +179,26 @@ public class Theme
       // added on the right and on the bottom of every keys.
       margin_top = config.marginTop + vertical_margin / 2;
       margin_left = horizontal_margin / 2;
-      keyboard_background_paint = init_keyboard_background_paint(theme, margin_top + row_height * layout.keysHeight + config.margin_bottom);
+      if (config.custom_colors_enabled)
+      {
+        keyboard_background_paint = new Paint();
+        keyboard_background_paint.setColor(config.custom_bg_color);
+        keyboard_background_paint.setAlpha(config.keyboardOpacity);
+      }
+      else
+      {
+        keyboard_background_paint = init_keyboard_background_paint(theme, margin_top + row_height * layout.keysHeight + config.margin_bottom);
+      }
       key = new Key(theme, config, keyWidth, false, KeyboardData.Key.Role.Normal);
       key_action = new Key(theme, config, keyWidth, false, KeyboardData.Key.Role.Action);
       key_space_bar = new Key(theme, config, keyWidth, false, KeyboardData.Key.Role.Space_bar);
       key_activated = new Key(theme, config, keyWidth, true, KeyboardData.Key.Role.Normal);
       key_suggestion = new Key(theme, config, keyWidth, false, KeyboardData.Key.Role.Suggestion);
       indication_paint = init_label_paint(config, null);
-      indication_paint.setColor(theme.subLabelColor);
+      if (config.custom_colors_enabled)
+        indication_paint.setColor(adjustLight(getContrastColor(config.custom_bg_color), 0.35f));
+      else
+        indication_paint.setColor(theme.subLabelColor);
     }
 
     static Paint init_keyboard_background_paint(Theme theme, float height)
@@ -185,7 +240,8 @@ public class Theme
         if (activated)
         {
           border_width = theme.keyBorderWidthActivated;
-          bg_paint.setColor(theme.colorKeyActivated);
+          int actColor = config.custom_colors_enabled ? config.custom_accent_color : theme.colorKeyActivated;
+          bg_paint.setColor(actColor);
           bg_paint.setAlpha(config.keyActivatedOpacity);
         }
         else
@@ -193,11 +249,13 @@ public class Theme
           switch (role)
           {
             case Action:
-              bg_paint.setColor(theme.colorKeyAction);
+              int actionColor = config.custom_colors_enabled ? config.custom_accent_color : theme.colorKeyAction;
+              bg_paint.setColor(actionColor);
               border_width = theme.keyBorderWidthAction;
               break;
             case Space_bar:
-              bg_paint.setColor(theme.colorKeySpaceBar);
+              int spaceColor = config.custom_colors_enabled ? computeKeyColor(config.custom_bg_color, theme.colorKeySpaceBar) : theme.colorKeySpaceBar;
+              bg_paint.setColor(spaceColor);
               border_width = theme.keyBorderWidthSpaceBar;
               break;
             case Suggestion:
@@ -205,16 +263,28 @@ public class Theme
               border_width = 0;
               break;
             default:
-              bg_paint.setColor(theme.colorKey);
+              int normalKeyColor = config.custom_colors_enabled ? computeKeyColor(config.custom_bg_color, theme.colorKey) : theme.colorKey;
+              bg_paint.setColor(normalKeyColor);
               border_width = config.borderConfig ? config.customBorderLineWidth : theme.keyBorderWidth;
               break;
           }
           bg_paint.setAlpha(config.keyOpacity);
         }
-        border_left_paint = init_border_paint(config, border_width, theme.keyBorderColorLeft);
-        border_top_paint = init_border_paint(config, border_width, theme.keyBorderColorTop);
-        border_right_paint = init_border_paint(config, border_width, theme.keyBorderColorRight);
-        border_bottom_paint = init_border_paint(config, border_width, theme.keyBorderColorBottom);
+        int bColor;
+        if (config.custom_colors_enabled)
+        {
+          int bg = config.custom_bg_color;
+          boolean isDark = ((0.299 * ((bg >> 16) & 0xFF) + 0.587 * ((bg >> 8) & 0xFF) + 0.114 * (bg & 0xFF)) / 255.0) < 0.5;
+          bColor = blend(config.custom_bg_color, isDark ? 0xFFFFFFFF : 0xFF000000, 0.08f);
+        }
+        else
+        {
+          bColor = theme.keyBorderColorLeft;
+        }
+        border_left_paint = init_border_paint(config, border_width, bColor);
+        border_top_paint = init_border_paint(config, border_width, bColor);
+        border_right_paint = init_border_paint(config, border_width, bColor);
+        border_bottom_paint = init_border_paint(config, border_width, bColor);
         _label_paint = init_label_paint(config, null);
         _special_label_paint = init_label_paint(config, _key_font);
         _sublabel_paint = init_label_paint(config, null);

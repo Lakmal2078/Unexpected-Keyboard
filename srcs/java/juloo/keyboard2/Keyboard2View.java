@@ -625,8 +625,25 @@ public class Keyboard2View extends View
     canvas.restore();
   }
 
-  private int labelColor(KeyValue k, boolean isKeyDown, boolean sublabel)
+  private int labelColor(KeyValue k, boolean isKeyDown, boolean sublabel, Theme.Computed.Key tc)
   {
+    if (_config.custom_colors_enabled)
+    {
+      if (tc == _tc.key_action || tc == _tc.key_activated || isKeyDown)
+      {
+        int text = Theme.getContrastColor(_config.custom_accent_color);
+        return sublabel ? Theme.adjustLight(text, 0.35f) : text;
+      }
+      else
+      {
+        int text = Theme.getContrastColor(_config.custom_bg_color);
+        if (sublabel)
+          return Theme.adjustLight(text, 0.35f);
+        if (k.hasFlagsAny(KeyValue.FLAG_SECONDARY | KeyValue.FLAG_GREYED))
+          return Theme.adjustLight(text, 0.5f);
+        return text;
+      }
+    }
     if (isKeyDown)
     {
       int flags = _pointers.getKeyFlags(k);
@@ -654,7 +671,7 @@ public class Keyboard2View extends View
     if (kv == null)
       return;
     float textSize = scaleTextSize(kv, true);
-    Paint p = tc.label_paint(kv.hasFlagsAny(KeyValue.FLAG_KEY_FONT), labelColor(kv, isKeyDown, false), textSize);
+    Paint p = tc.label_paint(kv.hasFlagsAny(KeyValue.FLAG_KEY_FONT), labelColor(kv, isKeyDown, false, tc), textSize);
     canvas.drawText(kv.getString(), x, (keyH - p.ascent() - p.descent()) / 2f + y, p);
   }
 
@@ -668,7 +685,7 @@ public class Keyboard2View extends View
     if (kv == null)
       return;
     float textSize = scaleTextSize(kv, false);
-    Paint p = tc.sublabel_paint(kv.hasFlagsAny(KeyValue.FLAG_KEY_FONT), labelColor(kv, isKeyDown, true), textSize, a);
+    Paint p = tc.sublabel_paint(kv.hasFlagsAny(KeyValue.FLAG_KEY_FONT), labelColor(kv, isKeyDown, true, tc), textSize, a);
     float subPadding = _config.keyPadding;
     if (v == Vertical.CENTER)
       y += (keyH - p.ascent() - p.descent()) / 2f;

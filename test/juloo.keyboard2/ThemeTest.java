@@ -76,4 +76,21 @@ public class ThemeTest
     assertEquals(R.style.Dark, Config.getThemeId(null, "system"));
     assertEquals(R.style.Dark, Config.getThemeId(null, "unknown_theme_key"));
   }
+
+  @Test
+  public void testCustomColorContrastAndBlending()
+  {
+    // High contrast text computation
+    assertEquals(0xFFFFFFFF, Theme.getContrastColor(0xFF000000)); // Black -> White text
+    assertEquals(0xFFFFFFFF, Theme.getContrastColor(0xFF0D1B2A)); // Navy -> White text
+    assertEquals(0xFF121212, Theme.getContrastColor(0xFFFFFFFF)); // White -> Dark text
+    assertEquals(0xFF121212, Theme.getContrastColor(0xFFFFD600)); // Yellow -> Dark text
+
+    // Harmonious key color computation
+    int darkKey = Theme.computeKeyColor(0xFF000000, 0);
+    assertTrue("Key color on black should be lighter than black", (darkKey & 0xFF) > 0);
+
+    int lightKey = Theme.computeKeyColor(0xFFFFFFFF, 0);
+    assertTrue("Key color on white should be slightly darker than pure white", (lightKey & 0xFF) < 255);
+  }
 }

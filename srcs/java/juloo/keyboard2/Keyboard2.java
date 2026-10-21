@@ -309,6 +309,33 @@ public class Keyboard2 extends InputMethodService
         }
       });
     }
+
+    if (_quick_toolbar != null)
+    {
+      int[] btnIds = new int[] {
+        R.id.toolbar_btn_apps, R.id.toolbar_btn_keyboard, R.id.toolbar_btn_translate,
+        R.id.toolbar_btn_settings, R.id.toolbar_btn_clipboard, R.id.toolbar_btn_theme
+      };
+      if (_config.custom_colors_enabled)
+      {
+        int iconTint = Theme.getContrastColor(_config.custom_bg_color);
+        for (int id : btnIds)
+        {
+          android.widget.ImageButton btn = _quick_toolbar.findViewById(id);
+          if (btn != null)
+            btn.setColorFilter(iconTint);
+        }
+      }
+      else
+      {
+        for (int id : btnIds)
+        {
+          android.widget.ImageButton btn = _quick_toolbar.findViewById(id);
+          if (btn != null)
+            btn.clearColorFilter();
+        }
+      }
+    }
   }
 
   private void launch_translate()
@@ -477,20 +504,40 @@ public class Keyboard2 extends InputMethodService
   private void refresh_config()
   {
     int prev_theme = _config.theme;
+    boolean prev_custom_colors = _config.custom_colors_enabled;
+    int prev_custom_bg = _config.custom_bg_color;
+    int prev_custom_accent = _config.custom_accent_color;
+
     _config.refresh(getResources(), _foldStateTracker.isUnfolded(), _dictionaries);
     refresh_current_dictionary();
-    // Refreshing the theme config requires re-creating the views
-    if (prev_theme != _config.theme)
+    // Refreshing the theme config or custom colors requires re-creating the views
+    if (prev_theme != _config.theme
+        || prev_custom_colors != _config.custom_colors_enabled
+        || prev_custom_bg != _config.custom_bg_color
+        || prev_custom_accent != _config.custom_accent_color)
     {
       create_keyboard_view();
       _emojiPane = null;
       _clipboard_pane = null;
       setInputView(_keyboard_container_view);
     }
-    // Set keyboard background opacity
-    Drawable bg = _keyboard_container_view.getBackground().mutate();
-    bg.setAlpha(_config.keyboardOpacity);
-    _keyboard_container_view.setBackground(bg);
+    // Set keyboard background
+    if (_config.custom_colors_enabled)
+    {
+      _keyboard_container_view.setBackgroundColor(_config.custom_bg_color);
+      if (_keyboard_container_view.getBackground() != null)
+      {
+        Drawable bg = _keyboard_container_view.getBackground().mutate();
+        bg.setAlpha(_config.keyboardOpacity);
+        _keyboard_container_view.setBackground(bg);
+      }
+    }
+    else if (_keyboard_container_view.getBackground() != null)
+    {
+      Drawable bg = _keyboard_container_view.getBackground().mutate();
+      bg.setAlpha(_config.keyboardOpacity);
+      _keyboard_container_view.setBackground(bg);
+    }
     _keyboard_layout_view.reset();
     refresh_candidates_view();
   }
