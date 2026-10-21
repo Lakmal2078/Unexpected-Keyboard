@@ -175,8 +175,8 @@ val compileComposeSequences by tasks.registering(Exec::class) {
   inputs.dir(`in`)
   outputs.file(out)
   doFirst { println("\nGenerating $out") }
-  val sequences = `in`.listFiles { it: File ->
-    !it.name.endsWith(".py") && !it.name.endsWith(".md")
+  val sequences = `in`.listFiles {
+    it: File -> !it.name.endsWith(".py") && !it.name.endsWith(".md")
   }!!.map { it.absolutePath }.toTypedArray()
   workingDir = projectDir
   commandLine("python3", `in`.resolve("compile.py").absolutePath, *sequences)
@@ -187,10 +187,36 @@ tasks.withType(Test::class).configureEach {
   dependsOn(genLayoutsList, checkKeyboardLayouts, compileComposeSequences, genMethodXml)
 }
 
-val initDebugKeystore by tasks.registering(Exec::class) {
-  // Automatically generate debug keystore if it doesn't exist (e.g. in CI / GitHub Actions)
-  isEnabled = !file("debug.keystore").exists()
-  commandLine("keytool", "-genkeypair", "-noprompt", "-dname", "cn=Debug, ou=Build, o=Android, c=US", "-alias", "androiddebugkey", "-keypass", "android", "-keystore", "debug.keystore", "-keyalg", "RSA", "-storepass", "android", "-validity", "10000")
+val initDebugKeystore by tasks.registering {
+  // Ensure the debug keystore exists and matches the credentials in debugConfig.
+  // A stale or checked-in keystore may use a different password and break CI packaging.
+  doLast {
+    val keystore = file("debug.keystore")
+    val valid = keystore.exists() && try {
+      ProcessBuilder(
+        "keytool", "-list", "-keystore", keystore.absolutePath,
+        "-storepass", "android", "-alias", "androiddebugkey"
+      ).redirectErrorStream(true).start().waitFor() == 0
+    } catch (_: Exception) {
+      false
+    }
+
+    if (!valid) {
+      if (keystore.exists() && !keystore.delete()) {
+        throw GradleException("Could not remove invalid debug keystore: ${keystore.absolutePath}")
+      }
+      val process = ProcessBuilder(
+        "keytool", "-genkeypair", "-noprompt",
+        "-dname", "cn=Debug, ou=Build, o=Android, c=US",
+        "-alias", "androiddebugkey", "-keypass", "android",
+        "-keystore", keystore.absolutePath, "-keyalg", "RSA",
+        "-storepass", "android", "-validity", "10000"
+      ).inheritIO().start()
+      if (process.waitFor() != 0) {
+        throw GradleException("Failed to generate debug keystore")
+      }
+    }
+  }
 }
 
 // latn_qwerty_us is used as a raw resource by the custom layout option.
@@ -208,8 +234,8 @@ val copyLayoutDefinitions by tasks.registering(Copy::class) {
 tasks.named("preBuild") {
   dependsOn(initDebugKeystore, copyRawQwertyUS, copyLayoutDefinitions)
   // 'mustRunAfter' defines ordering between tasks (which is required by
-  // Gradle) but doesn't create a dependency. These rules update files that are
-  // checked in the repository that don't need to be updated during regular
+  // Gradle) but doesn't create a dependency. These rules update files that
+  // are checked in the repository that don't need to be updated during regular
   // builds.
   mustRunAfter(genEmojis, genLayoutsList, compileComposeSequences, genMethodXml)
 }
