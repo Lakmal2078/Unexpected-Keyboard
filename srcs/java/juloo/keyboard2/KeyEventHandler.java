@@ -199,6 +199,7 @@ public final class KeyEventHandler
           ? _suggestions.clipboard_full_text
           : text.substring(2).trim();
       paste_from_clipboard_pane(pasteText);
+      _suggestions.dismiss_clipboard_suggestion();
       _suggestions.clear();
       _recv.set_suggestions(_suggestions);
       _next_last_action = LastAction.SUGGESTION_ENTERED;
