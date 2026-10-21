@@ -9,15 +9,12 @@ public final class SuggestionPolicy
   private SuggestionPolicy() {}
 
   // This inlined integer mask is safe on older Android versions too.
-  // This inlined integer mask is safe on older Android versions too.
   @SuppressLint("InlinedApi")
   public static boolean is_sensitive_input(int inputType, int imeOptions)
   {
-    // Previously, IME_FLAG_NO_PERSONALIZED_LEARNING was treated as sensitive.
-    // We now ignore this flag to allow suggestions in incognito/private mode.
-    return is_sensitive_input(inputType);
+    return (imeOptions & EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING) != 0
+        || is_sensitive_input(inputType);
   }
-
 
   public static boolean is_sensitive_input(int inputType)
   {
