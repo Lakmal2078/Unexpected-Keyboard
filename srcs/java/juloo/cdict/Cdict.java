@@ -56,6 +56,146 @@ public class Cdict {
     return 1;
   }
 
+  // Validate all externally supplied offsets before exposing a dictionary to lookups.
+  // The file is capped by the downloader, but the parser must not rely on that cap
+  // for memory safety: malformed offsets can still point outside the byte array.
+  private static void requireRange(byte[] data, int off, int size, String what)
+      throws ConstructionError {
+    if (off < 0 || size < 0 || off > data.length - size) {
+      throw new ConstructionError("Invalid " + what + " bounds");
+    }
+  }
+
+  private static int packedArraySize(int format, int count) throws ConstructionError {
+    if (format < 1 || format > 4 || count < 0) {
+      throw new ConstructionError("Invalid packed integer format");
+    }
+    return (format * count + 1) / 2;
+  }
+
+  private static int readSignedPacked(byte[] data, int format, int i, int off)
+      throws ConstructionError {
+    int idx = (format * i) / 2;
+    if (format == 1) {
+      requireRange(data, off + idx, 1, "packed integer");
+      int b = data[off + idx] & 0xFF;
+      int n = ((i & 1) != 0) ? (b >> 4) : (b & 0x0F);
+      return ((i & 1) == 0 && (n & 8) != 0) ? (n | ~0x0F) : n;
+    }
+    if (format == 2) {
+      requireRange(data, off + i, 1, "packed integer");
+      return data[off + i];
+    }
+    if (format == 4) {
+      requireRange(data, off + 2 * i, 2, "packed integer");
+      return (data[off + 2 * i] << 8) | (data[off + 2 * i + 1] & 0xFF);
+    }
+    requireRange(data, off + idx, 3, "packed integer");
+    return (data[off + idx] << 16)
+        | ((data[off + idx + 1] & 0xFF) << 8)
+        | (data[off + idx + 2] & 0xFF);
+  }
+
+  private static int readInt24Checked(byte[] data, int off) throws ConstructionError {
+    requireRange(data, off, 3, "24-bit integer");
+    return (data[off] << 16) | ((data[off + 1] & 0xFF) << 8) | (data[off + 2] & 0xFF);
+  }
+
+  private static void validateTrie(byte[] data, int root) throws ConstructionError {
+    // Iterative traversal avoids attacker-controlled recursion depth and detects cycles.
+    java.util.ArrayDeque<Integer> pending = new java.util.ArrayDeque<>();
+    java.util.HashSet<Integer> visited = new java.util.HashSet<>();
+    pending.add(root);
+    while (!pending.isEmpty()) {
+      int node = pending.removeFirst();
+      if (node < 0 || node >= data.length) {
+        throw new ConstructionError("Trie node offset out of bounds");
+      }
+      if (!visited.add(node)) {
+        throw new ConstructionError("Trie contains a cycle or shared node");
+      }
+      if (visited.size() > data.length / 2 + 1) {
+        throw new ConstructionError("Trie node count exceeds file size");
+      }
+      requireRange(data, node, 2, "trie node header");
+      int header = data[node] & 0xFF;
+      if ((header & 1) != 0) {
+        int prefixLength = header >>> 1;
+        requireRange(data, node, 4 + prefixLength, "trie prefix node");
+        int next = readInt24Checked(data, node + 1);
+        int relative = next & ~1;
+        if (relative == 0) {
+          if ((next & 1) == 0) {
+            throw new ConstructionError("Invalid zero trie pointer");
+          }
+          continue; // A final-word marker can point to the current node.
+        }
+        long target = (long) node + relative;
+        if (target < 0 || target >= data.length) {
+          throw new ConstructionError("Trie prefix pointer out of bounds");
+        }
+        pending.add((int) target);
+      } else {
+        int count = data[node + 1] & 0xFF;
+        if (count == 0) {
+          throw new ConstructionError("Empty trie branch node");
+        }
+        int branchFormat = (header >>> 1) & 0x07;
+        int numberFormat = (header >>> 4) & 0x07;
+        int branchBytes = packedArraySize(branchFormat, count);
+        int numberBytes = packedArraySize(numberFormat, count);
+        int labels = node + 2;
+        int branches = labels + count;
+        int numbers = branches + branchBytes;
+        requireRange(data, labels, count, "trie labels");
+        requireRange(data, branches, branchBytes, "trie branch pointers");
+        requireRange(data, numbers, numberBytes, "trie branch numbers");
+        for (int i = 0; i < count; i++) {
+          int relative = readSignedPacked(data, branchFormat, i, branches) & ~1;
+          if (relative == 0) {
+            throw new ConstructionError("Invalid zero trie branch pointer");
+          }
+          long target = (long) node + relative;
+          if (target < 0 || target >= data.length) {
+            throw new ConstructionError("Trie branch pointer out of bounds");
+          }
+          pending.add((int) target);
+        }
+      }
+    }
+  }
+
+  private static void validateDictionary(byte[] data, int tableEnd, int nameOffset,
+      int rootOffset, int frequencyOffset, int aliasesHeader, int aliasesLength,
+      int aliasesKeys, int aliasesValues) throws ConstructionError {
+    if (nameOffset < tableEnd || nameOffset >= data.length) {
+      throw new ConstructionError("Dictionary name offset out of bounds");
+    }
+    int nameEnd = nameOffset;
+    while (nameEnd < data.length && data[nameEnd] != 0) nameEnd++;
+    if (nameEnd == data.length) {
+      throw new ConstructionError("Dictionary name is not NUL-terminated");
+    }
+    if (rootOffset < tableEnd || rootOffset >= data.length) {
+      throw new ConstructionError("Trie root offset out of bounds");
+    }
+    if (frequencyOffset < tableEnd || frequencyOffset >= data.length) {
+      throw new ConstructionError("Frequency table offset out of bounds");
+    }
+    if (aliasesLength < 0 || aliasesLength > 0xFFFFFF) {
+      throw new ConstructionError("Invalid alias table length");
+    }
+    if (aliasesLength > 0) {
+      int keyFormat = aliasesHeader & 0x07;
+      int valueFormat = (aliasesHeader >>> 3) & 0x07;
+      int keyBytes = packedArraySize(keyFormat, aliasesLength);
+      int valueBytes = packedArraySize(valueFormat, aliasesLength);
+      requireRange(data, aliasesKeys, keyBytes, "alias keys");
+      requireRange(data, aliasesValues, valueBytes, "alias values");
+    }
+    validateTrie(data, rootOffset);
+  }
+
   public static Cdict[] of_bytes(byte[] data) throws ConstructionError {
     if (data == null || data.length < 5) {
       throw new ConstructionError("Invalid dictionary file: too small");
@@ -68,6 +208,11 @@ public class Cdict {
       throw new ConstructionError("Unsupported dictionary format version: " + version);
     }
     int dictCount = data[4] & 0xFF;
+    long tableEndLong = 5L + 24L * dictCount;
+    if (dictCount == 0 || tableEndLong > data.length) {
+      throw new ConstructionError("Invalid dictionary table length");
+    }
+    int tableEnd = (int) tableEndLong;
     Cdict[] dicts = new Cdict[dictCount];
     int off = 5;
     for (int i = 0; i < dictCount; i++) {
@@ -82,6 +227,8 @@ public class Cdict {
       int aliases_keys = decode_int32(data, off + 16);
       int aliases_values = decode_int32(data, off + 20);
 
+      validateDictionary(data, tableEnd, name_off, root_ptr, freq_off,
+          aliases_header, aliases_length, aliases_keys, aliases_values);
       int nameEnd = name_off;
       while (nameEnd < data.length && data[nameEnd] != 0) {
         nameEnd++;
