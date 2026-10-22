@@ -67,7 +67,7 @@ public class Cdict {
   }
 
   private static int packedArraySize(int format, int count) throws ConstructionError {
-    if (format < 1 || format > 4 || count < 0) {
+    if ((format != 1 && format != 2 && format != 4 && format != 6) || count < 0) {
       throw new ConstructionError("Invalid packed integer format");
     }
     return (format * count + 1) / 2;
