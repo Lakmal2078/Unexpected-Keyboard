@@ -116,7 +116,8 @@ public class Cdict {
         state.put(~entry, 2); // finished
         continue;
       }
-      int nodeState = state.getOrDefault(entry, 0);
+      Integer previousState = state.get(entry);
+      int nodeState = previousState == null ? 0 : previousState.intValue();
       if (nodeState == 1) {
         throw new ConstructionError("Trie contains a cycle");
       }
