@@ -79,6 +79,22 @@ public class AuditRegressionDeviceTest
   }
 
   @Test
+  public void bundledEnglishAndSinhalaDictionariesPassParserValidation()
+  {
+    Context context = ApplicationProvider.getApplicationContext();
+    Config config = new Config();
+    Dictionaries dictionaries = Dictionaries.instance(context);
+
+    dictionaries.set_current_dictionary(config, "en_US");
+    assertNotNull("Bundled English dictionary must pass Cdict validation",
+        config.current_dictionary);
+
+    dictionaries.set_current_dictionary(config, "si");
+    assertNotNull("Bundled Sinhala dictionary must pass Cdict validation",
+        config.current_dictionary);
+  }
+
+  @Test
   public void calculatorPunctuationCannotBeRemovedByDictionarySuggestions()
   {
     Context context = ApplicationProvider.getApplicationContext();
