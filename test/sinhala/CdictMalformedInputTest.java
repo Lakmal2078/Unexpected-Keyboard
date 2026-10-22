@@ -37,8 +37,8 @@ public class CdictMalformedInputTest {
     assertRejected(new byte[] {'D', 'i', 'c', 1});
     assertRejected(new byte[] {'D', 'i', 'c', 2, 1});
     assertRejected(header(-1, 32, 60));
-    assertRejected(header(29, 1000, 60));
-    assertRejected(header(29, 32, 1000));
+    assertRejected(header(62, 1000, 60));
+    assertRejected(header(62, 32, 1000));
   }
 
   @Test public void rejectsUnterminatedDictionaryName() {
@@ -48,7 +48,7 @@ public class CdictMalformedInputTest {
   }
 
   @Test public void rejectsOutOfBoundsTrieChildPointer() {
-    byte[] data = header(29, 32, 60);
+    byte[] data = header(62, 32, 60);
     data[32] = (byte)(2 | (2 << 4));
     data[33] = 1;
     data[34] = 'a';
