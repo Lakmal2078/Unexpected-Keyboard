@@ -160,6 +160,11 @@ public class Theme
     public final float row_height;
     public final Paint keyboard_background_paint;
     public final Paint indication_paint;
+    public final int custom_text_color_accent;
+    public final int custom_subtext_color_accent;
+    public final int custom_text_color_bg;
+    public final int custom_subtext_color_bg;
+    public final int custom_secondary_text_color_bg;
 
     public final Key key;
     public final Key key_activated;
@@ -196,9 +201,23 @@ public class Theme
       key_suggestion = new Key(theme, config, keyWidth, false, KeyboardData.Key.Role.Suggestion);
       indication_paint = init_label_paint(config, null);
       if (config.custom_colors_enabled)
-        indication_paint.setColor(adjustLight(getContrastColor(config.custom_bg_color), 0.35f));
+      {
+        custom_text_color_accent = getContrastColor(config.custom_accent_color);
+        custom_subtext_color_accent = adjustLight(custom_text_color_accent, 0.35f);
+        custom_text_color_bg = getContrastColor(config.custom_bg_color);
+        custom_subtext_color_bg = adjustLight(custom_text_color_bg, 0.35f);
+        custom_secondary_text_color_bg = adjustLight(custom_text_color_bg, 0.5f);
+        indication_paint.setColor(custom_subtext_color_bg);
+      }
       else
+      {
+        custom_text_color_accent = 0;
+        custom_subtext_color_accent = 0;
+        custom_text_color_bg = 0;
+        custom_subtext_color_bg = 0;
+        custom_secondary_text_color_bg = 0;
         indication_paint.setColor(theme.subLabelColor);
+      }
     }
 
     static Paint init_keyboard_background_paint(Theme theme, float height)

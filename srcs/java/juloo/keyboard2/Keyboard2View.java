@@ -631,17 +631,17 @@ public class Keyboard2View extends View
     {
       if (tc == _tc.key_action || tc == _tc.key_activated || isKeyDown)
       {
-        int text = Theme.getContrastColor(_config.custom_accent_color);
-        return sublabel ? Theme.adjustLight(text, 0.35f) : text;
+        return sublabel ? _tc.custom_subtext_color_accent : _tc.custom_text_color_accent;
+
       }
       else
       {
-        int text = Theme.getContrastColor(_config.custom_bg_color);
+
         if (sublabel)
-          return Theme.adjustLight(text, 0.35f);
+          return _tc.custom_subtext_color_bg;
         if (k.hasFlagsAny(KeyValue.FLAG_SECONDARY | KeyValue.FLAG_GREYED))
-          return Theme.adjustLight(text, 0.5f);
-        return text;
+          return _tc.custom_secondary_text_color_bg;
+        return _tc.custom_text_color_bg;
       }
     }
     if (isKeyDown)
