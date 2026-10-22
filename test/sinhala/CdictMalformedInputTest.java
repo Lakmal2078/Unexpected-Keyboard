@@ -32,6 +32,28 @@ public class CdictMalformedInputTest {
     catch (Cdict.ConstructionError expected) { }
   }
 
+
+  @Test public void acceptsValidTwentyFourBitTrieAndFindsWord() throws Exception {
+    byte[] data = new byte[45];
+    data[0] = 'D'; data[1] = 'i'; data[2] = 'c'; data[3] = 1; data[4] = 1;
+    putInt(data, 5, 43); // name
+    putInt(data, 9, 32); // root branch node
+    putInt(data, 13, 42); // one packed frequency byte
+    data[30] = 0; data[31] = 0; // terminal leaf node
+    data[32] = (byte)(6 << 4 | 6 << 1); // 24-bit branch pointers and word indexes
+    data[33] = 1;
+    data[34] = 'a';
+    data[35] = (byte)0xFF; data[36] = (byte)0xFF; data[37] = (byte)0xFF; // relative -2, final
+    data[38] = 0; data[39] = 0; data[40] = 0; data[41] = 0;
+    data[42] = 1;
+    data[43] = 'm'; data[44] = 0;
+
+    Cdict dict = Cdict.of_bytes(data)[0];
+    assertTrue(dict.find("a").found);
+    assertEquals("a", dict.word(0));
+    assertEquals(1, dict.freq(0));
+  }
+
   @Test public void rejectsTruncatedAndInvalidHeaders() {
     assertRejected(new byte[0]);
     assertRejected(new byte[] {'D', 'i', 'c', 1});
