@@ -71,7 +71,7 @@ public class CdictMalformedInputTest {
 
   @Test public void rejectsOutOfBoundsTrieChildPointer() {
     byte[] data = header(62, 32, 60);
-    data[32] = (byte)(2 | (2 << 4));
+    data[32] = (byte)((2 << 1) | (2 << 4));
     data[33] = 1;
     data[34] = 'a';
     data[35] = 100;
