@@ -137,9 +137,9 @@ public class Cdict {
         pending.add((int) target);
       } else {
         int count = data[node + 1] & 0xFF;
-        if (count == 0) {
-          throw new ConstructionError("Empty trie branch node");
-        }
+        // Empty nodes are valid terminal leaves; the parent pointer carries
+        // the final-word bit, so no child arrays are needed here.
+        if (count == 0) continue;
         int branchFormat = (header >>> 1) & 0x07;
         int numberFormat = (header >>> 4) & 0x07;
         int branchBytes = packedArraySize(branchFormat, count);
