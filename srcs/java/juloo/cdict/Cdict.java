@@ -103,18 +103,33 @@ public class Cdict {
 
   private static void validateTrie(byte[] data, int root, int trieStart, int trieEnd) throws ConstructionError {
     // Iterative traversal avoids attacker-controlled recursion depth and detects cycles.
+    // The generated trie is a DAG: the builder deduplicates equivalent DFA
+    // states, so multiple transitions may legitimately target the same node.
+    // Use iterative DFS colors to reject back-edges (cycles) while accepting
+    // already-validated shared nodes.
     java.util.ArrayDeque<Integer> pending = new java.util.ArrayDeque<>();
-    java.util.HashSet<Integer> visited = new java.util.HashSet<>();
-    pending.add(root);
+    java.util.HashMap<Integer, Integer> state = new java.util.HashMap<>();
+    pending.push(root);
     while (!pending.isEmpty()) {
-      int node = pending.removeFirst();
+      int entry = pending.pop();
+      if (entry < 0) {
+        state.put(~entry, 2); // finished
+        continue;
+      }
+      int nodeState = state.getOrDefault(entry, 0);
+      if (nodeState == 1) {
+        throw new ConstructionError("Trie contains a cycle");
+      }
+      if (nodeState == 2) {
+        continue; // shared node already validated
+      }
+      int node = entry;
       if (node < trieStart || node >= trieEnd) {
         throw new ConstructionError("Trie node offset out of bounds");
       }
-      if (!visited.add(node)) {
-        throw new ConstructionError("Trie contains a cycle or shared node");
-      }
-      if (visited.size() > data.length / 2 + 1) {
+      state.put(node, 1); // visiting
+      pending.push(~node); // exit marker; children are processed first
+      if (state.size() > data.length / 2 + 1) {
         throw new ConstructionError("Trie node count exceeds file size");
       }
       requireRange(data, node, 2, "trie node header");
@@ -138,7 +153,7 @@ public class Cdict {
         if (target < trieStart || target >= trieEnd) {
           throw new ConstructionError("Trie prefix pointer out of bounds");
         }
-        pending.add((int) target);
+        pending.push((int) target);
       } else {
         int count = data[node + 1] & 0xFF;
         // Empty nodes are valid terminal leaves; the parent pointer carries
@@ -168,7 +183,7 @@ public class Cdict {
           if (target < trieStart || target >= trieEnd) {
             throw new ConstructionError("Trie branch pointer out of bounds");
           }
-          pending.add((int) target);
+          pending.push((int) target);
         }
       }
     }
