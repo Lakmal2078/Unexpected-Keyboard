@@ -13,6 +13,7 @@ public class RegressionTest
     assertEquals("ලංකා", SinhalaTransliterator.transliterate("lanka"));
     assertEquals("ගමගේ", SinhalaTransliterator.transliterate("gamage"));
     assertEquals("නැතුව", SinhalaTransliterator.transliterate("nethuwa"));
+    assertEquals("බැරි", SinhalaTransliterator.transliterate("baeri"));
 
     List<String> first = SinhalaTransliterator.getSuggestions("ka");
     for (int i = 0; i < 50; i++)
