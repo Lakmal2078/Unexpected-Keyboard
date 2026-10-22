@@ -191,6 +191,9 @@ public class Cdict {
     if (frequencyOffset < tableEnd || frequencyOffset >= data.length) {
       throw new ConstructionError("Frequency table offset out of bounds");
     }
+    if (nameOffset <= frequencyOffset) {
+      throw new ConstructionError("Dictionary name overlaps trie/frequency data");
+    }
     if (aliasesLength < 0 || aliasesLength > 0xFFFFFF) {
       throw new ConstructionError("Invalid alias table length");
     }
