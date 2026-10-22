@@ -101,14 +101,14 @@ public class Cdict {
     return (data[off] << 16) | ((data[off + 1] & 0xFF) << 8) | (data[off + 2] & 0xFF);
   }
 
-  private static void validateTrie(byte[] data, int root) throws ConstructionError {
+  private static void validateTrie(byte[] data, int root, int trieStart, int trieEnd) throws ConstructionError {
     // Iterative traversal avoids attacker-controlled recursion depth and detects cycles.
     java.util.ArrayDeque<Integer> pending = new java.util.ArrayDeque<>();
     java.util.HashSet<Integer> visited = new java.util.HashSet<>();
     pending.add(root);
     while (!pending.isEmpty()) {
       int node = pending.removeFirst();
-      if (node < 0 || node >= data.length) {
+      if (node < trieStart || node >= trieEnd) {
         throw new ConstructionError("Trie node offset out of bounds");
       }
       if (!visited.add(node)) {
@@ -118,10 +118,14 @@ public class Cdict {
         throw new ConstructionError("Trie node count exceeds file size");
       }
       requireRange(data, node, 2, "trie node header");
+      if (node + 2 > trieEnd) throw new ConstructionError("Truncated trie node header");
       int header = data[node] & 0xFF;
       if ((header & 1) != 0) {
         int prefixLength = header >>> 1;
         requireRange(data, node, 4 + prefixLength, "trie prefix node");
+        if ((long) node + 4 + prefixLength > trieEnd) {
+          throw new ConstructionError("Truncated trie prefix node");
+        }
         int next = readInt24Checked(data, node + 1);
         int relative = next & ~1;
         if (relative == 0) {
@@ -131,7 +135,7 @@ public class Cdict {
           continue; // A final-word marker can point to the current node.
         }
         long target = (long) node + relative;
-        if (target < 0 || target >= data.length) {
+        if (target < trieStart || target >= trieEnd) {
           throw new ConstructionError("Trie prefix pointer out of bounds");
         }
         pending.add((int) target);
@@ -150,6 +154,9 @@ public class Cdict {
         requireRange(data, labels, count, "trie labels");
         requireRange(data, branches, branchBytes, "trie branch pointers");
         requireRange(data, numbers, numberBytes, "trie branch numbers");
+        if ((long) numbers + numberBytes > trieEnd) {
+          throw new ConstructionError("Truncated trie branch arrays");
+        }
         for (int i = 0; i < count; i++) {
           int rawPointer = readSignedPacked(data, branchFormat, i, branches);
           int relative = rawPointer & ~1;
@@ -158,7 +165,7 @@ public class Cdict {
             throw new ConstructionError("Invalid zero trie branch pointer");
           }
           long target = (long) node + relative;
-          if (target < 0 || target >= data.length) {
+          if (target < trieStart || target >= trieEnd) {
             throw new ConstructionError("Trie branch pointer out of bounds");
           }
           pending.add((int) target);
@@ -188,6 +195,9 @@ public class Cdict {
       throw new ConstructionError("Invalid alias table length");
     }
     if (aliasesLength > 0) {
+      if (aliasesKeys < tableEnd || aliasesValues < tableEnd) {
+        throw new ConstructionError("Alias table offset out of bounds");
+      }
       int keyFormat = aliasesHeader & 0x07;
       int valueFormat = (aliasesHeader >>> 3) & 0x07;
       int keyBytes = packedArraySize(keyFormat, aliasesLength);
@@ -195,7 +205,7 @@ public class Cdict {
       requireRange(data, aliasesKeys, keyBytes, "alias keys");
       requireRange(data, aliasesValues, valueBytes, "alias values");
     }
-    validateTrie(data, rootOffset);
+    validateTrie(data, rootOffset, tableEnd, frequencyOffset);
   }
 
   public static Cdict[] of_bytes(byte[] data) throws ConstructionError {
