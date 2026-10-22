@@ -151,8 +151,10 @@ public class Cdict {
         requireRange(data, branches, branchBytes, "trie branch pointers");
         requireRange(data, numbers, numberBytes, "trie branch numbers");
         for (int i = 0; i < count; i++) {
-          int relative = readSignedPacked(data, branchFormat, i, branches) & ~1;
+          int rawPointer = readSignedPacked(data, branchFormat, i, branches);
+          int relative = rawPointer & ~1;
           if (relative == 0) {
+            if ((rawPointer & 1) != 0) continue;
             throw new ConstructionError("Invalid zero trie branch pointer");
           }
           long target = (long) node + relative;
