@@ -42,7 +42,8 @@ public class KeyboardIntegrationTest
     verify(connection).setComposingText("ක", 1);
 
     handler.key_up(KeyValue.getKeyByName("space"), Pointers.Modifiers.EMPTY);
-    verify(connection).commitText("ක ", 1);
+    verify(connection).finishComposingText();
+    verify(connection).commitText(" ", 1);
   }
 
   @Test
