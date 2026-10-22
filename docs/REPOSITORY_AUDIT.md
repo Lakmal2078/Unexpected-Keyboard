@@ -6,7 +6,7 @@
 
 ## Executive summary
 
-The audit found no confirmed Critical or High severity issue from the inspected source. Three confirmed defects/inefficiencies were fixed in this patch: the README's “zero network permissions” statement contradicted the manifest and dictionary download flow; suggestion lookup sorted and allocated the whole common-word list on every eligible keystroke; and the Sinhala layout generator silently ignored invalid escape-list configuration. Dictionary downloads are also now closed deterministically and capped at 64 MiB decompressed size.
+The audit found no confirmed Critical or High severity issue from the inspected source. Four confirmed defects/inefficiencies were fixed: the README's “zero network permissions” statement contradicted the manifest and dictionary download flow; suggestion lookup sorted and allocated the whole common-word list on every eligible keystroke; the Sinhala layout generator mishandled invalid escape-list configuration; and a duplicate `baeri` entry silently overwrote the expected `බැරි` output with `බෑ`. Dictionary downloads are also now closed deterministically and capped at 64 MiB decompressed size.
 
 This repository already had meaningful Sinhala, keyboard-input and private-editor tests. The gap was not “no tests”; rather, Sinhala tests were all kept in the general Java test package, the physical Sinhala layout generator had no generated-output CI check, and dedicated input-integration/performance smoke coverage was limited.
 
@@ -51,7 +51,7 @@ None confirmed.
 
 Existing `SinhalaTransliteratorTest.java` already covers the requested baseline (`ka → ක`, `kaa → කා`, `ki → කි`, `ku → කු`, `ke → කෙ`, `ko → කො`), standalone vowels, multiple consonant forms, conjuncts, punctuation, casing, malformed/empty input, prefix-suggestion stability, and regression vocabulary.
 
-The parser's vowel/consonant arrays are ordered longest-first in the relevant cases (e.g. `aae` precedes `ae`, `chh` precedes `ch`). The source still intentionally supports several spelling aliases, so multiple Latin inputs producing the same Sinhala output are not automatically duplicates/bugs. No mapping corrections were made without a reliable oracle for colloquial Singlish; tests were added around current documented behavior rather than changing output semantics.
+The parser's vowel/consonant arrays are ordered longest-first in the relevant cases (e.g. `aae` precedes `ae`, `chh` precedes `ch`). The source intentionally supports several spelling aliases, so multiple Latin inputs producing the same Sinhala output are not automatically duplicates/bugs. The confirmed duplicate `baeri` override was removed so the earlier `බැරි` value is effective; no other phonetic output was changed without a reliable oracle for colloquial Singlish.
 
 ## Security and privacy
 
