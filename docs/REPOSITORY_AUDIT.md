@@ -28,6 +28,7 @@ None confirmed.
 | AUD-02 | Performance Issue | `SinhalaTransliterator.java:850-867` | `getSuggestions` allocated a list and sorted every `COMMON_WORDS` entry for every prefix query, including repeated calls during typing. | Prefix order is precomputed once during static initialization, preserving length-then-lexical ordering. |
 | AUD-03 | Risk | `DictionaryListView.java:183-210` | Gzip-expanded dictionary data was read without an application-level upper bound and streams were not consistently closed using try-with-resources. | Downloads and bundled fallback assets now use a 64 MiB decompressed-data ceiling and deterministic stream closure. |
 | AUD-04 | Bug | `SinhalaTransliterator.java:319,402` (base commit) | `COMMON_WORDS` declared `baeri` twice: the later `බෑ` value silently overwrote the earlier `බැරි` mapping in the `HashMap`, causing inconsistent direct transliteration for this spelling. | Removed the duplicate override and added a regression asserting `baeri → බැරි`. |
+| AUD-10 | Risk | `srcs/java/juloo/cdict/Cdict.java:59-94,284-324` | `Cdict.of_bytes()` checks basic magic/version and header lengths, but does not validate every root/node/offset in the trie before the dictionary is accepted. A structurally malformed remote dictionary could potentially fail later during lookup despite passing the initial construction call. | Add fail-closed bounds/structure validation and malformed-input fuzz tests before treating `of_bytes()` as full validation; the download-size cap is not a substitute for structural validation. |
 
 ### Low
 
@@ -56,6 +57,7 @@ The parser's vowel/consonant arrays are ordered longest-first in the relevant ca
 ## Security and privacy
 
 - `INTERNET` permission is real and needed by the optional dictionary downloader. The inspected downloader targets a fixed HTTPS GitHub raw-content URL, sets connect/read timeouts, validates bytes with `Cdict.of_bytes`, and does not send text-field contents.
+- **Unresolved native-format/parser risk (AUD-10):** `Cdict.of_bytes()` only performs initial header checks, not a full trie offset/node walk. Current download bounds mitigate oversized decompression, but malformed-content resilience needs dedicated parser hardening and fuzzing; this is reported as a Risk, not a confirmed exploit.
 - Source/Gradle inspection found no analytics, crash-reporting or advertising SDK dependency and no observed typed-text upload path. This is a bounded source audit, not proof about every downstream-built APK or dependency at runtime.
 - The IME service is exported with Android's `BIND_INPUT_METHOD` permission, as required for an input method. Launcher is exported for its launcher intent; Settings and Dictionaries activities are not exported. No content provider or broadcast receiver is declared in the manifest.
 - `allowBackup=false`; backup and device-transfer rules also exclude application data. This is conservative and consistent with a keyboard's sensitive-data surface.
