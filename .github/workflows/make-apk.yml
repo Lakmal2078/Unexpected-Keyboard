@@ -92,6 +92,10 @@ jobs:
           echo "RELEASE_KEYSTORE=$release_keystore" >> "$GITHUB_ENV"
 
       - name: Run unit tests
+        env:
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
         run: ./gradlew test
 
       - name: Build signed release APK
