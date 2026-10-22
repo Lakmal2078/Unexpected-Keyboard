@@ -9,9 +9,9 @@ Unexpected Keyboard replaces traditional multi-page keyboard layouts with intuit
 ## Key Features
 
 - **Gesture-Based Keypad**: Access numbers, symbols, and navigation keys with quick corner and edge swipes.
-- **Privacy First**: Fully offline with **zero network permissions** (`android.permission.INTERNET` is omitted). Your keystrokes never leave your device.
+- **Privacy first**: Sinhala transliteration runs on-device. The app requests `INTERNET` only for optional, user-initiated dictionary downloads; source review found no analytics/telemetry SDKs or code path that uploads typed text.
 - **Singlish to Sinhala Auto-Transliteration**: Built-in phonetic engine (`SinhalaTransliterator`) backed by a lightweight binary dictionary (`si.dict`) for fast, offline Sinhala typing.
-- **Browser & WebView Optimized**: Features native `InputConnection` batching and Unicode grapheme cluster calculation (`BreakIterator`) for fluid typing in mobile web browsers.
+- **Unicode-aware input**: Sinhala input uses Android's `InputConnection` composing/commit APIs and includes regression coverage for Unicode vowel signs and conjuncts.
 - **Smart Snippets & Calculator**: Instant text snippets (e.g., `//shrug` → `¯\_(ツ)_/¯`, `//sinhala` → `සිංහල`) and inline mathematical calculations.
 - **Customizable Themes**: Multiple built-in light, dark, AMOLED, and high-contrast accessibility themes.
 

@@ -8,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -21,13 +24,15 @@ import juloo.cdict.Cdict;
 import juloo.keyboard2.DeviceLocales;
 import juloo.keyboard2.Logs;
 import juloo.keyboard2.R;
-import juloo.keyboard2.Utils;
 
 public class DictionaryListView extends LinearLayout
 {
   List<DictView> _dict_views;
   Dictionaries _dictionaries;
   Set<String> _pending = new HashSet<String>();
+
+  // Bound decompressed dictionary data so a bad or compromised download cannot exhaust app memory.
+  static final int MAX_DICTIONARY_BYTES = 64 * 1024 * 1024;
 
   public DictionaryListView(Context ctx, AttributeSet attrs)
   {
@@ -190,7 +195,11 @@ public class DictionaryListView extends LinearLayout
       con.setConnectTimeout(15000);
       con.setReadTimeout(30000);
       con.setRequestProperty("Accept-Encoding", "identity");
-      byte[] data = Utils.read_all_bytes(new GZIPInputStream(con.getInputStream()));
+      byte[] data;
+      try (InputStream response = con.getInputStream();
+           InputStream stream = new GZIPInputStream(response)) {
+        data = read_bounded(stream, MAX_DICTIONARY_BYTES);
+      }
       Cdict.of_bytes(data); // Check that the dictionary can load.
       _dictionaries.install(dict_name, data);
       return true;
@@ -200,17 +209,37 @@ public class DictionaryListView extends LinearLayout
       // If remote download is unavailable, check if the dictionary is bundled in assets
       try
       {
-        java.io.InputStream inp = getContext().getAssets().open("dict/" + dict_name + ".dict");
-        byte[] data = Utils.read_all_bytes(inp);
-        inp.close();
+        byte[] data;
+        try (InputStream inp = getContext().getAssets().open("dict/" + dict_name + ".dict")) {
+          data = read_bounded(inp, MAX_DICTIONARY_BYTES);
+        }
         Cdict.of_bytes(data);
         _dictionaries.install(dict_name, data);
         return true;
       }
-      catch (Throwable t) {}
+      catch (Exception ignored) {}
       Logs.exn("", e);
       return false;
     }
+  }
+
+  /** Read a dictionary with a caller-supplied hard byte limit. Does not close [input]. */
+  static byte[] read_bounded(InputStream input, int maxBytes) throws IOException
+  {
+    if (maxBytes < 0)
+      throw new IllegalArgumentException("maxBytes must not be negative");
+    ByteArrayOutputStream output = new ByteArrayOutputStream(Math.min(maxBytes, 8192));
+    byte[] buffer = new byte[8192];
+    int total = 0;
+    int read;
+    while ((read = input.read(buffer)) != -1)
+    {
+      if (read > maxBytes - total)
+        throw new IOException("Dictionary exceeds maximum size of " + maxBytes + " bytes");
+      output.write(buffer, 0, read);
+      total += read;
+    }
+    return output.toByteArray();
   }
 
   void post_toast(int msg_id)

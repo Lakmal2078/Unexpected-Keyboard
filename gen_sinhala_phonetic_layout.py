@@ -264,13 +264,14 @@ def is_in_escape_list(char: str | int) -> bool:
     if isinstance(char, str):
         char = ord(char)
     for item in ESCAPE_LIST:
-        if isinstance(item, tuple) and char >= item[0] and char <= item[1]:
-            return True
+        if isinstance(item, tuple):
+            if char >= item[0] and char <= item[1]:
+                return True
         elif isinstance(item, int):
             if char == item:
                 return True
         else:
-            TypeError(f'Unexpected item {item} of ESCAPE_LIST')
+            raise TypeError(f'Unexpected item {item} of ESCAPE_LIST')
     return False
 
 
@@ -530,5 +531,5 @@ if __name__ == '__main__':
     if args.output == '-':
         print(content)
     else:
-        with open(args.output, 'w') as file:
+        with open(args.output, 'w', encoding='utf-8', newline='\n') as file:
             file.write(content)

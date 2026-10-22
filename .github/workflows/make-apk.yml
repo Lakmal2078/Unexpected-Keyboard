@@ -32,20 +32,6 @@ jobs:
         with:
           packages: platform-tools platforms;android-36 build-tools;35.0.0
 
-      - name: Install Android NDK
-        run: sdkmanager "ndk;27.2.12479018"
-
-      - name: Build native dictionary libraries from source
-        run: |
-          "$ANDROID_HOME/ndk/27.2.12479018/ndk-build" \
-            NDK_PROJECT_PATH=. \
-            APP_BUILD_SCRIPT=vendor/Android.mk \
-            APP_ABI="arm64-v8a x86_64" \
-            APP_PLATFORM=android-21 \
-            NDK_LIBS_OUT=libs
-          test -f libs/arm64-v8a/libcdict_java.so
-          test -f libs/x86_64/libcdict_java.so
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
