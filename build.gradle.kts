@@ -32,7 +32,6 @@ android {
     targetSdk { version = release(36) }
     versionCode = 57
     versionName = "2.1.1"
-    ndk.abiFilters.addAll(listOf("x86_64", "arm64-v8a"))
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
@@ -42,7 +41,6 @@ android {
       java.srcDirs("srcs/java")
       res.srcDirs("res", "build/generated-resources")
       assets.srcDirs("assets")
-      jniLibs.srcDirs("libs")
     }
 
     named("test") {
@@ -90,9 +88,6 @@ android {
       isDebuggable = false
       resValue("string", "app_name", "@string/app_name_release")
       signingConfig = signingConfigs["release"]
-      ndk {
-        debugSymbolLevel = "none"
-      }
     }
 
     named("debug") {

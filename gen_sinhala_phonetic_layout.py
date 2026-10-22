@@ -270,7 +270,7 @@ def is_in_escape_list(char: str | int) -> bool:
             if char == item:
                 return True
         else:
-            TypeError(f'Unexpected item {item} of ESCAPE_LIST')
+            raise TypeError(f'Unexpected item {item} of ESCAPE_LIST')
     return False
 
 
@@ -530,5 +530,5 @@ if __name__ == '__main__':
     if args.output == '-':
         print(content)
     else:
-        with open(args.output, 'w') as file:
+        with open(args.output, 'w', encoding='utf-8', newline='\n') as file:
             file.write(content)

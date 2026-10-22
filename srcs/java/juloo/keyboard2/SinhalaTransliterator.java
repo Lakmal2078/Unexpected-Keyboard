@@ -2,7 +2,6 @@ package juloo.keyboard2;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -19,6 +18,8 @@ public final class SinhalaTransliterator
 {
   private static final Map<String, String> COMMON_WORDS = new HashMap<>();
   private static final Map<String, List<String>> NEXT_WORD_PREDICTIONS = new HashMap<>();
+  // Prefix suggestions need a stable key order; build it once instead of sorting on every keypress.
+  private static final List<Map.Entry<String, String>> COMMON_WORDS_PREFIX_ORDER = new java.util.ArrayList<>();
 
   static
   {
@@ -589,6 +590,12 @@ public final class SinhalaTransliterator
     NEXT_WORD_PREDICTIONS.put("උදේ", Arrays.asList("කෑවද", "නැගිට්ටා", "ආවා"));
     NEXT_WORD_PREDICTIONS.put("රෑ", Arrays.asList("වෙලා", "කෑම", "නිදාගන්න"));
     NEXT_WORD_PREDICTIONS.put("මොකක්ද", Arrays.asList("ප්‍රශ්නය", "වෙන්නේ", "කරන්නේ"));
+
+    COMMON_WORDS_PREFIX_ORDER.addAll(COMMON_WORDS.entrySet());
+    Collections.sort(COMMON_WORDS_PREFIX_ORDER, (a, b) -> {
+      int lengthComparison = Integer.compare(a.getKey().length(), b.getKey().length());
+      return lengthComparison != 0 ? lengthComparison : a.getKey().compareTo(b.getKey());
+    });
   }
 
   /**
@@ -849,23 +856,8 @@ public final class SinhalaTransliterator
     // e.g. "colom" -> "කොළඹ", "lank" -> "ලංකාව", "kand" -> "මහනුවර", "saep" -> "සැප"
     if (lower.length() >= 2)
     {
-      // HashMap iteration order is unspecified. Sort by shortest matching
-      // key first, then alphabetically, so suggestions are deterministic.
-      java.util.List<Map.Entry<String, String>> entries =
-          new java.util.ArrayList<>(COMMON_WORDS.entrySet());
-      Collections.sort(entries, new Comparator<Map.Entry<String, String>>()
-      {
-        @Override
-        public int compare(Map.Entry<String, String> a, Map.Entry<String, String> b)
-        {
-          int lengthComparison = Integer.compare(a.getKey().length(), b.getKey().length());
-          return lengthComparison != 0
-              ? lengthComparison
-              : a.getKey().compareTo(b.getKey());
-        }
-      });
-
-      for (Map.Entry<String, String> entry : entries)
+      // Preserve deterministic priority without per-keystroke sorting and list allocations.
+      for (Map.Entry<String, String> entry : COMMON_WORDS_PREFIX_ORDER)
       {
         String k = entry.getKey();
         if (k.length() > lower.length() && k.startsWith(lower))

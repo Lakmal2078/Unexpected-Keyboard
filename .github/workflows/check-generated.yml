@@ -50,3 +50,20 @@ jobs:
     - run: python3 gen_method_xml.py > res/xml/method.xml
     - name: "Run 'gradle test' to update the generated files."
       run: git diff --exit-code
+
+  sinhala-layout:
+    name: Sinhala layout generator and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test Sinhala layout generator
+        run: python3 -m unittest discover -s test/sinhala -p 'test_*.py'
+      - name: Verify generated Sinhala layout is up to date
+        run: |
+          python3 gen_sinhala_phonetic_layout.py
+          git diff --exit-code -- srcs/layouts/sinhala_phonetic.xml

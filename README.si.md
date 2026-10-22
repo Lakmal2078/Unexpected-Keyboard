@@ -19,6 +19,8 @@
 
 Android සඳහා නිර්මාණය කළ සැහැල්ලු, පෞද්ගලිකත්වයට මුල්තැන දෙන තිරයේ යතුරුපුවරුවකි.
 
+> **පෞද්ගලිකත්ව සටහන:** Singlish → Sinhala පරිවර්තනය උපාංගය තුළම සිදු වේ. විකල්ප ශබ්දකෝෂ පරිශීලකයා ඉල්ලා download කිරීමට `INTERNET` අවසරය අවශ්‍ය වේ. Source inspection එකේ analytics/telemetry SDK හෝ ටයිප් කළ පෙළ upload කරන code path එකක් හමු නොවීය.
+
 https://github.com/Julow/Unexpected-Keyboard/assets/2310568/28f8f6fe-ac13-46f3-8c5e-d62443e16d0d
 
 යතුරුපුවරුවේ යතුරු කොන දෙසට ඇඟිල්ල ස්වයිප් කිරීමෙන් අමතර අක්ෂර ටයිප් කළ හැක. එය මෙහි ප්‍රධාන විශේෂාංගයයි.
@@ -42,10 +44,6 @@ https://github.com/Julow/Unexpected-Keyboard/assets/2310568/28f8f6fe-ac13-46f3-8
 ## යෙදුම ගොඩනැගීමට අවශ්‍ය මූලික සුදුසුකම් (Build Prerequisites)
 - **OpenJDK 17** (හෝ ඊට අනුකූල JDK)
 - **Android SDK**: Build tools සහ Platform `android-36`
-- **Git submodules**: ශබ්දකෝෂ හා spell-checking සඳහා (`vendor/cdict`):
-  ```sh
-  git submodule update --init --recursive
-  ```
 - **Python 3.x**: Layouts හා xml උත්පාදනය සඳහා (`gen_layouts.py`, `gen_method_xml.py`, `check_layout.py`)
 - **fontforge**: විශේෂ යතුරු අයිකන font ගොඩනැගීම සඳහා
 - **keytool**: Local debug keystore ජනනය කිරීම සඳහා
