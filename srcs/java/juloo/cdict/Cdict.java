@@ -80,7 +80,7 @@ public class Cdict {
       requireRange(data, off + idx, 1, "packed integer");
       int b = data[off + idx] & 0xFF;
       int n = ((i & 1) != 0) ? (b >> 4) : (b & 0x0F);
-      return ((i & 1) == 0 && (n & 8) != 0) ? (n | ~0x0F) : n;
+      return (n & 8) != 0 ? (n | ~0x0F) : n;
     }
     if (format == 2) {
       requireRange(data, off + i, 1, "packed integer");
