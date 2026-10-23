@@ -11,6 +11,7 @@ import os
 import re
 import struct
 import sys
+import unicodedata
 import urllib.request
 
 # Offline fallback list of core high-frequency Sinhala words in case internet is not reachable
@@ -45,15 +46,57 @@ CORE_SINHALA_WORDS = [
 ]
 
 
+SINHALA_WORD_RE = re.compile(r"[\u0D80-\u0DFF\u200D]+")
+
+
+def clean_sinhala_word(word):
+    """Normalize a single Sinhala token; return None for malformed/non-Sinhala input.
+
+    This deliberately performs conservative structural checks rather than trying
+    to encode every Sinhala orthographic rule. It catches leading/repeated
+    dependent signs and repeated virama sequences without rejecting ZWJ conjuncts.
+    """
+    word = unicodedata.normalize("NFC", word.strip())
+    if not word or not SINHALA_WORD_RE.fullmatch(word):
+        return None
+    if not any(unicodedata.category(ch).startswith("L") for ch in word):
+        return None
+
+    previous_was_vowel_sign = False
+    previous_was_virama = False
+    for ch in word:
+        category = unicodedata.category(ch)
+        is_vowel_sign = unicodedata.name(ch, "").startswith("SINHALA VOWEL SIGN")
+        if is_vowel_sign and (previous_was_vowel_sign or previous_was_virama):
+            return None
+        if ch == "\u0DCA" and previous_was_virama:
+            return None
+        if category.startswith("L"):
+            previous_was_vowel_sign = False
+            previous_was_virama = False
+        else:
+            previous_was_vowel_sign = is_vowel_sign
+            previous_was_virama = ch == "\u0DCA"
+    if unicodedata.category(word[0]) in ("Mn", "Mc") or word[0] == "\u0DCA":
+        return None
+    return word
+
+
 def load_words_from_transliterator(file_path):
+    """Extract Sinhala tokens from mapping strings, including multi-word phrases."""
     words = set()
     if os.path.exists(file_path):
         with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
-            for m in re.finditer(r"\"([\u0D80-\u0DFF\u200D]+)\"", content):
-                w = m.group(1).strip()
-                if w:
-                    words.add(w)
+        # Capture the complete quoted value first, then split it into Sinhala
+        # tokens. The old pattern required a whole value to be Sinhala-only and
+        # silently skipped mappings such as \"සවුදි අරාබිය\".
+        for quoted in re.finditer(r'"([^"\\]*(?:\\.[^"\\]*)*)"', content):
+            value = quoted.group(1)
+            for match in SINHALA_WORD_RE.finditer(value):
+                word = clean_sinhala_word(match.group(0))
+                if word:
+                    words.add(word)
     return words
 
 
@@ -69,9 +112,10 @@ def load_words_from_libreoffice():
                 if not line:
                     continue
                 word = line.split("/")[0].strip()
-                # Include Sinhala letters and ZWJ (Zero Width Joiner for Yansaya/Rakaransaya)
-                if re.match(r"^[\u0D80-\u0DFF\u200D]+$", word):
-                    words.add(word)
+                # Keep only normalized, structurally plausible Sinhala tokens.
+                cleaned = clean_sinhala_word(word)
+                if cleaned:
+                    words.add(cleaned)
         print(f"Loaded {len(words)} words from LibreOffice repository.")
     except Exception as e:
         print(f"Notice: Could not load remote LibreOffice dictionary ({e}). Using local/embedded wordlist.")
@@ -79,8 +123,13 @@ def load_words_from_libreoffice():
 
 
 def build_trie_dict(word_freq_map, dict_name="main"):
-    # Filter and sort
-    items = sorted(word_freq_map.items(), key=lambda x: x[0].encode("utf-8"))
+    # Normalize and conservatively clean every source before building the trie.
+    cleaned_freq = {}
+    for raw_word, freq in word_freq_map.items():
+        word = clean_sinhala_word(raw_word)
+        if word:
+            cleaned_freq[word] = max(freq, cleaned_freq.get(word, 0))
+    items = sorted(cleaned_freq.items(), key=lambda x: x[0].encode("utf-8"))
 
     class TrieNode:
         __slots__ = ("is_final", "freq", "children", "pos", "total_words", "word_index")

@@ -258,6 +258,25 @@ public class SinhalaTransliteratorTest
     }
   }
 
+  @Test
+  public void testEverydaySinglishAndPlaceNameRegressions()
+  {
+    assertEquals("ශ්‍රී ලංකාව", SinhalaTransliterator.transliterate("srilanka"));
+    assertEquals("කොළඹ", SinhalaTransliterator.transliterate("colombo"));
+    assertEquals("මහනුවර", SinhalaTransliterator.transliterate("kandy"));
+    assertEquals("ගාල්ල", SinhalaTransliterator.transliterate("galle"));
+    assertEquals("මාතර", SinhalaTransliterator.transliterate("matara"));
+    assertEquals("කුරුණෑගල", SinhalaTransliterator.transliterate("kurunegala"));
+    assertEquals("අනුරාධපුරය", SinhalaTransliterator.transliterate("anuradhapura"));
+    assertEquals("ත්‍රිකුණාමලය", SinhalaTransliterator.transliterate("trincomalee"));
+    assertEquals("ඉන්දියාව", SinhalaTransliterator.transliterate("india"));
+    assertEquals("ඕස්ට්‍රේලියාව", SinhalaTransliterator.transliterate("australia"));
+
+    assertEquals("අම්මා, මම ගෙදර යනවා!",
+        SinhalaTransliterator.transliterate("amma, mama gedhara yanawa!"));
+    assertEquals("සුබ උදෑසනක්!", SinhalaTransliterator.transliterate("suba udaesanak!"));
+  }
+
   public static void main(String[] args)
   {
     SinhalaTransliteratorTest test = new SinhalaTransliteratorTest();

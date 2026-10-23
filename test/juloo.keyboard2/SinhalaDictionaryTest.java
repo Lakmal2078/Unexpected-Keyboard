@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import juloo.cdict.Cdict;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -30,7 +32,8 @@ public class SinhalaDictionaryTest
     // Core words
     String[] coreWords = {
       "මම", "ඔයා", "අපි", "එයා", "ගෙදර", "වැඩ", "විශ්වවිද්‍යාලය",
-      "ශ්‍රී", "ලංකා", "ස්තූතියි", "ආයුබෝවන්", "කරුණාකර", "සිංහල", "ප්‍රශ්නය", "ක්‍රිකට්"
+      "ශ්‍රී", "ලංකා", "ස්තූතියි", "ආයුබෝවන්", "කරුණාකර", "සිංහල", "ප්‍රශ්නය", "ක්‍රිකට්",
+      "සවුදි", "අරාබිය", "පන්සල්"
     };
 
     for (String w : coreWords)
@@ -87,6 +90,46 @@ public class SinhalaDictionaryTest
       }
     }
     assertTrue("Distance search for 'ආයුබෝවන' should find 'ආයුබෝවන්'", foundAyubowan);
+  }
+
+  @Test
+  public void everyDictionaryWordHasAStableCdictLookupIndexAndValidUnicode() throws Exception
+  {
+    byte[] data = Files.readAllBytes(Paths.get("assets/dict/si.dict"));
+    Cdict d = Cdict.of_bytes(data)[0];
+    Set<String> seen = new HashSet<>();
+    int index;
+    for (index = 0; index < 100_000; index++)
+    {
+      String word = d.word(index);
+      assertNotNull("word() must return a value at index " + index, word);
+      if (!seen.add(word))
+      {
+        // Cdict returns the last word for an out-of-range index. Reaching it
+        // immediately after all unique words proves the valid index range.
+        assertEquals("Unexpected duplicate before the dictionary boundary", seen.size(), index);
+        break;
+      }
+      for (int offset = 0; offset < word.length(); )
+      {
+        int cp = word.codePointAt(offset);
+        assertTrue("Non-Sinhala code point in dictionary word: " + word,
+            (cp >= 0x0D80 && cp <= 0x0DFF) || cp == 0x200D);
+        offset += Character.charCount(cp);
+      }
+      Cdict.Result result = d.find(word);
+      assertTrue("Every indexed word must be findable: " + word, result.found);
+      assertEquals("Lookup index must round-trip for " + word, index, result.index);
+      assertEquals("Word lookup must round-trip for " + word, word, d.word(result.index));
+      assertTrue("Frequency must be within Cdict range for " + word,
+          d.freq(result.index) >= 0 && d.freq(result.index) <= 15);
+    }
+    assertTrue("Dictionary index scan must find a boundary", index < 100_000);
+    assertTrue("Dictionary should contain a substantial Sinhala vocabulary", seen.size() > 1_000);
+    assertFalse(seen.contains("අවස්්ථාවක"));
+    assertFalse(seen.contains("ආර්්ථික"));
+    assertFalse(seen.contains("කිිසිසේත්"));
+    assertFalse(seen.contains("කෑෑමට"));
   }
 
   @Test
