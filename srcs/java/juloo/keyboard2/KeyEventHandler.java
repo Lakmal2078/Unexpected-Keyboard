@@ -68,7 +68,8 @@ public final class KeyEventHandler
   {
     if (s == null || s.isEmpty())
       return false;
-    for (int i = 0; i < s.length(); i++)
+    int len = s.length();
+    for (int i = 0; i < len; i++)
     {
       char c = s.charAt(i);
       if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))
@@ -375,7 +376,8 @@ public final class KeyEventHandler
       return;
     if (eventAction == KeyEvent.ACTION_DOWN)
       finish_composing();
-    conn.sendKeyEvent(new KeyEvent(1, 1, eventAction, eventCode, 0,
+    long now = System.currentTimeMillis();
+    conn.sendKeyEvent(new KeyEvent(now, now, eventAction, eventCode, 0,
           metaState, KeyCharacterMap.VIRTUAL_KEYBOARD, 0,
           KeyEvent.FLAG_SOFT_KEYBOARD | KeyEvent.FLAG_KEEP_TOUCH_MODE));
     if (eventAction == KeyEvent.ACTION_UP)
@@ -633,50 +635,45 @@ public final class KeyEventHandler
     evaluate_macro_loop(keys, 0, Pointers.Modifiers.EMPTY, _autocap.pause());
   }
 
-  /** Evaluate the macro asynchronously to make sure event are processed in the
-      right order. */
+  /** Evaluate the macro iteratively to prevent stack recursion overhead during long sequences. */
   void evaluate_macro_loop(final KeyValue[] keys, int i, Pointers.Modifiers mods, final boolean autocap_paused)
   {
-    boolean should_delay = false;
-    KeyValue kv = KeyModifier.modify_no_modmap(keys[i], mods);
-    if (kv != null)
+    while (i < keys.length)
     {
-      if (kv.hasFlagsAny(KeyValue.FLAG_LATCH))
+      boolean should_delay = false;
+      KeyValue kv = KeyModifier.modify_no_modmap(keys[i], mods);
+      if (kv != null)
       {
-        // Non-special latchable keys clear latched modifiers
-        if (!kv.hasFlagsAny(KeyValue.FLAG_SPECIAL))
-          mods = Pointers.Modifiers.EMPTY;
-        mods = mods.with_extra_mod(kv);
-      }
-      else
-      {
-        key_down(kv, false);
-        key_up(kv, mods);
-        mods = Pointers.Modifiers.EMPTY;
-      }
-      should_delay = wait_after_macro_key(kv);
-    }
-    i++;
-    if (i >= keys.length) // Stop looping
-    {
-      _autocap.unpause(autocap_paused);
-    }
-    else if (should_delay)
-    {
-      // Add a delay before sending the next key to avoid race conditions
-      // causing keys to be handled in the wrong order. Notably, KeyEvent keys
-      // handling is scheduled differently than the other edit functions.
-      final int i_ = i;
-      final Pointers.Modifiers mods_ = mods;
-      _recv.getHandler().postDelayed(new Runnable() {
-        public void run()
+        if (kv.hasFlagsAny(KeyValue.FLAG_LATCH))
         {
-          evaluate_macro_loop(keys, i_, mods_, autocap_paused);
+          // Non-special latchable keys clear latched modifiers
+          if (!kv.hasFlagsAny(KeyValue.FLAG_SPECIAL))
+            mods = Pointers.Modifiers.EMPTY;
+          mods = mods.with_extra_mod(kv);
         }
-      }, 1000/30);
+        else
+        {
+          key_down(kv, false);
+          key_up(kv, mods);
+          mods = Pointers.Modifiers.EMPTY;
+        }
+        should_delay = wait_after_macro_key(kv);
+      }
+      i++;
+      if (should_delay)
+      {
+        final int nextI = i;
+        final Pointers.Modifiers nextMods = mods;
+        _recv.getHandler().postDelayed(new Runnable() {
+          public void run()
+          {
+            evaluate_macro_loop(keys, nextI, nextMods, autocap_paused);
+          }
+        }, 1000/30);
+        return;
+      }
     }
-    else
-      evaluate_macro_loop(keys, i, mods, autocap_paused);
+    _autocap.unpause(autocap_paused);
   }
 
   boolean wait_after_macro_key(KeyValue kv)
