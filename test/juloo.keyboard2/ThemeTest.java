@@ -40,7 +40,18 @@ public class ThemeTest
       "graphite_pro",
       "soft_lavender",
       "high_contrast",
-      "high_contrast_yellow"
+      "high_contrast_yellow",
+      "rose_quartz",
+      "ocean_breeze",
+      "citrus_pop",
+      "copper_night",
+      "berry_noir",
+      "mint_matcha",
+      "glass",
+      "aurora_flow",
+      "zen_minimal",
+      "soft_3d",
+      "pixel_retro"
     };
 
     for (String theme : curatedThemes)

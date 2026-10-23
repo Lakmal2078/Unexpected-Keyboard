@@ -236,7 +236,18 @@ public class Theme
       public Key(Theme theme, Config config, float keyWidth, boolean activated,
           KeyboardData.Key.Role role)
       {
-        border_radius = config.borderConfig ? config.customBorderRadius * keyWidth : theme.keyBorderRadius;
+        if (config.borderConfig)
+          border_radius = config.customBorderRadius * keyWidth;
+        else
+        {
+          switch (config.keyShape)
+          {
+            case "square": border_radius = 0; break;
+            case "rounded": border_radius = keyWidth * 0.16f; break;
+            case "pill": border_radius = keyWidth * 0.5f; break;
+            default: border_radius = theme.keyBorderRadius; break;
+          }
+        }
         if (activated)
         {
           border_width = theme.keyBorderWidthActivated;

@@ -67,6 +67,17 @@
     <item>@string/pref_theme_e_high_contrast_yellow</item>
     <item>@string/pref_theme_e_lanka_blue</item>
     <item>@string/pref_theme_e_unexpected_keyboard</item>
+    <item>@string/pref_theme_e_rose_quartz</item>
+    <item>@string/pref_theme_e_ocean_breeze</item>
+    <item>@string/pref_theme_e_citrus_pop</item>
+    <item>@string/pref_theme_e_copper_night</item>
+    <item>@string/pref_theme_e_berry_noir</item>
+    <item>@string/pref_theme_e_mint_matcha</item>
+    <item>@string/pref_theme_e_glass</item>
+    <item>@string/pref_theme_e_aurora_flow</item>
+    <item>@string/pref_theme_e_zen_minimal</item>
+    <item>@string/pref_theme_e_soft_3d</item>
+    <item>@string/pref_theme_e_pixel_retro</item>
   </string-array>
   <string-array name="pref_theme_values">
     <item>system</item>
@@ -107,6 +118,17 @@
     <item>high_contrast_yellow</item>
     <item>lanka_blue</item>
     <item>unexpected_keyboard</item>
+    <item>rose_quartz</item>
+    <item>ocean_breeze</item>
+    <item>citrus_pop</item>
+    <item>copper_night</item>
+    <item>berry_noir</item>
+    <item>mint_matcha</item>
+    <item>glass</item>
+    <item>aurora_flow</item>
+    <item>zen_minimal</item>
+    <item>soft_3d</item>
+    <item>pixel_retro</item>
   </string-array>
   <string-array name="pref_keyboard_font_entries">
     <item>@string/pref_font_default</item>
@@ -207,5 +229,11 @@
     <item>wide</item>
     <item>landscape</item>
     <item>never</item>
+  </string-array>
+  <string-array name="pref_key_shape_entries">
+    <item>@string/pref_key_shape_theme</item><item>@string/pref_key_shape_square</item><item>@string/pref_key_shape_rounded</item><item>@string/pref_key_shape_pill</item>
+  </string-array>
+  <string-array name="pref_key_shape_values">
+    <item>theme</item><item>square</item><item>rounded</item><item>pill</item>
   </string-array>
 </resources>

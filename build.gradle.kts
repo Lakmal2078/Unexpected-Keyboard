@@ -80,11 +80,13 @@ android {
 
   buildTypes {
     named("release") {
-      isMinifyEnabled = true
+      // Keep release runtime behavior aligned with debug while investigating
+      // suggestion/dictionary regressions caused by R8/resource shrinking.
+      isMinifyEnabled = false
+      isShrinkResources = false
       proguardFiles(
         getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro")
-      isShrinkResources = true
       isDebuggable = false
       resValue("string", "app_name", "@string/app_name_release")
       signingConfig = signingConfigs["release"]

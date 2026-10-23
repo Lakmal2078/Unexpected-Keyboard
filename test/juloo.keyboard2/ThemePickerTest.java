@@ -25,6 +25,8 @@ public class ThemePickerTest
     resources = mock(Resources.class);
     when(resources.getStringArray(R.array.pref_theme_values))
       .thenReturn(new String[]{ "dark", "graphite_pro", "light" });
+    when(resources.getStringArray(R.array.pref_theme_entries))
+      .thenReturn(new String[]{ "Dark", "Graphite Pro", "Light" });
     prefs = mock(SharedPreferences.class);
     when(prefs.getString("theme", Config.DEFAULT_THEME)).thenReturn("graphite_pro");
     editor = mock(SharedPreferences.Editor.class, RETURNS_SELF);
@@ -81,7 +83,11 @@ public class ThemePickerTest
     assertSame(dialog, ThemePicker.create(builder, resources, prefs));
     ArgumentCaptor<DialogInterface.OnClickListener> listener =
       ArgumentCaptor.forClass(DialogInterface.OnClickListener.class);
-    verify(builder).setSingleChoiceItems(eq(R.array.pref_theme_entries), eq(checked), listener.capture());
+    ArgumentCaptor<android.widget.ListAdapter> adapter =
+      ArgumentCaptor.forClass(android.widget.ListAdapter.class);
+    verify(builder).setAdapter(adapter.capture(), listener.capture());
+    assertEquals(3, adapter.getValue().getCount());
+    assertEquals("dark", adapter.getValue().getItem(0));
     verify(builder).setNegativeButton(android.R.string.cancel, null);
     select = listener.getValue();
   }

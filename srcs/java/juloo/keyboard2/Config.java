@@ -76,6 +76,8 @@ public class Config
   public KeyValue change_method_key_replacement;
   public NumberLayout selected_number_layout;
   public boolean borderConfig;
+  /** User-selected key corner style; "theme" preserves the theme-defined radius. */
+  public String keyShape = "theme";
   public int circle_sensitivity;
   public boolean clipboard_history_enabled;
   public int clipboard_history_duration;
@@ -201,6 +203,7 @@ public class Config
     keyActivatedOpacity = _prefs.getInt("key_activated_opacity", 100) * 255 / 100;
     // keyboard border settings
     borderConfig = _prefs.getBoolean("border_config", false);
+    keyShape = _prefs.getString("key_shape", "theme");
     customBorderRadius = _prefs.getInt("custom_border_radius", 0) / 100.f;
     customBorderLineWidth = get_dip_pref(dm, "custom_border_line_width", 0);
     screenHeightPixels = dm.heightPixels;
@@ -338,6 +341,17 @@ public class Config
       case "high_contrast_yellow": return R.style.HighContrastYellow;
       case "lanka_blue": return R.style.LankaBlue;
       case "unexpected_keyboard": return R.style.UnexpectedKeyboard;
+      case "rose_quartz": return R.style.RoseQuartz;
+      case "ocean_breeze": return R.style.OceanBreeze;
+      case "citrus_pop": return R.style.CitrusPop;
+      case "copper_night": return R.style.CopperNight;
+      case "berry_noir": return R.style.BerryNoir;
+      case "mint_matcha": return R.style.MintMatcha;
+      case "glass": return R.style.Glass;
+      case "aurora_flow": return R.style.AuroraFlow;
+      case "zen_minimal": return R.style.ZenMinimal;
+      case "soft_3d": return R.style.Soft3D;
+      case "pixel_retro": return R.style.PixelRetro;
       // Deprecated aliases for backwards compatibility
       case "oled_black":
       case "epaperblack":

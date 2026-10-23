@@ -44,6 +44,7 @@
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/pref_category_style">
     <ListPreference android:key="theme" android:title="@string/pref_theme" android:summary="%s" android:defaultValue="unexpected_keyboard" android:entries="@array/pref_theme_entries" android:entryValues="@array/pref_theme_values"/>
+    <ListPreference android:key="key_shape" android:title="@string/pref_key_shape_title" android:summary="@string/pref_key_shape_summary" android:defaultValue="theme" android:entries="@array/pref_key_shape_entries" android:entryValues="@array/pref_key_shape_values"/>
     <ListPreference android:key="keyboard_font" android:title="@string/pref_keyboard_font_title" android:summary="%s" android:defaultValue="default" android:entries="@array/pref_keyboard_font_entries" android:entryValues="@array/pref_keyboard_font_values"/>
     <CheckBoxPreference android:key="custom_colors_enabled" android:title="@string/pref_custom_colors_title" android:summary="@string/pref_custom_colors_summary" android:defaultValue="false"/>
     <juloo.keyboard2.prefs.ColorPickerPreference android:key="custom_bg_color" android:dependency="custom_colors_enabled" android:title="@string/pref_custom_bg_color_title" android:defaultValue="#1E1E2E"/>

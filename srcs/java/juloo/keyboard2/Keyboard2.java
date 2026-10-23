@@ -192,6 +192,17 @@ public class Keyboard2 extends InputMethodService
         {
           if (_emojiPane == null)
             _emojiPane = (ViewGroup)inflate_view(R.layout.emoji_pane);
+          // Keep the emoji pane aligned with the configured keyboard size.
+          View emojiGrid = _emojiPane.findViewById(R.id.emoji_grid);
+          if (emojiGrid != null)
+          {
+            ViewGroup.LayoutParams lp = emojiGrid.getLayoutParams();
+            if (lp != null)
+            {
+              lp.height = _config.keyboard_rows_height_pixels * 3;
+              emojiGrid.setLayoutParams(lp);
+            }
+          }
           setInputView(_emojiPane);
         }
       });
@@ -281,6 +292,17 @@ public class Keyboard2 extends InputMethodService
         {
           if (_clipboard_pane == null)
             _clipboard_pane = (ViewGroup)inflate_view(R.layout.clipboard_pane);
+          // Clipboard history scrolls within the same height budget as the keyboard.
+          View clipboardScroll = _clipboard_pane.findViewById(R.id.clipboard_scroll_view);
+          if (clipboardScroll != null)
+          {
+            ViewGroup.LayoutParams lp = clipboardScroll.getLayoutParams();
+            if (lp != null)
+            {
+              lp.height = _config.keyboard_rows_height_pixels * 3;
+              clipboardScroll.setLayoutParams(lp);
+            }
+          }
           setInputView(_clipboard_pane);
         }
       });
