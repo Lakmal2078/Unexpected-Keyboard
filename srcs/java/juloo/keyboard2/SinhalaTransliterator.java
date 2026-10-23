@@ -264,7 +264,8 @@ public final class SinhalaTransliterator
     COMMON_WORDS.put("ashan", "අශාන්");
     COMMON_WORDS.put("tharaka", "තාරක");
     COMMON_WORDS.put("madhava", "මාධව");
-    COMMON_WORDS.put("sanka", "සංඛ");
+    COMMON_WORDS.put("pansal", "පන්සල්");
+    COMMON_WORDS.put("sanda", "සඳ");
     COMMON_WORDS.put("harsha", "හර්ෂ");
     COMMON_WORDS.put("indika", "ඉන්දික");
     COMMON_WORDS.put("janaka", "ජනක");
@@ -702,7 +703,6 @@ public final class SinhalaTransliterator
     {"gn", "\u0DA4"},  // ඤ
     {"kn", "\u0DA4"},  // ඤ
     {"jn", "\u0DA5"},  // ඥ
-    {"nd", "\u0DB3"},  // ඳ
     {"nD", "\u0DAC"},  // ඬ
     {"mb", "\u0DB9"},  // ඹ
     {"ng", "\u0D9F"},  // ඟ
