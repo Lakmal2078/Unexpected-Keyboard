@@ -970,25 +970,28 @@
   <style name="SinhalaTech" parent="BaseTheme">
     <item name="isLightTheme">false</item>
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
-    <item name="colorKeyboard">#0B1628</item>
-    <item name="keyboardGradientStart">#102B47</item>
-    <item name="keyboardGradientEnd">#07101D</item>
-    <item name="colorKey">#142A43</item>
-    <item name="colorKeyActivated">#145B7A</item>
-    <item name="colorKeyAction">#1B3653</item>
-    <item name="colorKeySpaceBar">#102239</item>
+    <item name="colorKeyboard">#10191B</item>
+    <item name="keyboardGradientStart">#192629</item>
+    <item name="keyboardGradientEnd">#10191B</item>
+    <item name="colorKey">#192629</item>
+    <item name="colorKeyActivated">#43D9C5</item>
+    <item name="colorKeyAction">#243437</item>
+    <item name="colorKeySpaceBar">#243437</item>
     <item name="keyBorderWidth">0.8dp</item>
     <item name="keyBorderWidthActivated">1dp</item>
-    <item name="keyBorderColorLeft">#24516D</item>
-    <item name="keyBorderColorTop">#2F6C8A</item>
-    <item name="keyBorderColorRight">#24516D</item>
-    <item name="keyBorderColorBottom">#0A192A</item>
-    <item name="colorLabel">#F5FAFF</item>
-    <item name="colorLabelActivated">#42DCFF</item>
-    <item name="colorLabelLocked">#B6FF00</item>
-    <item name="colorSubLabel">#B3CDE2</item>
-    <item name="emoji_button_bg">#142A43</item>
-    <item name="emoji_color">#F5FAFF</item>
+    <item name="keyBorderColorLeft">#405659</item>
+    <item name="keyBorderColorTop">#405659</item>
+    <item name="keyBorderColorRight">#405659</item>
+    <item name="keyBorderColorBottom">#10191B</item>
+    <item name="colorLabel">#F3F8F7</item>
+    <item name="colorLabelPressed">#082321</item>
+    <item name="colorLabelActivated">#082321</item>
+    <item name="colorLabelLocked">#F2B86B</item>
+    <item name="colorSubLabel">#B7C8C7</item>
+    <item name="emoji_button_bg">#192629</item>
+    <item name="emoji_color">#F3F8F7</item>
+    <item name="clipboard_divider_color" type="color">#405659</item>
+    <item name="suggestions_background">#10191B</item>
   </style>
 
   <style name="SoftLavender" parent="BaseTheme">
