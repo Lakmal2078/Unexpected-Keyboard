@@ -30,8 +30,8 @@ android {
     applicationId = "juloo.keyboard2"
     minSdk = 21
     targetSdk { version = release(36) }
-    versionCode = 58
-    versionName = "2.1.5"
+    versionCode = 59
+    versionName = "2.1.6"
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
