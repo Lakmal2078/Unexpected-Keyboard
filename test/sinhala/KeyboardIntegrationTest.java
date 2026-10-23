@@ -46,9 +46,10 @@ public class KeyboardIntegrationTest
   }
 
   @Test
-  public void sensitiveEditorCommitsLiteralInputWithoutComposing()
+  public void passwordEditorCommitsLiteralInputWithoutComposing()
   {
     config.editor_config.is_sensitive_input = true;
+    config.editor_config.is_password_input = true;
     handler.started();
     handler.key_up(KeyValue.makeCharKey('k'), Pointers.Modifiers.EMPTY);
     handler.key_up(KeyValue.makeCharKey('a'), Pointers.Modifiers.EMPTY);
@@ -56,6 +57,24 @@ public class KeyboardIntegrationTest
     verify(connection, never()).setComposingText(any(CharSequence.class), anyInt());
     verify(connection).commitText("k", 1);
     verify(connection).commitText("a", 1);
+    assertEquals(0, handler._sinhala_buffer.length());
+  }
+
+  @Test
+  public void incognitoSensitiveEditorAllowsSinhalaTransliteration()
+  {
+    // Incognito browsing sets is_sensitive_input but NOT is_password_input
+    config.editor_config.is_sensitive_input = true;
+    config.editor_config.is_password_input = false;
+    handler.started();
+    handler.key_up(KeyValue.makeCharKey('k'), Pointers.Modifiers.EMPTY);
+    verify(connection).setComposingText("ක්", 1);
+
+    handler.key_up(KeyValue.makeCharKey('a'), Pointers.Modifiers.EMPTY);
+    verify(connection).setComposingText("ක", 1);
+
+    handler.key_up(KeyValue.getKeyByName("space"), Pointers.Modifiers.EMPTY);
+    verify(connection).commitText("ක ", 1);
     assertEquals(0, handler._sinhala_buffer.length());
   }
 }

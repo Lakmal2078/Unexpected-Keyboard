@@ -392,7 +392,7 @@ public final class KeyEventHandler
       return;
 
     boolean is_sinhala = _config.sinhala_transliteration
-        && !_config.editor_config.is_sensitive_input
+        && !_config.editor_config.is_password_input
         && (_meta_state & (KeyEvent.META_CTRL_ON | KeyEvent.META_ALT_ON | KeyEvent.META_META_ON)) == 0;
 
     String tracked = _typedword.get();

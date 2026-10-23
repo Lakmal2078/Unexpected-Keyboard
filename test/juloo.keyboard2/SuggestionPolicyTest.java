@@ -41,6 +41,25 @@ public class SuggestionPolicyTest
     }
   }
 
+  @Test
+  public void passwordInputDetectionIdentifiesPasswordsOnly()
+  {
+    assertTrue(SuggestionPolicy.is_password_input(InputType.TYPE_CLASS_TEXT
+        | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+    assertTrue(SuggestionPolicy.is_password_input(InputType.TYPE_CLASS_TEXT
+        | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD));
+    assertTrue(SuggestionPolicy.is_password_input(InputType.TYPE_CLASS_TEXT
+        | InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD));
+    assertTrue(SuggestionPolicy.is_password_input(InputType.TYPE_CLASS_NUMBER
+        | InputType.TYPE_NUMBER_VARIATION_PASSWORD));
+
+    assertFalse(SuggestionPolicy.is_password_input(InputType.TYPE_CLASS_TEXT));
+    assertFalse(SuggestionPolicy.is_password_input(InputType.TYPE_CLASS_TEXT
+        | InputType.TYPE_TEXT_VARIATION_URI));
+    assertFalse(SuggestionPolicy.is_password_input(InputType.TYPE_CLASS_NUMBER));
+    assertFalse(SuggestionPolicy.is_password_input(InputType.TYPE_CLASS_PHONE));
+  }
+
   private static void assertSensitive(int inputType)
   {
     assertTrue(SuggestionPolicy.is_sensitive_input(inputType));

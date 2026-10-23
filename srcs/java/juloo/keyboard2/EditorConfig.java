@@ -41,6 +41,10 @@ public final class EditorConfig
   // Doesn't override [_config.suggestions_enabled].
   public boolean should_show_candidates_view;
   public boolean is_sensitive_input;
+  /** Whether the input is a password field. Transliteration is disabled for
+      password fields but not for other sensitive contexts like incognito
+      browsing. */
+  public boolean is_password_input;
 
   public EditorConfig() {}
 
@@ -95,6 +99,7 @@ public final class EditorConfig
     caps_initially_updated = caps_should_update_state(info);
     /* CurrentlyTypedWord */
     is_sensitive_input = SuggestionPolicy.is_sensitive_input(info.inputType, info.imeOptions);
+    is_password_input = SuggestionPolicy.is_password_input(info.inputType);
     initial_text_before_cursor = null;
     initial_text_after_cursor = null;
     if (!is_sensitive_input && VERSION.SDK_INT >= 30)

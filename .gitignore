@@ -8,6 +8,7 @@
 .DS_Store
 /captures
 /build
+buildSrc/build
 /app
 /libs/**/*.so
 /obj

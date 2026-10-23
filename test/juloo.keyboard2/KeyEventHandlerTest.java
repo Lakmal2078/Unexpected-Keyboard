@@ -165,11 +165,12 @@ public class KeyEventHandlerTest
   }
 
   @Test
-  public void privateEditorDoesNotTrackOrTransliterateTypedText()
+  public void passwordEditorDoesNotTrackOrTransliterateTypedText()
   {
     type("old");
     handler._typedword.delayed_refresh();
     config.editor_config.is_sensitive_input = true;
+    config.editor_config.is_password_input = true;
     config.sinhala_transliteration = true;
     handler.started();
     clearInvocations(connection);
@@ -187,5 +188,25 @@ public class KeyEventHandlerTest
     verify(connection, never()).setComposingText(any(), anyInt());
     verify(connection, never()).getTextBeforeCursor(anyInt(), anyInt());
     verify(connection, never()).getSurroundingText(anyInt(), anyInt(), anyInt());
+  }
+
+  @Test
+  public void incognitoEditorAllowsSinhalaTransliterationWithoutTracking()
+  {
+    type("old");
+    handler._typedword.delayed_refresh();
+    config.editor_config.is_sensitive_input = true;
+    config.editor_config.is_password_input = false;
+    config.sinhala_transliteration = true;
+    handler.started();
+    clearInvocations(connection);
+
+    type("sinhala");
+    handler.handle_space_bar();
+
+    assertEquals("oldසිංහල ", document.toString());
+    assertEquals("", handler._typedword.get());
+    assertEquals(0, suggestions.count);
+    assertEquals(0, handler._sinhala_buffer.length());
   }
 }

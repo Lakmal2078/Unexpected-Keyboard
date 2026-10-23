@@ -72,6 +72,7 @@ public class InputPrivacyTest
     {
       refreshEditor(inputType, 0);
       assertTrue(config.editor_config.is_sensitive_input);
+      assertTrue(config.editor_config.is_password_input);
       invoke("launch_translate");
     }
     verify(keyboard, never()).getCurrentInputConnection();
@@ -90,6 +91,7 @@ public class InputPrivacyTest
 
     refreshEditor(InputType.TYPE_CLASS_TEXT, EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING);
     assertTrue(config.editor_config.is_sensitive_input);
+    assertFalse(config.editor_config.is_password_input);
     assertFalse(config.editor_config.should_show_candidates_view);
     invoke("launch_translate");
     invoke("update_top_bar_visibility");
@@ -99,6 +101,7 @@ public class InputPrivacyTest
 
     refreshEditor(InputType.TYPE_CLASS_TEXT, 0);
     assertFalse(config.editor_config.is_sensitive_input);
+    assertFalse(config.editor_config.is_password_input);
     invoke("update_top_bar_visibility");
     verify(translate).setEnabled(true);
   }
