@@ -303,6 +303,7 @@ public class Config
     {
       case "light": return R.style.Light;
       case "black": return R.style.Black;
+      case "oled_black": return R.style.OledBlack;
       case "dark": return R.style.Dark;
       case "white": return R.style.White;
       case "desert": return R.style.Desert;
@@ -354,7 +355,6 @@ public class Config
       case "soft_3d": return R.style.Soft3D;
       case "pixel_retro": return R.style.PixelRetro;
       // Deprecated aliases for backwards compatibility
-      case "oled_black":
       case "epaperblack":
       case "altblack":
         return R.style.Black;

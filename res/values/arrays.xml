@@ -33,6 +33,7 @@
     <item>@string/pref_theme_e_dark</item>
     <item>@string/pref_theme_e_light</item>
     <item>@string/pref_theme_e_black</item>
+    <item>@string/pref_theme_e_oled_black</item>
     <item>@string/pref_theme_e_white</item>
     <item>@string/pref_theme_e_monet</item>
     <item>@string/pref_theme_e_monetlight</item>
@@ -85,6 +86,7 @@
     <item>dark</item>
     <item>light</item>
     <item>black</item>
+    <item>oled_black</item>
     <item>white</item>
     <item>monet</item>
     <item>monetlight</item>

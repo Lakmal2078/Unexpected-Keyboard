@@ -12,6 +12,7 @@ public class ThemeTest
       "light",
       "dark",
       "black",
+      "oled_black",
       "white",
       "gruvbox_dark",
       "gruvbox_light",
@@ -38,6 +39,7 @@ public class ThemeTest
       "arctic_blue",
       "cobalt",
       "graphite_pro",
+      "quiet_teal",
       "soft_lavender",
       "high_contrast",
       "high_contrast_yellow",
@@ -66,7 +68,7 @@ public class ThemeTest
   {
     assertEquals(R.style.Black, Config.getThemeId(null, "altblack"));
     assertEquals(R.style.Black, Config.getThemeId(null, "epaperblack"));
-    assertEquals(R.style.Black, Config.getThemeId(null, "oled_black"));
+    assertEquals(R.style.OledBlack, Config.getThemeId(null, "oled_black"));
     assertEquals(R.style.White, Config.getThemeId(null, "epaper"));
     assertEquals(R.style.EmeraldForest, Config.getThemeId(null, "pine"));
     assertEquals(R.style.EmeraldForest, Config.getThemeId(null, "forest_mist"));
