@@ -1,0 +1,3 @@
+## 2024-10-25 - Avoid per-keystroke memory allocations in Suggestions
+**Learning:** Frequent small memory allocations (like `new StringBuilder(w)` and `Arrays.asList()`) inside hot paths like `currently_typed_word` and `query_suggestions` run on every keystroke, causing unnecessary GC pressure on Android, especially since most words don't require substitutions or list wrapping.
+**Action:** Always prefer lazy initialization of intermediate buffers (e.g., instantiate `StringBuilder` only when a mutation occurs) and use simple loops instead of stream-like or Collection wrapper abstractions (`Arrays.asList`) for small arrays on hot paths.

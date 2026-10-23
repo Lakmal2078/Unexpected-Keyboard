@@ -129,8 +129,17 @@ public final class Suggestions
         {
           suggestions[i] = list.get(i);
         }
-        // Keep the literal spelling reachable even for ambiguous prefixes.
-        if (!Arrays.asList(suggestions).contains(word))
+        // Optimization: Keep the literal spelling reachable even for ambiguous prefixes.
+        // Replaced Arrays.asList wrapper with a simple loop to avoid per-keystroke memory allocation
+        // and reduce GC pressure.
+        boolean containsWord = false;
+        for (int i = 0; i < count; i++) {
+          if (word.equals(suggestions[i])) {
+            containsWord = true;
+            break;
+          }
+        }
+        if (!containsWord)
         {
           if (count < MAX_COUNT)
             suggestions[count++] = word;
@@ -244,18 +253,24 @@ public final class Suggestions
 
   /** Apply the same substitutions that were used when building the
       dictionaries to find word aliases. This catches missing diacritics for
-      example. */
+      example.
+      Optimization: Uses lazy initialization for StringBuilder to prevent
+      per-keystroke memory allocations when no substitutions are needed. */
   String apply_substitutions(String w)
   {
-    StringBuilder b = new StringBuilder(w);
+    StringBuilder b = null;
     int len = w.length();
     for (int i = 0; i < len; i++)
     {
       char r =
-        ComposeKey.transform_char(ComposeKeyData.substitutions, b.charAt(i));
-      if (r != 0) b.setCharAt(i, r);
+        ComposeKey.transform_char(ComposeKeyData.substitutions, w.charAt(i));
+      if (r != 0)
+      {
+        if (b == null) b = new StringBuilder(w);
+        b.setCharAt(i, r);
+      }
     }
-    return b.toString();
+    return b != null ? b.toString() : w;
   }
 
   static final int[] NO_RESULTS = new int[0];
