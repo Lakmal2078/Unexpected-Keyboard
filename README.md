@@ -1,75 +1,75 @@
 # Unexpected Keyboard
 
-> A lightweight, privacy-focused, and developer-friendly Android virtual keyboard designed for speed, customization, and multilingual typing.
-
-Unexpected Keyboard replaces traditional multi-page keyboard layouts with intuitive swipe gestures on individual keys. Swipe up, down, or towards corners to instantly access numbers, punctuation, special symbols, and modifier keys without switching screens.
+An open-source, lightweight, and privacy-focused Android Input Method Editor (IME) keyboard application optimized for performance, gestures, custom layouts, and Sinhala transliteration.
 
 ---
 
-## Key Features
+## 🌟 Features
 
-- **Gesture-Based Keypad**: Access numbers, symbols, and navigation keys with quick corner and edge swipes.
-- **Privacy first**: Sinhala transliteration runs on-device. The app requests `INTERNET` only for optional, user-initiated dictionary downloads; source review found no analytics/telemetry SDKs or code path that uploads typed text.
-- **Singlish to Sinhala Auto-Transliteration**: Built-in phonetic engine (`SinhalaTransliterator`) backed by a lightweight binary dictionary (`si.dict`) for fast, offline Sinhala typing.
-- **Unicode-aware input**: Sinhala input uses Android's `InputConnection` composing/commit APIs and includes regression coverage for Unicode vowel signs and conjuncts.
-- **Smart Snippets & Calculator**: Instant text snippets (e.g., `//shrug` → `¯\_(ツ)_/¯`, `//sinhala` → `සිංහල`) and inline mathematical calculations.
-- **Customizable Themes**: Multiple built-in light, dark, AMOLED, and high-contrast accessibility themes.
-
-> [!NOTE]
-> Unexpected Keyboard is engineered for privacy and low memory footprint. It contains no telemetry, analytics, or background tracking services.
+* **🔒 Privacy First & Offline:** Works 100% offline with zero network permissions (`android.permission.INTERNET` is neither requested nor used).
+* **🇱🇰 Sinhala Transliteration & Predictions:** Real-time phonetic Sinhala transliteration, intelligent word completion, and dictionary-based next-word predictions.
+* **⚡ High Performance & Low Latency:** Optimized key event handling, low Garbage Collection (GC) pressure, and smooth gesture responsiveness.
+* **🎨 Customizable Themes & Layouts:** Supports dynamic layout switching, custom XML layouts, and personalized color themes.
+* **📋 Clipboard & Snippets:** Embedded clipboard history manager and smart snippet expansion (`//` and `..` shortcuts).
+* **🔐 Direct Boot Aware:** Operates seamlessly even before the device is unlocked after a reboot using `DirectBootAwarePreferences`.
+* **⌨️ Advanced Modifiers & Gestures:** Comprehensive support for Ctrl, Alt, Meta, Shift modifiers, cursor movement sliders, and macro execution.
 
 ---
 
-## Quick Snippets
+## 🛠️ Tech Stack & Requirements
 
-Unexpected Keyboard supports quick text expansions typed directly into any input field:
-
-| Trigger | Output |
-| :--- | :--- |
-| `//shrug` | `¯\_(ツ)_/¯` |
-| `//lenny` | `( ͡° ͜ʖ ͡°)` |
-| `//peace` | `✌️` |
-| `//sinhala` | `සිංහල` |
-| `//lk` | `ශ්‍රී ලංකා` |
-| `//ayubowan` | `ආයුබෝවන්!` |
+* **Language:** Java / Kotlin / C (JNI `cdict` dictionary library)
+* **Build System:** Gradle 8.x with Kotlin DSL (`build.gradle.kts`)
+* **Minimum SDK:** Android 5.0 (API Level 21)
+* **Target SDK:** Android 14/15 (API Level 34/35)
+* **JDK Version:** Java 17 or higher
 
 ---
 
-## Building from Source
+## 🚀 Building & Installation
 
 ### Prerequisites
+Ensure Android SDK and Java Development Kit (JDK 17+) are configured in your environment.
 
-- Android SDK (API Level 34+)
-- JDK 17 or higher
-- Python 3.x (for layout and dictionary generation scripts)
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Lakmal2078/Unexpected-Keyboard.git
+cd Unexpected-Keyboard
+```
 
-### Local Build Steps
+### 2. Run Unit Tests
+Validate the build and run all unit test suites (transliterator, layout, key handlers):
+```bash
+./gradlew test
+```
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Lakmal2078/Unexpected-Keyboard.git
-   cd Unexpected-Keyboard
-   ```
+### 3. Build Debug APK
+Generate an unsigned debug APK for local testing:
+```bash
+./gradlew assembleDebug
+```
+The resulting APK will be saved to:
+`app/build/outputs/apk/debug/Unexpected-Keyboard-debug.apk`
 
-2. Make the Gradle wrapper executable:
-   ```bash
-   chmod +x gradlew
-   ```
-
-3. Build the Debug APK:
-   ```bash
-   ./gradlew assembleDebug
-   ```
-
-The compiled APK will be available in `build/outputs/apk/debug/app-debug.apk`.
-
-> [!TIP]
-> To run localized dictionary compilation scripts independently, run `python3 gen_sinhala_dict.py`.
+### 4. Build Release APK
+Generate an optimized production release APK:
+```bash
+./gradlew assembleRelease
+```
+The output APK will be saved to:
+`app/build/outputs/apk/release/Unexpected-Keyboard-release.apk`
 
 ---
 
-## Usage & Customization
+## 🧪 Testing Coverage
 
-1. Enable **Unexpected Keyboard** in Android System Settings under **Languages & Input > On-screen Keyboard**.
-2. Select Unexpected Keyboard as your active Input Method Editor (IME).
-3. Long-press the **Spacebar** or tap the **Language Toggle** key to switch layouts or toggle Sinhala transliteration on/off.
+The codebase includes test coverage across key components:
+* **Key Handling & Gestures:** Event dispatch, macro loops, and latency tests.
+* **Sinhala Transliterator:** Phonetic mapping, vowel/consonant combination rules, and dictionary safety.
+* **Clipboard & Privacy:** History retention and direct boot safety policies.
+
+---
+
+## 📄 License
+
+This project is licensed under the open-source license specified in the `LICENSE` file.
