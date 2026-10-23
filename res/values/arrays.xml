@@ -62,6 +62,7 @@
     <item>@string/pref_theme_e_arctic_blue</item>
     <item>@string/pref_theme_e_cobalt</item>
     <item>@string/pref_theme_e_graphite_pro</item>
+    <item>@string/pref_theme_e_quiet_teal</item>
     <item>@string/pref_theme_e_soft_lavender</item>
     <item>@string/pref_theme_e_high_contrast</item>
     <item>@string/pref_theme_e_high_contrast_yellow</item>
@@ -113,6 +114,7 @@
     <item>arctic_blue</item>
     <item>cobalt</item>
     <item>graphite_pro</item>
+    <item>quiet_teal</item>
     <item>soft_lavender</item>
     <item>high_contrast</item>
     <item>high_contrast_yellow</item>

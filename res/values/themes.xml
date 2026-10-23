@@ -967,7 +967,7 @@
     <item name="emoji_color">#39271F</item>
   </style>
 
-  <style name="SinhalaTech" parent="BaseTheme">
+  <style name="QuietTeal" parent="BaseTheme">
     <item name="isLightTheme">false</item>
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#10191B</item>

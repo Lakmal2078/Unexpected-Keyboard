@@ -328,6 +328,7 @@ public class Config
       case "midnight_purple": return R.style.MidnightPurple;
       case "midnight_ocean": return R.style.MidnightOcean;
       case "graphite_pro": return R.style.GraphitePro;
+      case "quiet_teal": return R.style.QuietTeal;
       case "matrix_green": return R.style.MatrixGreen;
       case "arctic_blue": return R.style.ArcticBlue;
       case "royal_gold": return R.style.RoyalGold;
