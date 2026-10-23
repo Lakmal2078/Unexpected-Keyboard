@@ -41,7 +41,6 @@ final class ThemePicker
     private final String[] values;
     private final String[] entries;
     private final String selected;
-    private final int[] attrs = { R.attr.colorKeyboard, R.attr.colorKey, R.attr.colorLabel, R.attr.colorKeyActivated };
 
     ThemeAdapter(Context context, Resources resources, String[] values, String selected)
     {
@@ -69,11 +68,11 @@ final class ThemePicker
       row.addView(label, new LinearLayout.LayoutParams(-1, -2));
 
       ContextThemeWrapper themed = new ContextThemeWrapper(context, Config.getThemeId(context.getResources(), values[position]));
-      TypedArray colors = themed.obtainStyledAttributes(attrs);
-      int background = colors.getColor(0, 0xFF202020);
-      int key = colors.getColor(1, 0xFF444444);
-      int text = colors.getColor(2, 0xFFFFFFFF);
-      int active = colors.getColor(3, key);
+      TypedArray colors = themed.obtainStyledAttributes(R.styleable.keyboard);
+      int background = colors.getColor(R.styleable.keyboard_colorKeyboard, 0xFF202020);
+      int key = colors.getColor(R.styleable.keyboard_colorKey, 0xFF444444);
+      int text = colors.getColor(R.styleable.keyboard_colorLabel, 0xFFFFFFFF);
+      int active = colors.getColor(R.styleable.keyboard_colorKeyActivated, key);
       colors.recycle();
 
       LinearLayout preview = new LinearLayout(context);
