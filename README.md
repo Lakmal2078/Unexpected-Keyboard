@@ -1,75 +1,80 @@
 # Unexpected Keyboard
 
-An open-source, lightweight, and privacy-focused Android Input Method Editor (IME) keyboard application optimized for performance, gestures, custom layouts, and Sinhala transliteration.
+Unexpected Keyboard is a lightweight, open-source Android input method (IME) focused on gesture-based typing, customizable layouts, and privacy. This repository also includes Sinhala phonetic transliteration and dictionary-based suggestions.
 
----
+## Features
 
-## 🌟 Features
+- **Gesture typing:** Swipe toward a key's corners to enter additional characters and actions.
+- **Sinhala support:** Phonetic Singlish-to-Sinhala transliteration, word completion, and dictionary suggestions.
+- **Custom layouts and themes:** Switch layouts and personalize keyboard appearance.
+- **Clipboard and snippets:** Optional clipboard history and text-expansion shortcuts.
+- **Privacy-focused design:** Text processing is performed on-device. The app requests `INTERNET` permission for optional dictionary downloads; review the in-app settings and source code for details.
+- **Android integration:** Direct-boot-aware input service and modifier-key support.
 
-* **🔒 Privacy First & Offline:** Works 100% offline with zero network permissions (`android.permission.INTERNET` is neither requested nor used).
-* **🇱🇰 Sinhala Transliteration & Predictions:** Real-time phonetic Sinhala transliteration, intelligent word completion, and dictionary-based next-word predictions.
-* **⚡ High Performance & Low Latency:** Optimized key event handling, low Garbage Collection (GC) pressure, and smooth gesture responsiveness.
-* **🎨 Customizable Themes & Layouts:** Supports dynamic layout switching, custom XML layouts, and personalized color themes.
-* **📋 Clipboard & Snippets:** Embedded clipboard history manager and smart snippet expansion (`//` and `..` shortcuts).
-* **🔐 Direct Boot Aware:** Operates seamlessly even before the device is unlocked after a reboot using `DirectBootAwarePreferences`.
-* **⌨️ Advanced Modifiers & Gestures:** Comprehensive support for Ctrl, Alt, Meta, Shift modifiers, cursor movement sliders, and macro execution.
+## Requirements
 
----
+- JDK 17 or newer
+- Android SDK Platform 36
+- Python 3
+- FontForge (for building the special keyboard font)
+- Android SDK command-line/build tools configured in your environment
 
-## 🛠️ Tech Stack & Requirements
+The application supports Android 5.0 (API 21) and newer. The current Gradle configuration targets API 36.
 
-* **Language:** Java / Kotlin / C (JNI `cdict` dictionary library)
-* **Build System:** Gradle 8.x with Kotlin DSL (`build.gradle.kts`)
-* **Minimum SDK:** Android 5.0 (API Level 21)
-* **Target SDK:** Android 14/15 (API Level 34/35)
-* **JDK Version:** Java 17 or higher
+## Build
 
----
+Clone the repository and enter the project directory:
 
-## 🚀 Building & Installation
-
-### Prerequisites
-Ensure Android SDK and Java Development Kit (JDK 17+) are configured in your environment.
-
-### 1. Clone the Repository
-```bash
+```sh
 git clone https://github.com/Lakmal2078/Unexpected-Keyboard.git
 cd Unexpected-Keyboard
 ```
 
-### 2. Run Unit Tests
-Validate the build and run all unit test suites (transliterator, layout, key handlers):
-```bash
+Build a debug APK:
+
+```sh
+./gradlew assembleDebug
+```
+
+Output: `build/outputs/apk/debug/Unexpected-Keyboard-debug.apk`. The build also copies it to `app/build/outputs/apk/debug/app-debug.apk`.
+
+Build and run unit tests:
+
+```sh
 ./gradlew test
 ```
 
-### 3. Build Debug APK
-Generate an unsigned debug APK for local testing:
-```bash
-./gradlew assembleDebug
-```
-The resulting APK will be saved to:
-`app/build/outputs/apk/debug/Unexpected-Keyboard-debug.apk`
+Build a release APK:
 
-### 4. Build Release APK
-Generate an optimized production release APK:
-```bash
+```sh
+export RELEASE_KEYSTORE="/absolute/path/to/release.keystore"
+export RELEASE_KEYSTORE_PASSWORD="..."
+export RELEASE_KEY_ALIAS="..."
+export RELEASE_KEY_PASSWORD="..."
 ./gradlew assembleRelease
 ```
-The output APK will be saved to:
-`app/build/outputs/apk/release/Unexpected-Keyboard-release.apk`
 
----
+Keep signing credentials and keystore files private; do not commit them. Release builds without signing credentials can produce an unsigned APK. The release output is `build/outputs/apk/release/Unexpected-Keyboard-release.apk`.
 
-## 🧪 Testing Coverage
+For local builds that store signing settings in `.env`, `./build_release.sh` loads that file and runs `clean assembleRelease`. Treat `.env` as a secret and never share its contents.
 
-The codebase includes test coverage across key components:
-* **Key Handling & Gestures:** Event dispatch, macro loops, and latency tests.
-* **Sinhala Transliterator:** Phonetic mapping, vowel/consonant combination rules, and dictionary safety.
-* **Clipboard & Privacy:** History retention and direct boot safety policies.
+## Development
 
----
+- Main Java sources: `srcs/java/`
+- Android resources: `res/`
+- Keyboard layouts and compose sequences: `srcs/layouts/`, `srcs/compose/`
+- App assets and dictionaries: `assets/`
+- Unit tests: `test/`
+- Android instrumentation tests: `src/androidTest/`
+- Build and generated-file scripts: root-level `*.py` and `scripts/`
+- CI workflows: `.github/workflows/`
 
-## 📄 License
+Generated files are updated by the Gradle tasks and scripts used in CI. Run `./gradlew test` before submitting changes and inspect `git status` to ensure generated changes are intentional.
 
-This project is licensed under the open-source license specified in the `LICENSE` file.
+## License
+
+See [LICENSE](LICENSE) for the project's license.
+
+## Sinhala documentation
+
+සිංහල භාෂාවෙන් build කිරීම, privacy සහ clipboard ආරක්ෂාව පිළිබඳ වැඩිදුර තොරතුරු සඳහා [README.si.md](README.si.md) බලන්න.
