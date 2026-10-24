@@ -1,9 +1,12 @@
 package juloo.keyboard2;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.util.DisplayMetrics;
 import android.view.View;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +17,7 @@ import static org.mockito.Mockito.*;
 public class ThemePickerTest
 {
   private Resources resources;
+  private Context context;
   private AlertDialog.Builder builder;
   private SharedPreferences prefs;
   private SharedPreferences.Editor editor;
@@ -24,6 +28,7 @@ public class ThemePickerTest
   public void setUp()
   {
     resources = mock(Resources.class);
+    context = mock(Context.class);
     when(resources.getStringArray(R.array.pref_theme_values))
       .thenReturn(new String[]{ "dark", "graphite_pro", "light" });
     when(resources.getStringArray(R.array.pref_theme_entries))
@@ -35,6 +40,13 @@ public class ThemePickerTest
     when(prefs.edit()).thenReturn(editor);
     dialog = mock(AlertDialog.class);
     builder = mock(AlertDialog.Builder.class, RETURNS_SELF);
+    when(builder.getContext()).thenReturn(context);
+    when(context.getResources()).thenReturn(resources);
+    when(resources.getDisplayMetrics()).thenReturn(new DisplayMetrics());
+    Resources.Theme theme = mock(Resources.Theme.class);
+    TypedArray colors = mock(TypedArray.class);
+    when(resources.newTheme()).thenReturn(theme);
+    when(theme.obtainStyledAttributes(any(int[].class))).thenReturn(colors);
     when(builder.create()).thenReturn(dialog);
   }
 
