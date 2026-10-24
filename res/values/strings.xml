@@ -143,6 +143,7 @@
     <string name="pref_key_shape_theme">Theme default</string>
     <string name="pref_key_shape_square">Square</string>
     <string name="pref_key_shape_rounded">Rounded</string>
+    <string name="pref_key_shape_squircle">Squircle</string>
     <string name="pref_key_shape_pill">Pill</string>
     <string name="pref_theme_e_gruvbox_dark">Gruvbox Dark</string>
     <string name="pref_theme_e_gruvbox_light">Gruvbox Light</string>
