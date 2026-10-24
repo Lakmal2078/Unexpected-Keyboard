@@ -19,4 +19,22 @@ public class RegressionTest
     for (int i = 0; i < 50; i++)
       assertEquals(first, SinhalaTransliterator.getSuggestions("ka"));
   }
+
+  @Test
+  public void nextWordPredictionsIgnoreCaseAndSentencePunctuation()
+  {
+    List<String> expected = SinhalaTransliterator.getNextWordPredictions("සුබ");
+    assertFalse(expected.isEmpty());
+    assertEquals(expected, SinhalaTransliterator.getNextWordPredictions("සුබ,"));
+    assertEquals(expected, SinhalaTransliterator.getNextWordPredictions("SUBA!"));
+    assertEquals(expected, SinhalaTransliterator.getNextWordPredictions("  suba?  "));
+  }
+
+  @Test
+  public void nextWordPredictionsHandleNullAndPunctuationOnlyInput()
+  {
+    assertTrue(SinhalaTransliterator.getNextWordPredictions(null).isEmpty());
+    assertTrue(SinhalaTransliterator.getNextWordPredictions("...").isEmpty());
+    assertTrue(SinhalaTransliterator.getNextWordPredictions("   ").isEmpty());
+  }
 }
