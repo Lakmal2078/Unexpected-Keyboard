@@ -73,14 +73,28 @@ final class ThemePicker
     for (int i = 0; i < values.length; i++) {
       final String value = values[i];
       boolean chosen = value.equals(selected[0]);
-      ContextThemeWrapper themed = new ContextThemeWrapper(context,
-          Config.getThemeId(context.getResources(), value));
-      TypedArray colors = themed.obtainStyledAttributes(R.styleable.keyboard);
-      int keyboardColor = colors.getColor(R.styleable.keyboard_colorKeyboard, 0xFF202020);
-      int keyColor = colors.getColor(R.styleable.keyboard_colorKey, 0xFF444444);
-      int textColor = colors.getColor(R.styleable.keyboard_colorLabel, Color.WHITE);
-      int activeColor = colors.getColor(R.styleable.keyboard_colorKeyActivated, keyColor);
-      colors.recycle();
+      Resources.Theme theme = null;
+      if (context.getResources() != null) {
+        theme = context.getResources().newTheme();
+        if (theme != null) {
+          theme.applyStyle(Config.getThemeId(context.getResources(), value), true);
+        }
+      }
+      if (theme == null) {
+        theme = context.getTheme();
+      }
+      TypedArray colors = theme != null ? theme.obtainStyledAttributes(R.styleable.keyboard) : null;
+      int keyboardColor = 0xFF202020;
+      int keyColor = 0xFF444444;
+      int textColor = Color.WHITE;
+      int activeColor = keyColor;
+      if (colors != null) {
+        keyboardColor = colors.getColor(R.styleable.keyboard_colorKeyboard, 0xFF202020);
+        keyColor = colors.getColor(R.styleable.keyboard_colorKey, 0xFF444444);
+        textColor = colors.getColor(R.styleable.keyboard_colorLabel, Color.WHITE);
+        activeColor = colors.getColor(R.styleable.keyboard_colorKeyActivated, keyColor);
+        colors.recycle();
+      }
 
       LinearLayout card = new LinearLayout(context);
       card.setOrientation(LinearLayout.VERTICAL);
