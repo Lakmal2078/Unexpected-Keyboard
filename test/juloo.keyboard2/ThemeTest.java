@@ -91,6 +91,25 @@ public class ThemeTest
   }
 
   @Test
+  public void testKeyShapeCornerRadii()
+  {
+    float keyWidth = 100f;
+    float themeRadius = 7f;
+    assertEquals(themeRadius,
+        Theme.computeKeyBorderRadius("theme", keyWidth, themeRadius, false, 0f), 0f);
+    assertEquals(0f,
+        Theme.computeKeyBorderRadius("square", keyWidth, themeRadius, false, 0f), 0f);
+    assertEquals(16f,
+        Theme.computeKeyBorderRadius("rounded", keyWidth, themeRadius, false, 0f), 0f);
+    assertEquals(28f,
+        Theme.computeKeyBorderRadius("squircle", keyWidth, themeRadius, false, 0f), 0f);
+    assertEquals(50f,
+        Theme.computeKeyBorderRadius("pill", keyWidth, themeRadius, false, 0f), 0f);
+    assertEquals(12f,
+        Theme.computeKeyBorderRadius("squircle", keyWidth, themeRadius, true, 0.12f), 0f);
+  }
+
+  @Test
   public void testCustomColorContrastAndBlending()
   {
     // High contrast text computation
