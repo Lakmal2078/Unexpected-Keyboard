@@ -235,9 +235,9 @@
     <item>never</item>
   </string-array>
   <string-array name="pref_key_shape_entries">
-    <item>@string/pref_key_shape_theme</item><item>@string/pref_key_shape_square</item><item>@string/pref_key_shape_rounded</item><item>@string/pref_key_shape_pill</item>
+    <item>@string/pref_key_shape_theme</item><item>@string/pref_key_shape_square</item><item>@string/pref_key_shape_rounded</item><item>@string/pref_key_shape_squircle</item><item>@string/pref_key_shape_pill</item>
   </string-array>
   <string-array name="pref_key_shape_values">
-    <item>theme</item><item>square</item><item>rounded</item><item>pill</item>
+    <item>theme</item><item>square</item><item>rounded</item><item>squircle</item><item>pill</item>
   </string-array>
 </resources>
