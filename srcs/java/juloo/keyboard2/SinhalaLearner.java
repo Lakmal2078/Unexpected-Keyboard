@@ -69,9 +69,20 @@ public final class SinhalaLearner
       Object val = entry.getValue();
       int count = (val instanceof Integer) ? (Integer) val : 1;
 
-      Map<String, Integer> nexts = _memoryCache.computeIfAbsent(prev, k -> new HashMap<>());
+      Map<String, Integer> nexts = getOrCreateNexts(prev);
       nexts.put(next, count);
     }
+  }
+
+  private Map<String, Integer> getOrCreateNexts(String key)
+  {
+    Map<String, Integer> nexts = _memoryCache.get(key);
+    if (nexts == null)
+    {
+      nexts = new HashMap<>();
+      _memoryCache.put(key, nexts);
+    }
+    return nexts;
   }
 
   /**
@@ -85,8 +96,9 @@ public final class SinhalaLearner
     if (prevWord.equals(nextWord))
       return;
 
-    Map<String, Integer> nexts = _memoryCache.computeIfAbsent(prevWord, k -> new HashMap<>());
-    int current = nexts.getOrDefault(nextWord, 0);
+    Map<String, Integer> nexts = getOrCreateNexts(prevWord);
+    Integer countVal = nexts.get(nextWord);
+    int current = (countVal != null) ? countVal : 0;
     int updated = current + 1;
     nexts.put(nextWord, updated);
 
