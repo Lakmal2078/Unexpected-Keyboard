@@ -605,13 +605,44 @@ public final class SinhalaTransliterator
   {
     if (word == null || word.isEmpty())
       return java.util.Collections.emptyList();
+
+    // Suggestions are requested with the committed candidate, which may include
+    // sentence punctuation or autocapitalisation. Normalize only the token edges
+    // so ordinary punctuation does not disable an otherwise valid prediction.
     String trimmed = word.trim();
+    int start = 0;
+    int end = trimmed.length();
+    while (start < end && isBoundaryPunctuation(trimmed.charAt(start)))
+      start++;
+    while (end > start && isBoundaryPunctuation(trimmed.charAt(end - 1)))
+      end--;
+    if (start == end)
+      return java.util.Collections.emptyList();
+
+    trimmed = trimmed.substring(start, end);
+    String lower = trimmed.toLowerCase(Locale.ROOT);
     if (NEXT_WORD_PREDICTIONS.containsKey(trimmed))
       return NEXT_WORD_PREDICTIONS.get(trimmed);
-    String transliterated = transliterateWord(trimmed);
+    if (NEXT_WORD_PREDICTIONS.containsKey(lower))
+      return NEXT_WORD_PREDICTIONS.get(lower);
+
+    String transliterated = transliterateWord(lower);
     if (NEXT_WORD_PREDICTIONS.containsKey(transliterated))
       return NEXT_WORD_PREDICTIONS.get(transliterated);
     return java.util.Collections.emptyList();
+  }
+
+  private static boolean isBoundaryPunctuation(char c)
+  {
+    int type = Character.getType(c);
+    return Character.isWhitespace(c)
+        || type == Character.CONNECTOR_PUNCTUATION
+        || type == Character.DASH_PUNCTUATION
+        || type == Character.START_PUNCTUATION
+        || type == Character.END_PUNCTUATION
+        || type == Character.INITIAL_QUOTE_PUNCTUATION
+        || type == Character.FINAL_QUOTE_PUNCTUATION
+        || type == Character.OTHER_PUNCTUATION;
   }
 
   // Standalone vowels (start of word or preceded by vowel)
