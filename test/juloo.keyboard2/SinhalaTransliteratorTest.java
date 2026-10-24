@@ -143,7 +143,7 @@ public class SinhalaTransliteratorTest
     assertTrue(SinhalaTransliterator.getNextWordPredictions("STHUTHI")
         .contains("බොහොම"));
     assertTrue(SinhalaTransliterator.getNextWordPredictions("සුබ!")
-        .isEmpty());
+        .contains("උදෑසනක්"));
   }
 
   @Test
