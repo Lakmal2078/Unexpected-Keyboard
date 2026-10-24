@@ -275,9 +275,16 @@
     <string name="pref_theme_key_borders">Key borders</string>
     <string name="pref_theme_apply">Apply</string>
     <string name="pref_theme_category_all">All</string>
+    <string name="pref_theme_category_favorites">Favorites</string>
     <string name="pref_theme_category_system">System &amp; Adaptive</string>
     <string name="pref_theme_category_dark">Dark &amp; AMOLED</string>
     <string name="pref_theme_category_light">Light &amp; Minimal</string>
     <string name="pref_theme_category_vibrant">Vibrant &amp; Heritage</string>
+    <string name="pref_theme_search_hint">Search themes…</string>
+    <string name="pref_theme_no_results">No matching themes found</string>
+    <string name="pref_theme_favorite_add">Add to favorites</string>
+    <string name="pref_theme_favorite_remove">Remove from favorites</string>
+    <string name="pref_theme_day_title">Day theme</string>
+    <string name="pref_theme_night_title">Night theme</string>
 </resources>
 

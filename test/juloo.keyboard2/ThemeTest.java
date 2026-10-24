@@ -86,8 +86,31 @@ public class ThemeTest
   @Test
   public void testSystemAndUnknownFallbacks()
   {
-    assertEquals(R.style.Dark, Config.getThemeId(null, "system"));
-    assertEquals(R.style.Dark, Config.getThemeId(null, "unknown_theme_key"));
+    assertEquals(R.style.Light, Config.getThemeId(null, "system"));
+    assertEquals(R.style.Light, Config.getThemeId(null, "unknown_theme_key"));
+  }
+
+  @Test
+  public void testDayNightThemePairing()
+  {
+    android.content.SharedPreferences prefs = org.mockito.Mockito.mock(android.content.SharedPreferences.class);
+    org.mockito.Mockito.when(prefs.getString("day_theme", "light")).thenReturn("sepia_warm");
+    org.mockito.Mockito.when(prefs.getString("night_theme", "dark")).thenReturn("oled_black");
+
+    // With null res (uiMode 0 -> light mode), system theme resolves to day_theme ("sepia_warm")
+    assertEquals(R.style.SepiaWarm, Config.getThemeId(null, "system", prefs));
+
+    // With explicit night configuration
+    android.content.res.Resources nightRes = org.mockito.Mockito.mock(android.content.res.Resources.class);
+    android.content.res.Configuration nightConfig = new android.content.res.Configuration();
+    nightConfig.uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES;
+    org.mockito.Mockito.when(nightRes.getConfiguration()).thenReturn(nightConfig);
+
+    assertEquals(R.style.OledBlack, Config.getThemeId(nightRes, "system", prefs));
+
+    // Circular prevention: if pairTheme is "system", fallback gracefully to Dark/Light
+    org.mockito.Mockito.when(prefs.getString("night_theme", "dark")).thenReturn("system");
+    assertEquals(R.style.Dark, Config.getThemeId(nightRes, "system", prefs));
   }
 
   @Test
@@ -158,6 +181,8 @@ public class ThemeTest
       assertNotNull("Theme key '" + themeKey + "' must map to a category", category);
       assertNotEquals("Theme key '" + themeKey + "' should not map to ALL category",
           ThemePicker.ThemeCategory.ALL, category);
+      assertNotEquals("Theme key '" + themeKey + "' should not map to FAVORITES category",
+          ThemePicker.ThemeCategory.FAVORITES, category);
       categoryCounts.put(category, categoryCounts.get(category) + 1);
     }
 
@@ -165,6 +190,7 @@ public class ThemeTest
     assertEquals(24, (int) categoryCounts.get(ThemePicker.ThemeCategory.DARK));
     assertEquals(15, (int) categoryCounts.get(ThemePicker.ThemeCategory.LIGHT));
     assertEquals(8, (int) categoryCounts.get(ThemePicker.ThemeCategory.VIBRANT));
+    assertEquals(0, (int) categoryCounts.get(ThemePicker.ThemeCategory.FAVORITES));
 
     assertNull(ThemePicker.categoryOf(null));
     assertNull(ThemePicker.categoryOf("unknown_custom_theme"));
@@ -175,7 +201,7 @@ public class ThemeTest
   {
     assertTrue(Config.isNightMode(android.content.res.Configuration.UI_MODE_NIGHT_YES));
     assertFalse(Config.isNightMode(android.content.res.Configuration.UI_MODE_NIGHT_NO));
-    assertTrue(Config.isNightMode(android.content.res.Configuration.UI_MODE_NIGHT_UNDEFINED));
-    assertTrue(Config.isNightMode(0));
+    assertFalse(Config.isNightMode(android.content.res.Configuration.UI_MODE_NIGHT_UNDEFINED));
+    assertFalse(Config.isNightMode(0));
   }
 }

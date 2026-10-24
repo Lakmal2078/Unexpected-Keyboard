@@ -49,6 +49,19 @@ public class ThemePickerTest
     when(context.getTheme()).thenReturn(theme);
     when(theme.obtainStyledAttributes(any(int[].class))).thenReturn(colors);
     when(builder.create()).thenReturn(dialog);
+    when(context.getString(R.string.pref_theme_apply)).thenReturn("Apply");
+    when(context.getString(R.string.pref_theme_choose)).thenReturn("Choose a keyboard theme");
+    when(context.getString(R.string.pref_theme_key_borders)).thenReturn("Key borders");
+    when(context.getString(R.string.pref_theme_search_hint)).thenReturn("Search themes…");
+    when(context.getString(R.string.pref_theme_no_results)).thenReturn("No matching themes found");
+    when(context.getString(R.string.pref_theme_category_all)).thenReturn("All");
+    when(context.getString(R.string.pref_theme_category_favorites)).thenReturn("Favorites");
+    when(context.getString(R.string.pref_theme_category_system)).thenReturn("System");
+    when(context.getString(R.string.pref_theme_category_dark)).thenReturn("Dark");
+    when(context.getString(R.string.pref_theme_category_light)).thenReturn("Light");
+    when(context.getString(R.string.pref_theme_category_vibrant)).thenReturn("Vibrant");
+    when(prefs.getStringSet("favorite_themes", null)).thenReturn(null);
+    when(editor.putStringSet(eq("favorite_themes"), any())).thenReturn(editor);
   }
 
   @Test
@@ -70,6 +83,7 @@ public class ThemePickerTest
 
     verify(editor).putString("theme", "graphite_pro");
     verify(editor).putBoolean("border_config", false);
+    verify(editor).putStringSet(eq("favorite_themes"), any());
     verify(editor).apply();
   }
 

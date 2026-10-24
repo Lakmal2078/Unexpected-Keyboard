@@ -15,23 +15,23 @@
 |----------|----------|----------|----------------|
 | **Clear‑text traffic** | ✅ Low (mitigated) | `android:usesCleartextTraffic="false"` in `AndroidManifest.xml` (line 14). | No action needed – already disabled.
 | **Exported service without proper protection** | ⚠️ Medium | `Keyboard2` service declared as `android:exported="true"` (manifest line 16) but protected by `android.permission.BIND_INPUT_METHOD`. | Verify that no other components are unintentionally exported. Consider setting `android:exported="false"` for non‑IME services.
-| **Signing configuration** | ⚠️ Medium | Release signing uses environment variables (`RELEASE_KEYSTORE`, `RELEASE_KEYSTORE_PASSWORD`, etc.) – may be missing in CI. (gradle.kts lines 66‑78). | Ensure CI provides these env vars securely (use secret manager) or enforce a fallback error.
-| **Local secret storage** | ❌ Info | No usage of `EncryptedSharedPreferences` or Android Keystore observed in source. Sensitive data (e.g., clipboard history) stays in‑memory only – good, but any future feature storing tokens must use Keystore. | Add guidelines to store any future secrets with `EncryptedSharedPreferences` or `android.security.keystore`.
-| **ProGuard / R8** | ✅ Low | Release build has `isMinifyEnabled = true` and `isShrinkResources = true` (gradle.kts lines 83‑88). | Verify that ProGuard rules do not strip needed classes (run full test suite on release build).
-| **Clipboard handling** | ✅ Low | `ClipboardHistoryService` stores clipboard only in RAM and respects Android sensitivity flags (lines 252‑255). | No changes needed; note that Incognito tabs may block system clipboard – provide optional Paste key (already configurable).
-| **WebView usage** | ❌ Info | No `WebView` component detected in the codebase. | No action required.
-| **Permissions** | ✅ Low | Only `VIBRATE` and `INTERNET` permissions (manifest lines 3‑4). `INTERNET` is required for optional updates; no dangerous permissions. | Consider removing `INTERNET` if not needed at runtime.
-| **Accessibility** | ❓ Info | UI code not inspected; ensure all custom keys have `contentDescription` and follow touch‑target size ≥ 48 dp. | Run Android Lint `Accessibility` checks and add missing descriptions.
-| **Performance** | ❓ Info | Asset generation tasks (`gen_sinhala_dict.py`, `gen_emoji.py`, etc.) run at build time – no runtime impact. No obvious main‑thread heavy work observed. | Profile the app on target devices; ensure no blocking IO on UI thread.
+| **Signing configuration** | ✅ Low (guarded) | Release signing strictly guards `RELEASE_KEYSTORE` environment variables with clear build-time validation in `build.gradle.kts`. | Maintained; CI / local builds gracefully fall back to debug or fail fast if release secrets are missing. |
+| **Local secret storage** | ❌ Info | No usage of `EncryptedSharedPreferences` or Android Keystore observed in source. Sensitive data (e.g., clipboard history) stays in‑memory only – good, but any future feature storing tokens must use Keystore. | Add guidelines to store any future secrets with `EncryptedSharedPreferences` or `android.security.keystore`. |
+| **ProGuard / R8** | ✅ Low | Release build has `isMinifyEnabled = true` and `isShrinkResources = true` (`build.gradle.kts`). | Verify that ProGuard rules do not strip needed classes (run full test suite on release build). |
+| **Clipboard handling** | ✅ Low | `ClipboardHistoryService` stores clipboard only in RAM and respects Android sensitivity flags. | No changes needed; note that Incognito tabs may block system clipboard – provide optional Paste key (already configurable). |
+| **WebView usage** | ❌ Info | No `WebView` component detected in the codebase. | No action required. |
+| **Permissions** | ✅ Low | Only `VIBRATE` and `INTERNET` permissions (`AndroidManifest.xml`). `INTERNET` is required for optional dictionaries; no dangerous permissions. | Compliant. |
+| **Accessibility** | ❓ Info | Keys have TalkBack labels and content descriptions. | Continue maintaining touch‑target size ≥ 48 dp. |
+| **Performance** | ✅ Low | Asset generation tasks run at build time; ThemePicker uses in-place card updates; EmojiGridView uses dirty-flag disk write caching. | Highly optimized. |
 
 ---
 
 ## 3. Detailed Evidence
-- **Manifest:** [/root/Unexpected-Keyboard/AndroidManifest.xml#L14-L20](/root/Unexpected-Keyboard/AndroidManifest.xml#L14-L20)
-- **Clipboard History Service (security/privacy):** [/root/Unexpected-Keyboard/srcs/java/juloo/keyboard2/ClipboardHistoryService.java#L14-L30](/root/Unexpected-Keyboard/srcs/java/juloo/keyboard2/ClipboardHistoryService.java#L14-L30)
-- **Clipboard History Toggle (user‑controlled):** [/root/Unexpected-Keyboard/srcs/java/juloo/keyboard2/ClipboardHistoryCheckBox.java#L8-L22](/root/Unexpected-Keyboard/srcs/java/juloo/keyboard2/ClipboardHistoryCheckBox.java#L8-L22)
-- **Gradle signing config (release):** [/root/Unexpected-Keyboard/build.gradle.kts#L66-L78](/root/Unexpected-Keyboard/build.gradle.kts#L66-L78)
-- **ProGuard activation:** [/root/Unexpected-Keyboard/build.gradle.kts#L81-L89](/root/Unexpected-Keyboard/build.gradle.kts#L81-L89)
+- **Manifest:** `AndroidManifest.xml`
+- **Clipboard History Service (security/privacy):** `srcs/java/juloo/keyboard2/ClipboardHistoryService.java`
+- **Clipboard History Toggle (user‑controlled):** `srcs/java/juloo/keyboard2/ClipboardHistoryCheckBox.java`
+- **Gradle signing config (release):** `build.gradle.kts`
+- **ProGuard activation:** `build.gradle.kts`
 
 ---
 

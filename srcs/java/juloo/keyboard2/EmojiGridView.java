@@ -27,6 +27,7 @@ public class EmojiGridView extends GridView
 
   private List<Emoji> _emojiArray;
   private HashMap<Emoji, Integer> _lastUsed;
+  private boolean _last_used_dirty = false;
 
   /*
    ** TODO: adapt column width and emoji size
@@ -50,10 +51,12 @@ public class EmojiGridView extends GridView
   public void onItemClick(AdapterView<?> parent, View v, int pos, long id)
   {
     Config config = Config.globalConfig();
-    Integer used = _lastUsed.get(_emojiArray.get(pos));
-    _lastUsed.put(_emojiArray.get(pos), (used == null) ? 1 : used.intValue() + 1);
-    config.handler.key_up(_emojiArray.get(pos).kv(), Pointers.Modifiers.EMPTY);
-    saveLastUsed(); // TODO: opti
+    Emoji emoji = _emojiArray.get(pos);
+    Integer used = _lastUsed.get(emoji);
+    _lastUsed.put(emoji, (used == null) ? 1 : used.intValue() + 1);
+    _last_used_dirty = true;
+    config.handler.key_up(emoji.kv(), Pointers.Modifiers.EMPTY);
+    saveLastUsed();
   }
 
   private List<Emoji> getLastEmojis()
@@ -71,14 +74,18 @@ public class EmojiGridView extends GridView
 
   private void saveLastUsed()
   {
+    if (!_last_used_dirty) return;
     SharedPreferences.Editor edit;
     try { edit = emojiSharedPreferences().edit(); }
     catch (Exception _e) { return; }
-    HashSet<String> set = new HashSet<String>();
-    for (Emoji emoji : _lastUsed.keySet())
-      set.add(String.valueOf(_lastUsed.get(emoji)) + "-" + emoji.kv().getString());
+    HashSet<String> set = new HashSet<String>(_lastUsed.size());
+    for (java.util.Map.Entry<Emoji, Integer> entry : _lastUsed.entrySet())
+    {
+      set.add(entry.getValue() + "-" + entry.getKey().kv().getString());
+    }
     edit.putStringSet(LAST_USE_PREF, set);
     edit.apply();
+    _last_used_dirty = false;
   }
 
   private void loadLastUsed()

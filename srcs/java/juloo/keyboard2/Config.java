@@ -221,7 +221,7 @@ public class Config
       * characterSizeScale;
     String theme_name = _prefs.getString("theme", DEFAULT_THEME);
     theme_follows_system = "system".equals(theme_name) || "monet".equals(theme_name);
-    theme = getThemeId(res, theme_name);
+    theme = getThemeId(res, theme_name, _prefs);
     autocapitalisation = _prefs.getBoolean("autocapitalisation", true);
     change_method_key_replacement = get_change_method_key_replacement(_prefs);
     extra_keys_param = ExtraKeysPreference.get_extra_keys(_prefs);
@@ -300,10 +300,15 @@ public class Config
 
   public static boolean isNightMode(int uiMode)
   {
-    return (uiMode & Configuration.UI_MODE_NIGHT_MASK) != Configuration.UI_MODE_NIGHT_NO;
+    return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
   }
 
   static int getThemeId(Resources res, String theme_name)
+  {
+    return getThemeId(res, theme_name, null);
+  }
+
+  static int getThemeId(Resources res, String theme_name, SharedPreferences prefs)
   {
     int uiMode = (res == null || res.getConfiguration() == null) ? 0 :
         res.getConfiguration().uiMode;
@@ -311,6 +316,16 @@ public class Config
     switch (theme_name)
     {
       case "system":
+        if (prefs != null)
+        {
+          String pairTheme = night
+              ? prefs.getString("night_theme", "dark")
+              : prefs.getString("day_theme", "light");
+          if (pairTheme != null && !"system".equals(pairTheme))
+          {
+            return getThemeId(res, pairTheme, null);
+          }
+        }
         return night ? R.style.Dark : R.style.Light;
       case "monet":
         return night ? R.style.MonetDark : R.style.MonetLight;

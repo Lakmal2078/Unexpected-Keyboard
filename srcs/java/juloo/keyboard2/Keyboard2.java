@@ -528,10 +528,10 @@ public class Keyboard2 extends InputMethodService
   {
     super.onConfigurationChanged(newConfig);
     if (_config == null || newConfig == null) return;
+    if (!_config.theme_follows_system) return;
     int night = newConfig.uiMode & Configuration.UI_MODE_NIGHT_MASK;
     if (night == _last_night_mode) return;
     _last_night_mode = night;
-    if (!_config.theme_follows_system) return;
     refresh_config();
   }
 
