@@ -151,6 +151,23 @@ public class Theme
     return _key_font;
   }
 
+  /** Compute the key-corner radius for the selected style. */
+  static float computeKeyBorderRadius(String shape, float keyWidth,
+      float themeRadius, boolean customBorderEnabled, float customRadius)
+  {
+    if (customBorderEnabled)
+      return customRadius * keyWidth;
+    if ("square".equals(shape))
+      return 0f;
+    if ("rounded".equals(shape))
+      return keyWidth * 0.16f;
+    if ("squircle".equals(shape))
+      return keyWidth * 0.28f;
+    if ("pill".equals(shape))
+      return keyWidth * 0.5f;
+    return themeRadius;
+  }
+
   public static final class Computed
   {
     public final float vertical_margin;
@@ -236,18 +253,8 @@ public class Theme
       public Key(Theme theme, Config config, float keyWidth, boolean activated,
           KeyboardData.Key.Role role)
       {
-        if (config.borderConfig)
-          border_radius = config.customBorderRadius * keyWidth;
-        else
-        {
-          switch (config.keyShape)
-          {
-            case "square": border_radius = 0; break;
-            case "rounded": border_radius = keyWidth * 0.16f; break;
-            case "pill": border_radius = keyWidth * 0.5f; break;
-            default: border_radius = theme.keyBorderRadius; break;
-          }
-        }
+        border_radius = computeKeyBorderRadius(config.keyShape, keyWidth,
+            theme.keyBorderRadius, config.borderConfig, config.customBorderRadius);
         if (activated)
         {
           border_width = theme.keyBorderWidthActivated;
