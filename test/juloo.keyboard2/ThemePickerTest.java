@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.view.View;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -16,7 +17,7 @@ public class ThemePickerTest
   private AlertDialog.Builder builder;
   private SharedPreferences prefs;
   private SharedPreferences.Editor editor;
-  private DialogInterface.OnClickListener select;
+  private DialogInterface.OnClickListener apply;
   private AlertDialog dialog;
 
   @Before
@@ -29,6 +30,7 @@ public class ThemePickerTest
       .thenReturn(new String[]{ "Dark", "Graphite Pro", "Light" });
     prefs = mock(SharedPreferences.class);
     when(prefs.getString("theme", Config.DEFAULT_THEME)).thenReturn("graphite_pro");
+    when(prefs.getBoolean("border_config", false)).thenReturn(false);
     editor = mock(SharedPreferences.Editor.class, RETURNS_SELF);
     when(prefs.edit()).thenReturn(editor);
     dialog = mock(AlertDialog.class);
@@ -37,58 +39,38 @@ public class ThemePickerTest
   }
 
   @Test
-  public void openingAndDismissingPickerNeverWritesTheTheme()
+  public void openingAndDismissingPickerNeverWritesPreferences()
   {
-    openPicker(1);
+    openPicker();
     dialog.dismiss();
     verify(prefs, never()).edit();
     verifyNoInteractions(editor);
   }
 
   @Test
-  public void selectingThemePersistsOnlyTheChosenValue()
+  public void applyingPickerPersistsCurrentThemeAndBorderSetting()
   {
-    openPicker(1);
+    openPicker();
     verify(prefs, never()).edit();
-    select.onClick(dialog, 2);
-    verify(editor).putString("theme", "light");
-    verify(editor).apply();
-    verifyNoMoreInteractions(editor);
-    verify(dialog).dismiss();
-  }
 
-  @Test
-  public void selectingCurrentThemeDoesNotRewritePreferences()
-  {
-    openPicker(1);
-    select.onClick(dialog, 1);
-    verify(prefs, never()).edit();
-    verifyNoInteractions(editor);
-    verify(dialog).dismiss();
-  }
+    apply.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
 
-  @Test
-  public void legacyThemeRemainsUnchangedUntilASelectionIsMade()
-  {
-    when(prefs.getString("theme", Config.DEFAULT_THEME)).thenReturn("forest_mist");
-    openPicker(-1);
-    verify(prefs, never()).edit();
-    select.onClick(dialog, 0);
-    verify(editor).putString("theme", "dark");
+    verify(editor).putString("theme", "graphite_pro");
+    verify(editor).putBoolean("border_config", false);
     verify(editor).apply();
   }
 
-  private void openPicker(int checked)
+  private void openPicker()
   {
     assertSame(dialog, ThemePicker.create(builder, resources, prefs));
+    ArgumentCaptor<View> view = ArgumentCaptor.forClass(View.class);
+    verify(builder).setView(view.capture());
+    assertNotNull(view.getValue());
+
     ArgumentCaptor<DialogInterface.OnClickListener> listener =
       ArgumentCaptor.forClass(DialogInterface.OnClickListener.class);
-    ArgumentCaptor<android.widget.ListAdapter> adapter =
-      ArgumentCaptor.forClass(android.widget.ListAdapter.class);
-    verify(builder).setAdapter(adapter.capture(), listener.capture());
-    assertEquals(3, adapter.getValue().getCount());
-    assertEquals("dark", adapter.getValue().getItem(0));
+    verify(builder).setPositiveButton(eq("Apply"), listener.capture());
+    apply = listener.getValue();
     verify(builder).setNegativeButton(android.R.string.cancel, null);
-    select = listener.getValue();
   }
 }
