@@ -46,6 +46,7 @@ public class ThemePickerTest
     Resources.Theme theme = mock(Resources.Theme.class);
     TypedArray colors = mock(TypedArray.class);
     when(resources.newTheme()).thenReturn(theme);
+    when(context.getTheme()).thenReturn(theme);
     when(theme.obtainStyledAttributes(any(int[].class))).thenReturn(colors);
     when(builder.create()).thenReturn(dialog);
   }
