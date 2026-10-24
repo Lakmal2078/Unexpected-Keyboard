@@ -521,6 +521,20 @@ public class Keyboard2 extends InputMethodService
     update_top_bar_visibility();
   }
 
+  private int _last_night_mode = -1;
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig)
+  {
+    super.onConfigurationChanged(newConfig);
+    if (_config == null || newConfig == null) return;
+    int night = newConfig.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+    if (night == _last_night_mode) return;
+    _last_night_mode = night;
+    if (!_config.theme_follows_system) return;
+    refresh_config();
+  }
+
   /** Might re-create the keyboard view. [_keyboard_layout_view.setKeyboard()] and
       [setInputView()] must be called soon after. */
   private void refresh_config()

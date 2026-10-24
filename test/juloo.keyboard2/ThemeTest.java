@@ -125,4 +125,57 @@ public class ThemeTest
     int lightKey = Theme.computeKeyColor(0xFFFFFFFF, 0);
     assertTrue("Key color on white should be slightly darker than pure white", (lightKey & 0xFF) < 255);
   }
+
+  @Test
+  public void testAll51ThemesMapToExactlyOneCategory()
+  {
+    String[] all51Themes = {
+      "system", "dark", "light", "black", "oled_black", "white",
+      "monet", "monetlight", "monetdark", "gruvbox_dark", "gruvbox_light",
+      "solarized_dark", "dracula", "nord", "tokyo_night", "catppuccin_mocha",
+      "catppuccin_latte", "rosepine", "everforestlight", "sepia_warm",
+      "desert", "sinhala_sand", "emerald_forest", "jungle", "cyberpunk_neon",
+      "matrix_green", "sunset_glow", "lanka_maroon", "royal_gold",
+      "midnight_purple", "midnight_ocean", "arctic_blue", "cobalt",
+      "graphite_pro", "quiet_teal", "soft_lavender", "high_contrast",
+      "high_contrast_yellow", "lanka_blue", "unexpected_keyboard",
+      "rose_quartz", "ocean_breeze", "citrus_pop", "copper_night",
+      "berry_noir", "mint_matcha", "glass", "aurora_flow", "zen_minimal",
+      "soft_3d", "pixel_retro"
+    };
+
+    assertEquals(51, all51Themes.length);
+
+    java.util.Map<ThemePicker.ThemeCategory, Integer> categoryCounts = new java.util.HashMap<>();
+    for (ThemePicker.ThemeCategory cat : ThemePicker.ThemeCategory.values())
+    {
+      categoryCounts.put(cat, 0);
+    }
+
+    for (String themeKey : all51Themes)
+    {
+      ThemePicker.ThemeCategory category = ThemePicker.categoryOf(themeKey);
+      assertNotNull("Theme key '" + themeKey + "' must map to a category", category);
+      assertNotEquals("Theme key '" + themeKey + "' should not map to ALL category",
+          ThemePicker.ThemeCategory.ALL, category);
+      categoryCounts.put(category, categoryCounts.get(category) + 1);
+    }
+
+    assertEquals(4, (int) categoryCounts.get(ThemePicker.ThemeCategory.SYSTEM));
+    assertEquals(24, (int) categoryCounts.get(ThemePicker.ThemeCategory.DARK));
+    assertEquals(15, (int) categoryCounts.get(ThemePicker.ThemeCategory.LIGHT));
+    assertEquals(8, (int) categoryCounts.get(ThemePicker.ThemeCategory.VIBRANT));
+
+    assertNull(ThemePicker.categoryOf(null));
+    assertNull(ThemePicker.categoryOf("unknown_custom_theme"));
+  }
+
+  @Test
+  public void testNightModeResolution()
+  {
+    assertTrue(Config.isNightMode(android.content.res.Configuration.UI_MODE_NIGHT_YES));
+    assertFalse(Config.isNightMode(android.content.res.Configuration.UI_MODE_NIGHT_NO));
+    assertTrue(Config.isNightMode(android.content.res.Configuration.UI_MODE_NIGHT_UNDEFINED));
+    assertTrue(Config.isNightMode(0));
+  }
 }

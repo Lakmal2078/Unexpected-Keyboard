@@ -271,5 +271,13 @@
     <string name="clipboard_action_paste">Paste clipboard item</string>
     <string name="clipboard_action_pin">Pin clipboard item</string>
     <string name="clipboard_action_remove_pin">Remove pinned clipboard item</string>
+    <string name="pref_theme_choose">Choose a keyboard theme</string>
+    <string name="pref_theme_key_borders">Key borders</string>
+    <string name="pref_theme_apply">Apply</string>
+    <string name="pref_theme_category_all">All</string>
+    <string name="pref_theme_category_system">System &amp; Adaptive</string>
+    <string name="pref_theme_category_dark">Dark &amp; AMOLED</string>
+    <string name="pref_theme_category_light">Light &amp; Minimal</string>
+    <string name="pref_theme_category_vibrant">Vibrant &amp; Heritage</string>
 </resources>
 

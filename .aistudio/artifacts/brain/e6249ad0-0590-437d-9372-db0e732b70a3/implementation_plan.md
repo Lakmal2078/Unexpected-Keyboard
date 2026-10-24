@@ -1,24 +1,24 @@
-# Sinhala Context-Aware Next-Word Predictions & Typing Enhancements
+# Categorized Theme Gallery & Automatic Day/Night Switching
 
-A comprehensive architectural plan to introduce context-aware next-word predictions, expanded colloquial Singlish vocabulary, and a privacy-preserving dynamic on-device bigram learning engine for Sinhala input in Unexpected Keyboard.
+A comprehensive plan to reorganize and streamline Unexpected Keyboard's theme ecosystem with a categorized preview gallery, instant category filtering pills, and automatic system Day/Night switching.
 
 ## User Review & Critical Decisions
 
 > [!IMPORTANT]
-> The following directions were confirmed during interactive clarification and guide this implementation:
+> The following directions were confirmed during interactive clarification:
 
-- **Confirmed Decision 1**: Prioritize **Sinhala typing and word prediction improvements** as the primary development focus.
-- **Confirmed Decision 2**: Implement **Context-aware next-word predictions** as the core enhancement.
-- **Architectural Decision (Privacy)**: Prediction learning will remain **100% on-device and local**, with zero network transmissions. Learning is strictly suspended in password and sensitive editor fields.
-- **Architectural Decision (Performance)**: Pre-compiled static n-gram models with O(1) lookup + a bounded in-memory LRU frequency cache to ensure sub-millisecond keystroke responsiveness without GC churn.
+- **Confirmed Decision 1**: Organize theme selection into a **Categorized gallery with live keyboard previews**.
+- **Confirmed Decision 2**: Prioritize **Automatic Day and Night switching following system mode**.
+- **Architectural Decision (Instant Responsiveness)**: Add category filter chips (`All`, `🌟 Adaptive/System`, `🌙 Dark`, `☀️ Light`, `🎨 Vibrant`) to `ThemePicker.java` that filter the gallery dynamically without reloading or dialog stutter.
+- **Architectural Decision (Configuration Lifecycle)**: Hook `onConfigurationChanged` in `Keyboard2.java` to seamlessly switch themes when Android toggles dark/light mode, eliminating manual reloads.
 
 ---
 
 ## 1. Overview & Core Concept
 
-- **What It Does**: Enhances Unexpected Keyboard's Sinhala transliteration engine to anticipate the user's next words in real time. Upon committing any Sinhala word (by typing space or selecting a candidate), the top suggestion bar immediately presents context-relevant next-word continuations (e.g., typing "සුබ" offers "උදෑසනක්", "දවසක්", "අලුත් අවුරුද්දක්"). In addition, the keyboard learns frequent word pairings typed by the user to adapt predictions over time.
-- **Target Audience**: Sri Lankan users and Sinhala speakers communicating via WhatsApp, SMS, email, and social apps using Singlish phonetic typing.
-- **Key Value**: Reduces keystrokes by up to 40% for typical Sinhala phrases, minimizes spelling friction, and speeds up daily messaging.
+- **What It Does**: Transforms the 50+ theme selection from a long, unorganized list into an intuitive, categorized visual gallery with real-time interactive preview cards. It enhances the `system` and `monet` themes to automatically switch between daytime light palettes and nighttime dark palettes in sync with Android OS dark mode.
+- **Target Audience**: Users wanting an aesthetically pleasing keyboard that matches their device theme and is effortless to customize.
+- **Key Value**: Reduces visual clutter, makes finding favorite themes effortless, and provides automated dark mode switching so users never get blinded by bright themes at night.
 
 ---
 
@@ -26,95 +26,88 @@ A comprehensive architectural plan to introduce context-aware next-word predicti
 
 ### Key User Flows
 
-1. **Typing with Real-Time Predictive Continuations**:
-   - User types `subha` in Singlish -> candidate bar shows transliteration `සුබ`.
-   - User taps space or selects `සුබ` -> word commits.
-   - Candidates strip instantly updates with high-probability next words: `[ උදෑසනක් | දවසක් | අලුත් අවුරුද්දක් ]`.
-   - Tapping any predicted word commits it immediately and generates the next tier of predictions (e.g. selecting `උදෑසනක්` predicts `[ වේවා | ප්‍රාර්ථනා | වේවා! ]`).
-2. **Context-Aware Multi-Word Sentences**:
-   - The engine analyzes multi-word window context before the cursor (e.g. Subject-Object-Verb patterns like "මම ගෙදර" -> "යනවා", "ආවා", "ඉන්නේ") rather than only isolated single tokens.
-3. **Visual Distinctions on Candidate Bar**:
-   - Prediction candidates are cleanly badged with subtle styling differences (e.g. forward arrow indicator `›` or distinct opacity) so the user immediately recognizes predictive suggestions versus active word transliterations.
-   - Preserves quick emoji suggestions and quick clipboard paste previews seamlessly.
+1. **Browsing Categorized Themes in Settings**:
+   - User opens **Settings -> Theme**.
+   - A modern gallery dialog appears with category filter chips at the top:
+     - `All` (All 51 themes)
+     - `🌟 System & Adaptive` (System Auto Day/Night, Monet Material You, High Contrast)
+     - `🌙 Dark & AMOLED` (Graphite Pro, Dark, Pure Black, OLED, Dracula, Tokyo Night, Nord, Catppuccin Mocha)
+     - `☀️ Light & Minimal` (Light, White, Catppuccin Latte, Everforest, Sepia Warm, Zen Minimal)
+     - `🎨 Vibrant & Heritage` (Lanka Maroon, Lanka Blue, Royal Gold, Sinhala Sand, Emerald Forest, Cyberpunk Neon)
+   - Tapping any chip filters the cards smoothly.
+2. **Live Keyboard Previews**:
+   - Each card displays the theme's name, category tag, selected checkmark `✓`, and an accurate scaled 4-row keyboard preview showing background, keycaps, and action accents.
+   - An interactive "Key borders" toggle switch at the bottom previews with/without borders in real time.
+   - Tapping "Apply" commits the selection without flickering.
+3. **Automatic System Day/Night Adaptation**:
+   - When "System" or "Material You (Monet)" is active, turning on Android Dark Mode instantly switches the keyboard to the dark variant.
+   - Turning off Dark Mode during the daytime switches it back to the light variant without restarting the keyboard or losing typed text.
 
 ---
 
 ## 3. Key Product Decisions & Trade-Offs
 
-- **Decision 1: Static High-Frequency N-Gram Model vs Cloud API**
-  - *Chosen Approach*: Curate a comprehensive, pre-indexed Sinhala corpus (~500+ common bigram transitions and trigram collocations) directly in the app.
-  - *Why*: True offline capability, zero latency on keystroke, zero API cost, and complete user privacy.
-  - *Alternatives Considered*: Firebase / Gemini cloud API (rejected because keyboards require <10ms offline response and must never send private keystrokes across the network).
+- **Decision 1: Category Filter Chips vs Multi-Page Pager**
+  - *Chosen Approach*: Horizontal chip selector at the top of the gallery dialog with instant view filtering.
+  - *Why*: Fast, intuitive, lightweight, and works on all Android screen sizes without heavy ViewPager dependencies.
 
-- **Decision 2: Dynamic On-Device Personal Vocabulary Learning**
-  - *Chosen Approach*: A bounded, encrypted/direct-boot-safe local cache of user-typed word pairs. When the user repeatedly types a custom sequence (e.g., "මාලක මල්ලී"), the local learner increases its transition frequency.
-  - *Why*: Allows the keyboard to adapt to individual conversational styles and dialect preferences without bloating the base APK.
-  - *Safety Boundary*: Suspended automatically when `EditorInfo.inputType` indicates password, numeric, or private browsing modes.
+- **Decision 2: Automatic Lifecycle Day/Night Hook**
+  - *Chosen Approach*: Override `onConfigurationChanged` in `Keyboard2.java` to invoke `refresh_config()`.
+  - *Why*: Android broadcasts configuration changes (such as `uiMode` night/day transitions) to active InputMethodServices; handling it directly provides instant, zero-touch switching.
 
-- **Decision 3: Multi-Token Backtrack vs Single-Token Lookup**
-  - *Chosen Approach*: Check trigram context first (previous 2 words), fall back to bigram context (previous 1 word), and fall back to general high-frequency conversational openers if beginning a sentence.
+- **Decision 3: Backward-Compatible Color Extraction**
+  - *Chosen Approach*: Use `Theme.obtainStyledAttributes` via safe `newTheme()` so all 50+ themes correctly render their styled preview colors in unit tests and on physical devices.
 
 ---
 
-## 4. Technical Architecture & Data Strategy
+## 4. Technical Architecture & Component Mapping
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      Android Keyboard IME                   │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ User keystroke / commit
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      KeyEventHandler                        │
-│  - Captures committed Sinhala word                          │
-│  - Queries InputConnection.getTextBeforeCursor()            │
-└──────────────┬──────────────────────────────┬───────────────┘
-               │                              │
-               ▼                              ▼
-┌──────────────────────────────┐ ┌───────────────────────────┐
-│  SinhalaPredictionEngine     │ │   DynamicBigramLearner    │
-│  - Trigram matching          │ │   - Local LRU store       │
-│  - Static Bigram tables      │ │   - Frequency counter     │
-│  - Conversational openers    │ │   - Privacy filter        │
-└──────────────┬───────────────┘ └────────────┬──────────────┘
-               │                              │
-               └──────────────┬───────────────┘
-                              │ Merged ranked candidates
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      Suggestions.java                       │
-│  - set_predictions(List<String>)                            │
-│  - Formats top 3 candidates + emoji slot                    │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      CandidatesView                         │
-│  - Renders interactive predictive pills                     │
-│  - Handles tap-to-commit & recursive prediction chain       │
-└─────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────┐
+│                   Android OS System                    │
+│        (Dark Mode Toggle / System Configuration)       │
+└───────────────────────────┬────────────────────────────┘
+                            │ onConfigurationChanged(newConfig)
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│                     Keyboard2.java                     │
+│  - Catches OS Night/Day transitions                    │
+│  - Calls refresh_config()                              │
+│  - Compares prev_theme != current_theme                │
+└───────────────────────────┬────────────────────────────┘
+                            │
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│                      Config.java                       │
+│  - getThemeId(res, theme_name)                         │
+│  - Resolves "system" -> Light (day) / Dark (night)     │
+│  - Resolves "monet" -> MonetLight / MonetDark          │
+└───────────────────────────┬────────────────────────────┘
+                            │
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│                    ThemePicker.java                    │
+│  - Category Filter Bar: [All|System|Dark|Light|Vibrant]│
+│  - Filtered Gallery of live keyboard preview cards     │
+│  - Real-time "Key borders" toggle                      │
+│  - "Apply" / "Cancel" actions                          │
+└────────────────────────────────────────────────────────┘
 ```
 
 ### Component Breakdown & Execution Plan
 
-1. **`SinhalaPredictionEngine.java`**:
-   - Extract and expand prediction logic from `SinhalaTransliterator.java` into a dedicated, clean prediction engine.
-   - Core tables:
-     - Greetings & Courtesies (`ආයුබෝවන්`, `සුබ`, `ස්තූතියි`, `කරුණාකර`, `සමාවෙන්න`).
-     - Pronouns & Action Verbs (`මම`, `ඔයා`, `අපි`, `එයා`, `ඔබ`, `ඔයාලා`).
-     - Spatial & Temporal Adverbs (`දැන්`, `හෙට`, `ඊයේ`, `අද`, `එහේ`, `මෙහේ`, `ගෙදර`).
-     - Questions & Requests (`කොහොමද`, `මොකද`, `කොහෙද`, `කවද්ද`, `පුළුවන්ද`, `ඕනෙද`).
-     - Noun-Verb collocations and postpositional markers (`ගැන`, `සඳහා`, `වෙත`, `සමඟ`).
-2. **`SinhalaLearner.java` (Dynamic On-Device Learning)**:
-   - Records transitions `(word_n-1, word_n)` when user commits text in regular editors.
-   - Frequency-weighted scoring to prioritize personal names and everyday phrases.
-   - Clear/reset option in Settings for full user control over learned dictionary data.
-3. **`KeyEventHandler.java` Integration**:
-   - Multi-word context inspection via `InputConnection.getTextBeforeCursor(40, 0)`.
-   - Fires prediction update on Space, Enter, or suggestion tap.
-4. **`CandidatesView.java` & `res/layout` Polish**:
-   - Subtle visual differentiation for predictive continuations so the user clearly distinguishes transliterations from next-word predictions.
-5. **Testing & Validation**:
-   - Dedicated JUnit tests under `test/sinhala/ContextPredictionTest.java`.
-   - Tests for sentence context, single-token fallback, unknown word handling, learning persistence, and private editor filtering.
-   - Compilation and regression validation against existing test suites.
+1. **`ThemePicker.java`**:
+   - Define a clean `ThemeCategory` enumeration (`SYSTEM`, `DARK`, `LIGHT`, `VIBRANT`).
+   - Map all 51 theme keys to their respective categories.
+   - Add horizontal chip selector above the gallery.
+   - Implement category filtering so only relevant cards are shown while maintaining selected state.
+   - Preserve test contracts (`ThemePicker.create(builder, resources, prefs)` and `ThemePickerTest.java`).
+2. **`Keyboard2.java`**:
+   - Implement `onConfigurationChanged(Configuration newConfig)`.
+   - Call `refresh_config()` when UI mode night mask changes.
+3. **`Config.java`**:
+   - Validate and ensure `system` and `monet` mappings cleanly check `Configuration.UI_MODE_NIGHT_MASK`.
+4. **Validation & Testing**:
+   - Run `gradle test` to verify `ThemePickerTest` and all 148 unit tests.
+   - Verify `compile_applet`.
+   - Run `python3 check_theme_contrast.py` to ensure all themes maintain WCAG AA contrast compliance.

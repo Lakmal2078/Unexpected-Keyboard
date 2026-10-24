@@ -21,4 +21,12 @@
     <string name="pref_custom_bg_color_summary">Keyboard එක සඳහා අභිරුචි පසුබිම් වර්ණයක් තෝරන්න</string>
     <string name="pref_custom_accent_color_title">Key accent වර්ණය</string>
     <string name="pref_custom_accent_color_summary">Action keys සහ highlight සඳහා accent වර්ණයක් තෝරන්න</string>
+    <string name="pref_theme_choose">යතුරුපුවරු තේමාව තෝරන්න</string>
+    <string name="pref_theme_key_borders">යතුරු මායිම් (Borders)</string>
+    <string name="pref_theme_apply">යොදන්න (Apply)</string>
+    <string name="pref_theme_category_all">සියල්ල</string>
+    <string name="pref_theme_category_system">පද්ධති (System)</string>
+    <string name="pref_theme_category_dark">අඳුරු (Dark)</string>
+    <string name="pref_theme_category_light">දීප්තිමත් (Light)</string>
+    <string name="pref_theme_category_vibrant">වර්ණවත් (Vibrant)</string>
 </resources>

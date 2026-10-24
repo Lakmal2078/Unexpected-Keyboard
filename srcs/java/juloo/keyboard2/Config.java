@@ -72,6 +72,7 @@ public class Config
   public boolean double_tap_lock_shift;
   public float characterSize; // Ratio
   public int theme; // Values are R.style.*
+  public boolean theme_follows_system = false;
   public boolean autocapitalisation;
   public KeyValue change_method_key_replacement;
   public NumberLayout selected_number_layout;
@@ -218,7 +219,9 @@ public class Config
     characterSize =
       _prefs.getFloat("character_size", 1.15f)
       * characterSizeScale;
-    theme = getThemeId(res, _prefs.getString("theme", DEFAULT_THEME));
+    String theme_name = _prefs.getString("theme", DEFAULT_THEME);
+    theme_follows_system = "system".equals(theme_name) || "monet".equals(theme_name);
+    theme = getThemeId(res, theme_name);
     autocapitalisation = _prefs.getBoolean("autocapitalisation", true);
     change_method_key_replacement = get_change_method_key_replacement(_prefs);
     extra_keys_param = ExtraKeysPreference.get_extra_keys(_prefs);
@@ -295,12 +298,22 @@ public class Config
     return get_dip_pref(dm, pref_base_name + suffix, def);
   }
 
+  public static boolean isNightMode(int uiMode)
+  {
+    return (uiMode & Configuration.UI_MODE_NIGHT_MASK) != Configuration.UI_MODE_NIGHT_NO;
+  }
+
   static int getThemeId(Resources res, String theme_name)
   {
-    int night_mode = (res == null || res.getConfiguration() == null) ? 0 :
-        (res.getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK);
+    int uiMode = (res == null || res.getConfiguration() == null) ? 0 :
+        res.getConfiguration().uiMode;
+    boolean night = isNightMode(uiMode);
     switch (theme_name)
     {
+      case "system":
+        return night ? R.style.Dark : R.style.Light;
+      case "monet":
+        return night ? R.style.MonetDark : R.style.MonetLight;
       case "light": return R.style.Light;
       case "black": return R.style.Black;
       case "oled_black": return R.style.OledBlack;
@@ -310,10 +323,6 @@ public class Config
       case "jungle": return R.style.Jungle;
       case "monetlight": return R.style.MonetLight;
       case "monetdark": return R.style.MonetDark;
-      case "monet":
-        if ((night_mode & Configuration.UI_MODE_NIGHT_NO) != 0)
-          return R.style.MonetLight;
-        return R.style.MonetDark;
       case "rosepine": return R.style.RosePine;
       case "everforestlight": return R.style.EverforestLight;
       case "cobalt": return R.style.Cobalt;
@@ -378,10 +387,7 @@ public class Config
       case "ocean_teal":
         return R.style.MidnightOcean;
       default:
-      case "system":
-        if ((night_mode & Configuration.UI_MODE_NIGHT_NO) != 0)
-          return R.style.Light;
-        return R.style.Dark;
+        return night ? R.style.Dark : R.style.Light;
     }
   }
 
