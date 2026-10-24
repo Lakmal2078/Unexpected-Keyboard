@@ -629,7 +629,16 @@ public final class SinhalaTransliterator
     String transliterated = transliterateWord(lower);
     if (NEXT_WORD_PREDICTIONS.containsKey(transliterated))
       return NEXT_WORD_PREDICTIONS.get(transliterated);
-    return java.util.Collections.emptyList();
+
+    List<String> enginePreds = SinhalaPredictionEngine.getPredictions(trimmed, null);
+    if (!enginePreds.isEmpty())
+      return enginePreds;
+    return SinhalaPredictionEngine.getPredictions(transliterated, null);
+  }
+
+  public static List<String> getPredictionsForContext(String precedingText, SinhalaLearner learner)
+  {
+    return SinhalaPredictionEngine.getPredictions(precedingText, learner);
   }
 
   private static boolean isBoundaryPunctuation(char c)

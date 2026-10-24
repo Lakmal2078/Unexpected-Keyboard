@@ -33,6 +33,8 @@ public final class Suggestions
   private String dismissed_clipboard_text = null;
   /** Number of suggestions in [suggestions]. */
   public static final int MAX_COUNT = 3;
+  /** Whether the current suggestions represent predicted next words rather than active input completions. */
+  public boolean is_prediction = false;
 
   public Suggestions(Callback c, Config conf)
   {
@@ -76,6 +78,7 @@ public final class Suggestions
     if (!_enabled || list == null || list.isEmpty())
       return;
     clear();
+    is_prediction = true;
     count = Math.min(list.size(), MAX_COUNT);
     for (int i = 0; i < count; i++)
     {
@@ -188,6 +191,7 @@ public final class Suggestions
   public void clear()
   {
     count = 0;
+    is_prediction = false;
     for (int i = 0; i < MAX_COUNT; i++)
       suggestions[i] = null;
     emoji_suggestion = null;

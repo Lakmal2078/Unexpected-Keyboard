@@ -1,0 +1,6 @@
+{
+  "summary":  "Implementation plan for Context-Aware Next-Word Predictions and Sinhala Typing Enhancements in Unexpected Keyboard, detailing n-gram prediction corpora, dynamic on-device learning, multi-token cursor inspection, and candidate bar integration.",
+  "updatedAt":  "2026-10-24T17:51:08.958862353Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}
