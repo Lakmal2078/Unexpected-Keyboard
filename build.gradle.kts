@@ -119,6 +119,10 @@ android {
       isReturnDefaultValues = true
     }
   }
+
+  lint {
+    baseline = file("lint-baseline.xml")
+  }
 }
 
 val buildKeyboardFont by tasks.registering(Exec::class) {
