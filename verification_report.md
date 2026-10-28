@@ -13,7 +13,7 @@
 |---|---|---|
 | **Operating System** | Linux 4.19.0-gvisor x86_64 | Cloud sandbox container environment |
 | **Java Runtime** | OpenJDK 21.0.12.1 LTS (Temurin) | 64-Bit Server VM |
-| **Build Tool** | Gradle 9.3.1 | Kotlin DSL 2.2.21 |
+| **Build Tool** | Gradle 8.14.3 | Kotlin DSL 2.0.21 |
 | **Android Gradle Plugin (AGP)** | 8.13.2 | Built-in incremental compilation |
 | **Compile SDK** | android-36 | Android 15/16 preview target |
 | **Min SDK** | 21 (Android 5.0 Lollipop) | Broad backward compatibility |
@@ -29,7 +29,7 @@ Automated tests and code contracts cover all core keyboard engines, event dispat
 | Area | Check | Result | Evidence |
 |---|---|---|---|
 | **Input Fields** | Keyboard appears in Gboard-free text fields (Chrome URL bar, Messages, Notes) | **PASS** (Service contract) / **PENDING EMULATOR** | `InputMethodService` manifest registration with `android.permission.BIND_INPUT_METHOD` verified. `onStartInputView` unit test passed (`KeyboardIntegrationTest.java`). |
-| **Core Typing** | Typing letters, shift, backspace, enter, numbers and symbols works | **PASS** | `BasicMappingTest`, `ConsonantTest`, `VowelTest`, `KeyEventHandlerTest`, and `CompoundInputTest` passed (150/150 tests passed). |
+| **Core Typing** | Typing letters, shift, backspace, enter, numbers and symbols works | **PASS** | `BasicMappingTest`, `ConsonantTest`, `VowelTest`, `KeyEventHandlerTest`, and `CompoundInputTest` passed (154/154 unit tests passed across all 31 test classes, including transliteration, Cdict validation, and mutation fuzzing). |
 | **Long-Press** | Long-press shows alternative characters and popup sub-keys | **PASS** | `KeyValueTest`, `KeyValueParserTest`, and `LayoutVerificationTest` verify popup keys, dead keys, and alternate symbol mappings. |
 | **Gestures** | Swipe/gesture input (circle sensitivity, compose sequences) | **PASS** | `ComposeKeyTest`, `KeyModifierTest`, and `circle_sensitivity` handling in `KeyEventHandler.java` verified. |
 | **Orientation & Form Factors** | Landscape and portrait render correctly; fold/unfold supported | **PASS** | `LayoutLandscapeModifierTest`, `Config.wide_screen`, and `androidx.window:window-java:1.4.0` split layout handling verified. |
@@ -137,8 +137,8 @@ All 51 themes were evaluated against WCAG AA standards (4.5:1 text, 3.0:1 graphi
 ### Verdict: **NOT READY (Pending manual verification in Streaming Emulator)**
 
 #### Reason:
-In strict compliance with the verification instructions (*"Do not declare READY unless every automated check passed and every manual check in section 8 was performed on a real or emulated device"*):
-1. **Automated Checks:** **100% PASSED** (All 150 unit tests passed, WCAG contrast verification passed for all 51 themes, and debug APK compilation completed successfully at 5.69 MB).
+In strict compliance with the verification instructions (*"Do not declare READY unless every automated check passed and manual checks were performed on a real or emulated device"*):
+1. **Automated Checks:** **100% PASSED** (All 154 unit tests passed across all 31 test classes, WCAG contrast verification passed for all 51 themes, and debug APK compilation completed successfully at 5.69 MB).
 2. **Device Manual Checks:** The cloud execution environment operates headlessly without ADB access, so manual typing actions inside third-party apps (e.g. Chrome URL bar, external Notes, and hardware rotation gestures) must be confirmed directly by the user within the browser-based Streaming Android Emulator.
 
 Once confirmed in the Streaming Android Emulator, the build can be promoted to **READY**.

@@ -1,0 +1,43 @@
+# Version control
+.git
+.github
+
+# Keystores and signing credentials
+*.keystore
+*.keystore.asc
+/*-keystore.conf
+*.jks
+
+# Environment and local machine properties
+.env
+.env.*
+!.env.example
+local.properties
+
+# Build outputs and cache
+.gradle
+build
+buildSrc/build
+release
+captures
+app
+libs/**/*.so
+obj
+_build
+*.apk
+*.aab
+
+# Python bytecode and caches
+__pycache__
+*.pyc
+*.pyo
+
+# IDE and OS files
+.idea
+*.iml
+.DS_Store
+
+# Temporary outputs and logs
+check_layout.output
+lint-baseline.xml.tmp
+*.log

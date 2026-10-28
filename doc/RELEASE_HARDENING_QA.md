@@ -39,6 +39,11 @@ The release build must be signed using the project's configured release signing 
 
 ## AND-CFG-001 — R8/minified release
 
-- Run assembleRelease with release signing credentials.
+> [!NOTE]
+> In `build.gradle.kts`, `isMinifyEnabled` and `isShrinkResources` are currently intentionally set to `false` in the `release` build type to maintain parity with debug runtime behavior while investigating suggestion and dictionary regressions caused by R8/resource shrinking.
+
+When re-enabling R8/minification in production releases:
+- Set `isMinifyEnabled = true` and `isShrinkResources = true` in `build.gradle.kts`.
+- Run `assembleRelease` with release signing credentials.
 - Install the minified APK and verify the IME can be enabled, opened, type text, invoke Settings, and handle keyboard switching.
 - Inspect the R8 mapping and APK size; retain only rules justified by component entry points or actual reflection.

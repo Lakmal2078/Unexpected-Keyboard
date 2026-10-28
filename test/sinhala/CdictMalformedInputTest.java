@@ -1,5 +1,7 @@
 package juloo.cdict;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Random;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -89,6 +91,67 @@ public class CdictMalformedInputTest {
       putInt(data, 9, 32);
       putInt(data, 13, 60);
       assertRejected(data);
+    }
+  }
+
+  @Test public void rejectsBranchWordIndexExceedingWordCount() {
+    byte[] data = new byte[45];
+    data[0] = 'D'; data[1] = 'i'; data[2] = 'c'; data[3] = 1; data[4] = 1;
+    putInt(data, 5, 43); // name at 43
+    putInt(data, 9, 32); // root branch node at 32
+    putInt(data, 13, 42); // freq at 42 -> maxWords = (43 - 42) * 2 = 2 words
+    data[30] = 0; data[31] = 0; // leaf
+    data[32] = (byte)(6 << 4 | 6 << 1); // 24-bit branch ptrs and numbers
+    data[33] = 1;
+    data[34] = 'a';
+    data[35] = (byte)0xFF; data[36] = (byte)0xFF; data[37] = (byte)0xFF; // relative -2, final
+    // Branch number is 99 (exceeds maxWords = 2)
+    data[38] = 0; data[39] = 0; data[40] = 99;
+    data[42] = 1;
+    data[43] = 'm'; data[44] = 0;
+
+    assertRejected(data);
+  }
+
+  @Test public void rejectsAliasKeyOrTargetExceedingWordCount() {
+    byte[] data = new byte[60];
+    data[0] = 'D'; data[1] = 'i'; data[2] = 'c'; data[3] = 1; data[4] = 1;
+    putInt(data, 5, 43); // name at 43
+    putInt(data, 9, 32); // root node at 32
+    putInt(data, 13, 42); // freq at 42 -> maxWords = 2
+    // alias header: 1 alias, format 2 (8-bit)
+    data[17] = (byte)(2 | (2 << 3));
+    data[18] = 0; data[19] = 0; data[20] = 1; // aliases_length = 1
+    putInt(data, 21, 46); // aliases_keys offset
+    putInt(data, 25, 47); // aliases_values offset
+    data[30] = 0; data[31] = 0;
+    data[32] = 0; data[33] = 0; // leaf node
+    data[42] = 1;
+    data[43] = 'm'; data[44] = 0;
+    // aliases_keys at 46 has key = 50 (exceeds maxWords = 2)
+    data[46] = 50;
+    data[47] = 0;
+
+    assertRejected(data);
+  }
+
+  @Test public void mutationFuzzingAgainstRealDictionary() throws Exception {
+    File dictFile = new File("assets/dict/si.dict");
+    if (!dictFile.exists()) return;
+    byte[] validBytes = Files.readAllBytes(dictFile.toPath());
+    Random random = new Random(0x434449);
+    for (int i = 0; i < 200; i++) {
+      byte[] mutated = validBytes.clone();
+      int mutations = 1 + random.nextInt(5);
+      for (int m = 0; m < mutations; m++) {
+        int pos = random.nextInt(mutated.length);
+        mutated[pos] = (byte) random.nextInt(256);
+      }
+      try {
+        Cdict.of_bytes(mutated);
+      } catch (Cdict.ConstructionError expected) {
+        // Expected parser rejection of malformed or corrupted data
+      }
     }
   }
 }

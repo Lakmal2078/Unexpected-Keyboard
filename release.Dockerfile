@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget unzip \
     && mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest"
 
 RUN yes | sdkmanager --licenses
-RUN sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+RUN sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0" "platforms;android-35" "build-tools;35.0.0"
 
 WORKDIR /w
 COPY --chown=gradle:gradle . .

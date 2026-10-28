@@ -1,6 +1,10 @@
-name: Android pull request checks
+name: Android CI and Device Tests
 
 on:
+  push:
+    branches:
+      - main
+      - master
   pull_request:
     branches:
       - main

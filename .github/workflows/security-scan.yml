@@ -1,12 +1,14 @@
-name: Security and Dependency Scan
+name: Security, Vulnerability and Dependency Scan
 
 on:
   push:
     branches:
       - master
+      - main
   pull_request:
     branches:
       - master
+      - main
   schedule:
     # Run weekly on Monday at 04:00 UTC
     - cron: '0 4 * * 1'
@@ -18,7 +20,7 @@ permissions:
 
 jobs:
   dependency-and-lint:
-    name: Dependency & Code Quality Audit
+    name: Dependency, Lint & Security Vulnerability Audit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -58,3 +60,19 @@ jobs:
           name: lint-report
           path: build/reports/lint-results-debug.html
           if-no-files-found: error
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+        continue-on-error: true

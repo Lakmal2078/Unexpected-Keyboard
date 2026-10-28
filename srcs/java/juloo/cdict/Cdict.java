@@ -101,7 +101,7 @@ public class Cdict {
     return (data[off] << 16) | ((data[off + 1] & 0xFF) << 8) | (data[off + 2] & 0xFF);
   }
 
-  private static void validateTrie(byte[] data, int root, int trieStart, int trieEnd) throws ConstructionError {
+  private static void validateTrie(byte[] data, int root, int trieStart, int trieEnd, int maxWords) throws ConstructionError {
     // Iterative traversal avoids attacker-controlled recursion depth and detects cycles.
     // The generated trie is a DAG: the builder deduplicates equivalent DFA
     // states, so multiple transitions may legitimately target the same node.
@@ -174,6 +174,10 @@ public class Cdict {
           throw new ConstructionError("Truncated trie branch arrays");
         }
         for (int i = 0; i < count; i++) {
+          int branchNumber = sized_int_unsigned(data, numberFormat, i, numbers);
+          if (branchNumber > maxWords) {
+            throw new ConstructionError("Branch word index out of bounds: " + branchNumber + " > " + maxWords);
+          }
           int rawPointer = readSignedPacked(data, branchFormat, i, branches);
           int relative = rawPointer & ~1;
           if (relative == 0) {
@@ -210,6 +214,7 @@ public class Cdict {
     if (nameOffset <= frequencyOffset) {
       throw new ConstructionError("Dictionary name overlaps trie/frequency data");
     }
+    int maxWords = Math.max(0, (nameOffset - frequencyOffset) * 2);
     if (aliasesLength < 0 || aliasesLength > 0xFFFFFF) {
       throw new ConstructionError("Invalid alias table length");
     }
@@ -223,8 +228,18 @@ public class Cdict {
       int valueBytes = packedArraySize(valueFormat, aliasesLength);
       requireRange(data, aliasesKeys, keyBytes, "alias keys");
       requireRange(data, aliasesValues, valueBytes, "alias values");
+      for (int i = 0; i < aliasesLength; i++) {
+        int key = sized_int_unsigned(data, keyFormat, i, aliasesKeys);
+        int target = sized_int_unsigned(data, valueFormat, i, aliasesValues);
+        if (key >= maxWords) {
+          throw new ConstructionError("Alias key out of frequency table bounds: " + key + " >= " + maxWords);
+        }
+        if (target >= maxWords) {
+          throw new ConstructionError("Alias target out of frequency table bounds: " + target + " >= " + maxWords);
+        }
+      }
     }
-    validateTrie(data, rootOffset, tableEnd, frequencyOffset);
+    validateTrie(data, rootOffset, tableEnd, frequencyOffset, maxWords);
   }
 
   public static Cdict[] of_bytes(byte[] data) throws ConstructionError {

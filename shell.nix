@@ -1,16 +1,23 @@
-{ pkgs ? import <nixpkgs> {
-  config.android_sdk.accept_license = true;
-  config.allowUnfree = true;
-} }:
+# Reproducible developer shell with pinned nixpkgs
+{ nixpkgs ? fetchTarball {
+    name = "nixos-24.05-pinned";
+    url = "https://github.com/NixOS/nixpkgs/archive/05bbf6177181fc20e4d7bfb91705e1ecb2d10523.tar.gz";
+    sha256 = "0mgq3l2ndfpg992cdh5m5c37w8x1a57c5kcl01l2f558a2d54839";
+  }
+, pkgs ? import nixpkgs {
+    config.android_sdk.accept_license = true;
+    config.allowUnfree = true;
+  }
+}:
 
 let
   jdk = pkgs.openjdk17;
   build_tools_version = "35.0.0";
 
   android = pkgs.androidenv.composeAndroidPackages {
-    buildToolsVersions = [ build_tools_version ];
-    platformVersions = [ "36" ];
-    abiVersions = [ "armeabi-v7a" ];
+    buildToolsVersions = [ build_tools_version "36.0.0" ];
+    platformVersions = [ "35" "36" ];
+    abiVersions = [ "armeabi-v7a" "x86_64" ];
     includeNDK = true;
     ndkVersion = "27.0.12077973";
   };
