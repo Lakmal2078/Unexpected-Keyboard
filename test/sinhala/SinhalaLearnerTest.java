@@ -110,7 +110,7 @@ public class SinhalaLearnerTest
     secondActiveLearner.recordCorrection("amma", "අම්මා");
     assertFalse(fakePrefs.getAll().isEmpty());
 
-    learner.clearLearnedData();
+    SinhalaLearner.clearAllLearnedData(fakePrefs);
 
     assertTrue("First active learner cache must be empty",
         learner.getLearnedPredictions("මම").isEmpty());
