@@ -82,4 +82,7 @@
   <PreferenceCategory android:title="@string/pref_category_clipboard">
     <ListPreference android:key="clipboard_history_duration" android:title="@string/pref_clipboard_history_duration" android:summary="%s" android:defaultValue="5" android:entries="@array/pref_clipboard_duration_entries" android:entryValues="@array/pref_clipboard_duration_values"/>
   </PreferenceCategory>
+  <PreferenceCategory android:title="@string/pref_category_privacy">
+    <Preference android:key="clear_sinhala_learned_data" android:title="@string/pref_clear_sinhala_learned_data_title" android:summary="@string/pref_clear_sinhala_learned_data_summary"/>
+  </PreferenceCategory>
 </PreferenceScreen>
