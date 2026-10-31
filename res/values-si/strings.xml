@@ -293,4 +293,12 @@
     <string name="pref_clear_sinhala_learned_data_action">දත්ත මකන්න</string>
     <string name="pref_clear_sinhala_learned_data_done">ඉගෙනගත් සිංහල දත්ත මකා දැමුවා</string>
     <string name="pref_clear_sinhala_learned_data_failed">ඉගෙනගත් දත්ත මැකීමට නොහැකි විය. නැවත උත්සාහ කරන්න.</string>
+    <string name="pref_category_maintenance">නඩත්තුව</string>
+    <string name="pref_reset_keyboard_settings_title">යතුරුපුවරු සැකසුම් පෙරනිමියට හරවන්න</string>
+    <string name="pref_reset_keyboard_settings_summary">සියලු යතුරුපුවරු සැකසුම් මුල් අගයන්ට නැවත සකසන්න. ඉගෙනගත් සිංහල දත්ත සුරැකේ.</string>
+    <string name="pref_reset_keyboard_settings_confirm_title">යතුරුපුවරු සැකසුම් නැවත සකසන්නද?</string>
+    <string name="pref_reset_keyboard_settings_confirm_message">තේමා, පිරිසැලසුම්, යතුරු හැඩය, ප්‍රමාණය සහ හැසිරීම් සැකසුම් පෙරනිමි අගයන්ට හැරවේ. ඉගෙනගත් සිංහල දත්ත මැකෙන්නේ නැත.</string>
+    <string name="pref_reset_keyboard_settings_action">සැකසුම් නැවත සකසන්න</string>
+    <string name="pref_reset_keyboard_settings_done">යතුරුපුවරු සැකසුම් පෙරනිමි අගයන්ට හරවා ඇත</string>
+    <string name="pref_reset_keyboard_settings_failed">සැකසුම් නැවත සැකසිය නොහැකි විය. නැවත උත්සාහ කරන්න.</string>
 </resources>

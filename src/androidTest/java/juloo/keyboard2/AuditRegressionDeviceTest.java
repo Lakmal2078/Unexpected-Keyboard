@@ -7,12 +7,10 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.os.Build;
 import android.view.ContextThemeWrapper;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -59,6 +57,49 @@ public class AuditRegressionDeviceTest
     {
       SharedPreferences.Editor editor = keyboardPrefs.edit();
       if (hadValue) editor.putBoolean(key, original); else editor.remove(key);
+      editor.commit();
+    }
+  }
+
+  @Test
+  public void resetRestoresKeyboardDefaultsAndPreservesLearnedSinhalaData()
+  {
+    Context context = ApplicationProvider.getApplicationContext();
+    SharedPreferences prefs = DirectBootAwarePreferences.get_shared_preferences(context);
+    SharedPreferences learned = DirectBootAwarePreferences.get_protected_prefs(
+        context, "sinhala_learned_bigrams");
+    Map<String, ?> previousPrefs = new HashMap<>(prefs.getAll());
+    String marker = "reset_test_preservation_marker";
+    boolean hadMarker = learned.contains(marker);
+    String previousMarker = learned.getString(marker, null);
+    try
+    {
+      assertTrue(prefs.edit()
+          .putBoolean("sinhala_transliteration", false)
+          .putString("theme", "dracula")
+          .putString("key_shape", "pill")
+          .putBoolean("need_migration", true)
+          .commit());
+      assertTrue(learned.edit().putString(marker, "keep").commit());
+
+      assertTrue("Reset operation should commit", SettingsActivity.resetKeyboardSettings(prefs, Build.VERSION.SDK_INT >= 24));
+
+      assertTrue("Sinhala transliteration should use its enabled runtime default", prefs.getBoolean("sinhala_transliteration", true));
+      assertEquals("Theme should return to its default", Config.DEFAULT_THEME, prefs.getString("theme", Config.DEFAULT_THEME));
+      assertEquals("Key shape should return to its default", "theme", prefs.getString("key_shape", "theme"));
+      assertEquals("Number row should return to its default", "no_number_row", prefs.getString("number_row", "no_number_row"));
+      assertEquals("Long-press interval should return to its default", 65, prefs.getInt("longpress_interval", 65));
+      assertEquals("Config migration should initialize the current version", 6, prefs.getInt("version", 0));
+      if (Build.VERSION.SDK_INT >= 24)
+        assertFalse("Legacy encrypted preferences must not be restored", prefs.getBoolean("need_migration", true));
+      assertEquals("Reset must preserve learned Sinhala data", "keep", learned.getString(marker, null));
+    }
+    finally
+    {
+      restorePreferences(prefs, previousPrefs);
+      SharedPreferences.Editor editor = learned.edit();
+      if (hadMarker) editor.putString(marker, previousMarker);
+      else editor.remove(marker);
       editor.commit();
     }
   }
@@ -129,6 +170,9 @@ public class AuditRegressionDeviceTest
       screenshot.recycle();
       scenario.onActivity(activity -> dialog[0].dismiss());
     }
+  }
+
+  @Test
   public void SinhalaLearnerPersistsAndClearActionRemovesDiskAndMemoryData() throws Exception
   {
     Context context = ApplicationProvider.getApplicationContext();
