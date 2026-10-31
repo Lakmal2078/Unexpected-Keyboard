@@ -87,10 +87,10 @@ jobs:
           script: |
             ./gradlew connectedDebugAndroidTest
             mkdir -p build/uiux-screenshots
-            for screenshot in theme-picker-light.png theme-picker-dark.png; do
-              adb exec-out run-as juloo.keyboard2.debug cat "files/unexpected-keyboard-uiux/$screenshot" > "build/uiux-screenshots/$screenshot"
-              test -s "build/uiux-screenshots/$screenshot"
-            done
+            adb exec-out run-as juloo.keyboard2.debug cat files/unexpected-keyboard-uiux/theme-picker-light.png > build/uiux-screenshots/theme-picker-light.png
+            test -s build/uiux-screenshots/theme-picker-light.png
+            adb exec-out run-as juloo.keyboard2.debug cat files/unexpected-keyboard-uiux/theme-picker-dark.png > build/uiux-screenshots/theme-picker-dark.png
+            test -s build/uiux-screenshots/theme-picker-dark.png
 
       - name: Upload theme picker screenshots
         if: always()
