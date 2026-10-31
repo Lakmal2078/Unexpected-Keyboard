@@ -174,7 +174,7 @@ public class Config
       keyboardHeightPercent = _prefs.getInt(foldable_unfolded ? "keyboard_height_unfolded" : "keyboard_height", 35);
     }
     layouts = LayoutsPreference.load_from_preferences(res, _prefs);
-    inverse_numpad = _prefs.getString("numpad_layout", "default").equals("low_first");
+    inverse_numpad = _prefs.getString("numpad_layout", "high_first").equals("low_first");
     String number_row = _prefs.getString("number_row", "no_symbols");
     add_number_row = !number_row.equals("no_number_row");
     number_row_symbols = number_row.equals("symbols");
