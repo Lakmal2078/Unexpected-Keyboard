@@ -1,7 +1,10 @@
 package juloo.keyboard2;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -11,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -133,15 +137,16 @@ public class AuditRegressionDeviceTest
 
     try (ActivityScenario<SettingsActivity> scenario = ActivityScenario.launch(SettingsActivity.class))
     {
-      captureThemePickerScreenshot(scenario, android.R.style.Theme_DeviceDefault_Light,
+      captureThemePickerScreenshot(context, scenario, android.R.style.Theme_DeviceDefault_Light,
           new File(screenshotDirectory, "theme-picker-light.png"));
-      captureThemePickerScreenshot(scenario, android.R.style.Theme_DeviceDefault,
+      captureThemePickerScreenshot(context, scenario, android.R.style.Theme_DeviceDefault,
           new File(screenshotDirectory, "theme-picker-dark.png"));
     }
   }
 
-  private static void captureThemePickerScreenshot(ActivityScenario<SettingsActivity> scenario,
-      int themeResource, File output) throws IOException
+  private static void captureThemePickerScreenshot(Context context,
+      ActivityScenario<SettingsActivity> scenario, int themeResource, File output)
+      throws IOException
   {
     final AlertDialog[] dialog = new AlertDialog[1];
     scenario.onActivity(activity -> {
@@ -157,10 +162,14 @@ public class AuditRegressionDeviceTest
     instrumentation.waitForIdleSync();
     Bitmap screenshot = instrumentation.getUiAutomation().takeScreenshot();
     assertNotNull("Theme picker screenshot must be captured", screenshot);
-    try (FileOutputStream stream = new FileOutputStream(output))
+    try
     {
-      assertTrue("Theme picker screenshot must be written",
-          screenshot.compress(Bitmap.CompressFormat.PNG, 100, stream));
+      try (FileOutputStream stream = new FileOutputStream(output))
+      {
+        assertTrue("Theme picker screenshot must be written",
+            screenshot.compress(Bitmap.CompressFormat.PNG, 100, stream));
+      }
+      publishScreenshotToMediaStore(context, screenshot, output.getName());
     }
     finally
     {
@@ -169,6 +178,48 @@ public class AuditRegressionDeviceTest
     }
     assertTrue("Captured screenshot must be written and non-empty",
         output.isFile() && output.length() > 0);
+  }
+
+  /** Publish screenshots to shared media storage so CI can pull them after instrumentation exits. */
+  private static void publishScreenshotToMediaStore(Context context, Bitmap screenshot,
+      String fileName) throws IOException
+  {
+    ContentValues values = new ContentValues();
+    values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+    values.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
+    if (Build.VERSION.SDK_INT >= 29)
+    {
+      values.put(MediaStore.MediaColumns.RELATIVE_PATH,
+          Environment.DIRECTORY_PICTURES + "/unexpected-keyboard-uiux");
+      values.put(MediaStore.MediaColumns.IS_PENDING, 1);
+    }
+
+    Uri uri = context.getContentResolver().insert(
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    if (uri == null)
+      throw new IOException("Could not create a shared screenshot media entry");
+
+    try
+    {
+      try (OutputStream stream = context.getContentResolver().openOutputStream(uri))
+      {
+        if (stream == null
+            || !screenshot.compress(Bitmap.CompressFormat.PNG, 100, stream))
+          throw new IOException("Could not write screenshot to shared media storage");
+      }
+      if (Build.VERSION.SDK_INT >= 29)
+      {
+        ContentValues publish = new ContentValues();
+        publish.put(MediaStore.MediaColumns.IS_PENDING, 0);
+        if (context.getContentResolver().update(uri, publish, null, null) != 1)
+          throw new IOException("Could not publish screenshot media entry");
+      }
+    }
+    catch (IOException e)
+    {
+      context.getContentResolver().delete(uri, null, null);
+      throw e;
+    }
   }
 
   @Test
