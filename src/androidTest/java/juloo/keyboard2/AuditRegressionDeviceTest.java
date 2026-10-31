@@ -7,12 +7,10 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.os.Build;
 import android.view.ContextThemeWrapper;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -129,6 +127,9 @@ public class AuditRegressionDeviceTest
       screenshot.recycle();
       scenario.onActivity(activity -> dialog[0].dismiss());
     }
+  }
+
+  @Test
   public void SinhalaLearnerPersistsAndClearActionRemovesDiskAndMemoryData() throws Exception
   {
     Context context = ApplicationProvider.getApplicationContext();
