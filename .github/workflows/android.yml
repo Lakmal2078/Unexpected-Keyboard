@@ -84,13 +84,10 @@ jobs:
           api-level: 35
           arch: x86_64
           target: default
-          script: ./gradlew connectedDebugAndroidTest
-
-      - name: Collect theme picker screenshots
-        if: always()
-        run: |
-          mkdir -p build/uiux-screenshots
-          adb pull /sdcard/Android/data/juloo.keyboard2.debug/files/Pictures/unexpected-keyboard-uiux/. build/uiux-screenshots/ || true
+          script: |
+            ./gradlew connectedDebugAndroidTest
+            mkdir -p build/uiux-screenshots
+            adb pull /sdcard/Android/data/juloo.keyboard2.debug/files/Pictures/unexpected-keyboard-uiux/. build/uiux-screenshots/ || true
 
       - name: Upload theme picker screenshots
         if: always()
