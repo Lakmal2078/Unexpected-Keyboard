@@ -281,6 +281,15 @@ public class Keyboard2View extends View
     return widthSpecSize > 0 ? widthSpecSize : displayWidth;
   }
 
+  /** Limit row height to the space actually offered by the IME window. */
+  static float resolveMaxRowHeight(int availableHeight, float verticalMargins,
+      float keysHeight)
+  {
+    if (availableHeight <= 0 || keysHeight <= 0)
+      return Float.POSITIVE_INFINITY;
+    return Math.max(1f, (availableHeight - verticalMargins) / keysHeight);
+  }
+
   @Override
   public void onMeasure(int wSpec, int hSpec)
   {
@@ -290,7 +299,13 @@ public class Keyboard2View extends View
     _marginRight = Math.max(_config.horizontal_margin, _insets_right);
     _marginBottom = _config.margin_bottom + _insets_bottom;
     _keyWidth = (width - _marginLeft - _marginRight) / _keyboard.keysWidth;
-    _tc = new Theme.Computed(_theme, _config, _keyWidth, _keyboard);
+    int heightMode = MeasureSpec.getMode(hSpec);
+    int availableHeight = MeasureSpec.getSize(hSpec);
+    float maxRowHeight = (heightMode == MeasureSpec.UNSPECIFIED || availableHeight <= 0)
+        ? Float.POSITIVE_INFINITY
+        : resolveMaxRowHeight(availableHeight, _config.marginTop + _marginBottom,
+            _keyboard.keysHeight);
+    _tc = new Theme.Computed(_theme, _config, _keyWidth, _keyboard, maxRowHeight);
     // Compute the size of labels based on the width or the height of keys. The
     // margin around keys is taken into account. Keys normal aspect ratio is
     // assumed to be 3/2 for a 10 columns layout. It's generally more, the
@@ -304,7 +319,7 @@ public class Keyboard2View extends View
     int height =
       (int)(_tc.row_height * _keyboard.keysHeight
           + _config.marginTop + _marginBottom);
-    setMeasuredDimension(width, height);
+    setMeasuredDimension(resolveSize(width, wSpec), resolveSize(height, hSpec));
     _accessibilityHelper.invalidateRoot();
   }
 
