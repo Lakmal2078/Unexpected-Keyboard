@@ -175,7 +175,7 @@ public class Config
     }
     layouts = LayoutsPreference.load_from_preferences(res, _prefs);
     inverse_numpad = _prefs.getString("numpad_layout", "high_first").equals("low_first");
-    String number_row = _prefs.getString("number_row", "no_symbols");
+    String number_row = _prefs.getString("number_row", "no_number_row");
     add_number_row = !number_row.equals("no_number_row");
     number_row_symbols = number_row.equals("symbols");
     suggestions_enabled = _prefs.getBoolean("suggestions", true);
