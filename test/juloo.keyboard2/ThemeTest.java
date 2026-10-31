@@ -61,7 +61,7 @@ public class ThemeTest
         org.mockito.Mockito.mock(android.content.SharedPreferences.Editor.class);
     org.mockito.Mockito.when(prefs.getInt("version", 0)).thenReturn(4);
     org.mockito.Mockito.when(prefs.edit()).thenReturn(editor);
-    org.mockito.Mockito.when(editor.putInt("version", 5)).thenReturn(editor);
+    org.mockito.Mockito.when(editor.putInt("version", 6)).thenReturn(editor);
     org.mockito.Mockito.when(prefs.contains("theme")).thenReturn(true);
     org.mockito.Mockito.when(prefs.contains("day_theme")).thenReturn(true);
     org.mockito.Mockito.when(prefs.contains("night_theme")).thenReturn(true);
@@ -85,6 +85,39 @@ public class ThemeTest
     org.mockito.Mockito.verify(editor).putStringSet(org.mockito.ArgumentMatchers.eq("favorite_themes"),
         org.mockito.ArgumentMatchers.eq(new java.util.HashSet<>(
             java.util.Arrays.asList("monet", "lanka_maroon"))));
+    org.mockito.Mockito.verify(editor).apply();
+  }
+
+  @Test
+  public void testShowNumpadPreferenceNormalization()
+  {
+    assertEquals("never", Config.migrateShowNumpadPreference("1"));
+    assertEquals("never", Config.migrateShowNumpadPreference(null));
+    assertEquals("never", Config.migrateShowNumpadPreference("invalid"));
+    assertEquals("never", Config.migrateShowNumpadPreference("never"));
+    assertEquals("landscape", Config.migrateShowNumpadPreference("landscape"));
+    assertEquals("always", Config.migrateShowNumpadPreference("always"));
+  }
+
+  @Test
+  public void testVersionFiveInvalidNumpadDefaultIsMigrated()
+  {
+    android.content.SharedPreferences prefs =
+        org.mockito.Mockito.mock(android.content.SharedPreferences.class);
+    android.content.SharedPreferences.Editor editor =
+        org.mockito.Mockito.mock(android.content.SharedPreferences.Editor.class);
+    org.mockito.Mockito.when(prefs.getInt("version", 0)).thenReturn(5);
+    org.mockito.Mockito.when(prefs.edit()).thenReturn(editor);
+    org.mockito.Mockito.when(editor.putInt("version", 6)).thenReturn(editor);
+    org.mockito.Mockito.when(prefs.contains("show_numpad")).thenReturn(true);
+    org.mockito.Mockito.when(prefs.getString("show_numpad", "never")).thenReturn("1");
+    org.mockito.Mockito.when(editor.putString(org.mockito.ArgumentMatchers.anyString(),
+        org.mockito.ArgumentMatchers.anyString())).thenReturn(editor);
+
+    Config.migrate(prefs);
+
+    org.mockito.Mockito.verify(editor).putString("show_numpad", "never");
+    org.mockito.Mockito.verify(editor).putInt("version", 6);
     org.mockito.Mockito.verify(editor).apply();
   }
 
