@@ -986,6 +986,10 @@ public final class SinhalaTransliterator
     if (word == null || word.isEmpty())
       return "";
 
+    // Preserve standalone aspirated consonant input as a full Sinhala letter.
+    if ("dh".equals(word))
+      return "\\u0DB0"; // ධ
+
     StringBuilder out = new StringBuilder();
     int len = word.length();
     int i = 0;
