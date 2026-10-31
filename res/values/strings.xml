@@ -294,5 +294,13 @@
     <string name="pref_clear_sinhala_learned_data_action">Clear data</string>
     <string name="pref_clear_sinhala_learned_data_done">Learned Sinhala data cleared</string>
     <string name="pref_clear_sinhala_learned_data_failed">Could not clear learned data. Please try again.</string>
+    <string name="pref_category_maintenance">Maintenance</string>
+    <string name="pref_reset_keyboard_settings_title">Reset keyboard settings</string>
+    <string name="pref_reset_keyboard_settings_summary">Restore all keyboard preferences to their defaults. Learned Sinhala data is kept.</string>
+    <string name="pref_reset_keyboard_settings_confirm_title">Reset keyboard settings?</string>
+    <string name="pref_reset_keyboard_settings_confirm_message">This resets themes, layouts, key shape, size, and behavior preferences to their defaults. Learned Sinhala data is not deleted.</string>
+    <string name="pref_reset_keyboard_settings_action">Reset settings</string>
+    <string name="pref_reset_keyboard_settings_done">Keyboard settings restored to defaults</string>
+    <string name="pref_reset_keyboard_settings_failed">Could not reset keyboard settings. Please try again.</string>
 </resources>
 
