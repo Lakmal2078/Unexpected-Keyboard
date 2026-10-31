@@ -193,7 +193,7 @@ public class Config
     vibrate_custom = _prefs.getBoolean("vibrate_custom", false);
     vibrate_duration = _prefs.getInt("vibrate_duration", 20);
     longPressTimeout = _prefs.getInt("longpress_timeout", 600);
-    longPressInterval = _prefs.getInt("longpress_interval", 65);
+    longPressInterval = _prefs.getInt("longpress_interval", 25);
     keyrepeat_enabled = _prefs.getBoolean("keyrepeat_enabled", true);
     margin_bottom = get_dip_pref_oriented(dm, "margin_bottom", 7, 3);
     key_vertical_margin = get_dip_pref(dm, "key_vertical_margin", 1.5f) / 100;
