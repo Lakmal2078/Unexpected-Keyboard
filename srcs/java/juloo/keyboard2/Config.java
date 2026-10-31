@@ -7,7 +7,9 @@ import android.graphics.Typeface;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Map;
 import juloo.cdict.Cdict;
 import juloo.keyboard2.dict.Dictionaries;
@@ -473,7 +475,47 @@ public class Config
 
   /** Config migrations. */
 
-  private static int CONFIG_VERSION = 4;
+  private static int CONFIG_VERSION = 5;
+
+  /** Map legacy theme preferences to the supported curated theme catalog. */
+  static String migrateThemePreference(String theme)
+  {
+    if (theme == null) return DEFAULT_THEME;
+    switch (theme)
+    {
+      case "system": case "dark": case "light": case "black": case "oled_black":
+      case "white": case "monet": case "graphite_pro": case "gruvbox_dark":
+      case "solarized_dark": case "dracula": case "nord": case "tokyo_night":
+      case "catppuccin_mocha": case "catppuccin_latte": case "sinhala_sand":
+      case "lanka_maroon": case "high_contrast":
+        return theme;
+      case "monetlight": case "monetdark":
+        return "monet";
+      case "gruvbox_light": case "everforestlight": case "sepia_warm":
+      case "desert": case "rose_quartz": case "ocean_breeze": case "citrus_pop":
+      case "mint_matcha": case "glass": case "soft_3d": case "zen_minimal":
+        return "light";
+      case "epaper": return "white";
+      case "epaperblack": case "altblack": return "black";
+      case "rosepine": case "midnight_purple": case "midnight_ocean":
+      case "arctic_blue": case "cobalt": case "quiet_teal": case "copper_night":
+      case "berry_noir": case "aurora_flow": case "pixel_retro":
+      case "unexpected_keyboard": case "lanka_blue":
+        return "graphite_pro";
+      case "jungle": case "emerald_forest": case "pine": case "forest_mist":
+        return "sinhala_sand";
+      case "cyberpunk_neon": case "matrix_green": case "sunset_glow":
+      case "royal_gold": case "quantum_neon": case "sinhala_tech":
+      case "amoled_cyan": case "cyber_purple": case "neon_rose":
+      case "gradientpurplepink": case "sinhala_heritage": case "aurora":
+      case "ocean_teal":
+        return "lanka_maroon";
+      case "high_contrast_yellow":
+        return "high_contrast";
+      default:
+        return DEFAULT_THEME;
+    }
+  }
 
   public static void migrate(SharedPreferences prefs)
   {
@@ -514,6 +556,22 @@ public class Config
             prefs.getBoolean("switch_input_immediate", false) ? "prev" : "picker");
         // Fallthrough
       case 4:
+        // Curate the theme catalog without discarding existing user choices.
+        if (prefs.contains("theme"))
+          e.putString("theme", migrateThemePreference(prefs.getString("theme", DEFAULT_THEME)));
+        if (prefs.contains("day_theme"))
+          e.putString("day_theme", migrateThemePreference(prefs.getString("day_theme", "light")));
+        if (prefs.contains("night_theme"))
+          e.putString("night_theme", migrateThemePreference(prefs.getString("night_theme", "dark")));
+        Set<String> oldFavorites = prefs.getStringSet("favorite_themes", null);
+        if (oldFavorites != null)
+        {
+          Set<String> migratedFavorites = new HashSet<>();
+          for (String favorite : oldFavorites)
+            migratedFavorites.add(migrateThemePreference(favorite));
+          e.putStringSet("favorite_themes", migratedFavorites);
+        }
+        // Fallthrough
       default: break;
     }
     e.apply();
