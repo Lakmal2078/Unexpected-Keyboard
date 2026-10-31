@@ -206,7 +206,7 @@ final class ThemePicker
 
     // Build theme cards once
     buildCards(context, gallery, values, entries, selected, borders[0], cardHolders,
-        colorCache, favorites, prefs, () -> {
+        colorCache, favorites, () -> {
           if (activeCategory[0] == ThemeCategory.FAVORITES)
           {
             filterCards(cardHolders, noResultsView, currentQuery[0], activeCategory[0], favorites);
@@ -271,7 +271,7 @@ final class ThemePicker
 
   private static void buildCards(Context context, LinearLayout gallery, String[] values,
       String[] entries, String[] selected, boolean borders, List<CardHolder> cardHolders,
-      Map<String, int[]> colorCache, Set<String> favorites, SharedPreferences prefs,
+      Map<String, int[]> colorCache, Set<String> favorites,
       Runnable onFavoriteChanged)
   {
     if (values == null) return;
@@ -334,10 +334,6 @@ final class ThemePicker
           star.setText("★");
           star.setTextColor(0xFFF9A825);
           star.setContentDescription("Favorited");
-        }
-        if (prefs != null)
-        {
-          prefs.edit().putStringSet(PREF_FAVORITES, new HashSet<>(favorites)).apply();
         }
         if (onFavoriteChanged != null)
         {
