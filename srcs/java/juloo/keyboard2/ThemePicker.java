@@ -229,6 +229,7 @@ final class ThemePicker
       chip.setText(getCategoryLabel(context, cat));
       chip.setTextSize(13);
       chip.setPadding(dp(context, 12), dp(context, 6), dp(context, 12), dp(context, 6));
+      chip.setMinWidth(dp(context, 48));
       chip.setMinHeight(dp(context, 48));
       chip.setGravity(Gravity.CENTER);
       LinearLayout.LayoutParams chipLp = new LinearLayout.LayoutParams(-2, -2);
