@@ -77,7 +77,7 @@ final class ThemePicker
     }
   }
 
-  private static final class PickerPalette
+  static final class PickerPalette
   {
     final int cardBackground;
     final int selectedCardBackground;
