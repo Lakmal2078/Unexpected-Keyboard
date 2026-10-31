@@ -229,6 +229,8 @@ final class ThemePicker
       chip.setText(getCategoryLabel(context, cat));
       chip.setTextSize(13);
       chip.setPadding(dp(context, 12), dp(context, 6), dp(context, 12), dp(context, 6));
+      chip.setMinHeight(dp(context, 48));
+      chip.setGravity(Gravity.CENTER);
       LinearLayout.LayoutParams chipLp = new LinearLayout.LayoutParams(-2, -2);
       chipLp.rightMargin = dp(context, 6);
       chip.setLayoutParams(chipLp);
@@ -360,6 +362,9 @@ final class ThemePicker
       star.setTextSize(20);
       star.setTextColor(isFav ? 0xFFF9A825 : palette.secondaryText);
       star.setPadding(dp(context, 8), dp(context, 2), dp(context, 8), dp(context, 2));
+      star.setMinWidth(dp(context, 48));
+      star.setMinHeight(dp(context, 48));
+      star.setGravity(Gravity.CENTER);
       star.setContentDescription(isFav
           ? getStringSafe(context, R.string.pref_theme_favorite_remove, "Remove from favorites")
           : getStringSafe(context, R.string.pref_theme_favorite_add, "Add to favorites"));
