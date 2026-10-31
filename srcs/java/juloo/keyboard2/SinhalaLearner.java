@@ -257,7 +257,8 @@ public final class SinhalaLearner
 
   public synchronized void clearLearnedData()
   {
-    clearActiveCaches();
+    _memoryCache.clear();
+    _correctionsCache.clear();
     if (_prefs != null)
       _prefs.edit().clear().apply();
   }
