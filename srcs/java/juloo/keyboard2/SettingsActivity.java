@@ -1,8 +1,11 @@
 package juloo.keyboard2;
 
+import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.widget.Toast;
 
 public class SettingsActivity extends PreferenceActivity
 {
@@ -28,6 +31,35 @@ public class SettingsActivity extends PreferenceActivity
     findPreference("horizontal_margin_landscape_unfolded").setEnabled(foldableDevice);
     findPreference("keyboard_height_unfolded").setEnabled(foldableDevice);
     findPreference("keyboard_height_landscape_unfolded").setEnabled(foldableDevice);
+
+    Preference clearLearnedData = findPreference("clear_sinhala_learned_data");
+    if (clearLearnedData != null)
+    {
+      clearLearnedData.setOnPreferenceClickListener(preference -> {
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.pref_clear_sinhala_learned_data_confirm_title)
+            .setMessage(R.string.pref_clear_sinhala_learned_data_confirm_message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.pref_clear_sinhala_learned_data_action, (dialog, which) -> {
+              try
+              {
+                int message = SinhalaLearner.clearAllLearnedData(this)
+                    ? R.string.pref_clear_sinhala_learned_data_done
+                    : R.string.pref_clear_sinhala_learned_data_failed;
+                Toast.makeText(this, message,
+                    message == R.string.pref_clear_sinhala_learned_data_done
+                        ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG).show();
+              }
+              catch (Exception e)
+              {
+                Toast.makeText(this, R.string.pref_clear_sinhala_learned_data_failed,
+                    Toast.LENGTH_LONG).show();
+              }
+            })
+            .show();
+        return true;
+      });
+    }
   }
 
   void fallbackEncrypted()

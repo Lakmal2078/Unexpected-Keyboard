@@ -104,14 +104,48 @@ public class SinhalaLearnerTest
   @Test
   public void testClearLearnedData()
   {
+    SinhalaLearner secondActiveLearner = new SinhalaLearner(fakePrefs);
     learner.recordTransition("මම", "යනවා");
     learner.recordTransition("ඔබ", "එනවා");
+    secondActiveLearner.recordCorrection("amma", "අම්මා");
+    secondActiveLearner.recordTransition("මම", "යනවා");
+    assertFalse("Second learner cache must contain a prediction before clearing",
+        secondActiveLearner.getLearnedPredictions("මම").isEmpty());
     assertFalse(fakePrefs.getAll().isEmpty());
+
+    assertTrue(SinhalaLearner.clearAllLearnedData(fakePrefs));
+
+    assertTrue("First active learner cache must be empty",
+        learner.getLearnedPredictions("මම").isEmpty());
+    assertTrue("Other active learner cache must be empty",
+        secondActiveLearner.getLearnedPredictions("මම").isEmpty());
+    assertNull("Learned corrections must be cleared",
+        secondActiveLearner.getLearnedCorrection("amma"));
+    assertTrue("SharedPreferences must be empty", fakePrefs.getAll().isEmpty());
+  }
+
+  @Test
+  public void testClearAllLearnedDataRejectsMissingPreferences()
+  {
+    assertFalse(SinhalaLearner.clearAllLearnedData((SharedPreferences)null));
+  }
+
+  @Test
+  public void testInstanceClearDoesNotDeleteAnotherLearnerStore()
+  {
+    FakeSharedPreferences otherPrefs = new FakeSharedPreferences();
+    SinhalaLearner otherLearner = new SinhalaLearner(otherPrefs);
+    learner.recordTransition("මම", "යනවා");
+    otherLearner.recordTransition("ඔබ", "එනවා");
 
     learner.clearLearnedData();
 
-    assertTrue("Memory cache must be empty", learner.getLearnedPredictions("මම").isEmpty());
-    assertTrue("SharedPreferences must be empty", fakePrefs.getAll().isEmpty());
+    assertTrue(fakePrefs.getAll().isEmpty());
+    assertTrue(learner.getLearnedPredictions("මම").isEmpty());
+    assertFalse("Clearing one learner must not erase another store",
+        otherPrefs.getAll().isEmpty());
+    assertFalse("Other learner predictions must remain intact",
+        otherLearner.getLearnedPredictions("ඔබ").isEmpty());
   }
 
   @Test

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Privacy-preserving, on-device dynamic bigram learner for Sinhala text.
@@ -26,6 +27,10 @@ public final class SinhalaLearner
   public static final int MAX_WORD_LENGTH = 30;
 
   public static final int MAX_CORRECTIONS = 200;
+
+  // Keep weak references to live IME learner instances so a Settings action
+  // can clear both persisted data and in-memory predictions without leaking them.
+  private static final Map<SinhalaLearner, Boolean> ACTIVE_INSTANCES = new WeakHashMap<>();
 
   private final SharedPreferences _prefs;
   private final Map<String, String> _correctionsCache =
@@ -73,6 +78,7 @@ public final class SinhalaLearner
         ? DirectBootAwarePreferences.get_protected_prefs(context, PREF_NAME)
         : null;
     loadFromPreferences();
+    registerInstance();
   }
 
   /**
@@ -82,6 +88,15 @@ public final class SinhalaLearner
   {
     _prefs = prefs;
     loadFromPreferences();
+    registerInstance();
+  }
+
+  private void registerInstance()
+  {
+    synchronized (ACTIVE_INSTANCES)
+    {
+      ACTIVE_INSTANCES.put(this, Boolean.TRUE);
+    }
   }
 
   private synchronized void loadFromPreferences()
@@ -245,8 +260,44 @@ public final class SinhalaLearner
     _memoryCache.clear();
     _correctionsCache.clear();
     if (_prefs != null)
-    {
       _prefs.edit().clear().apply();
+  }
+
+  /** Clear persisted learning and every live learner cache in this app process. */
+  public static boolean clearAllLearnedData(Context context)
+  {
+    if (context == null)
+      return false;
+    SharedPreferences prefs =
+        DirectBootAwarePreferences.get_protected_prefs(context, PREF_NAME);
+    return clearAllLearnedData(prefs);
+  }
+
+  static boolean clearAllLearnedData(SharedPreferences prefs)
+  {
+    if (prefs == null || !prefs.edit().clear().commit())
+      return false;
+    clearActiveCaches();
+    return true;
+  }
+
+  private static void clearActiveCaches()
+  {
+    List<SinhalaLearner> learners;
+    synchronized (ACTIVE_INSTANCES)
+    {
+      learners = new ArrayList<>(ACTIVE_INSTANCES.keySet());
+    }
+    for (SinhalaLearner learner : learners)
+    {
+      if (learner != null)
+      {
+        synchronized (learner)
+        {
+          learner._memoryCache.clear();
+          learner._correctionsCache.clear();
+        }
+      }
     }
   }
 
