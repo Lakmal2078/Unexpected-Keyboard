@@ -87,7 +87,10 @@ jobs:
           script: |
             ./gradlew connectedDebugAndroidTest
             mkdir -p build/uiux-screenshots
-            adb pull /sdcard/Android/data/juloo.keyboard2.debug/files/Pictures/unexpected-keyboard-uiux/. build/uiux-screenshots/ || true
+            for screenshot in theme-picker-light.png theme-picker-dark.png; do
+              adb exec-out run-as juloo.keyboard2.debug cat "files/unexpected-keyboard-uiux/$screenshot" > "build/uiux-screenshots/$screenshot"
+              test -s "build/uiux-screenshots/$screenshot"
+            done
 
       - name: Upload theme picker screenshots
         if: always()
@@ -95,7 +98,7 @@ jobs:
         with:
           name: unexpected-keyboard-theme-picker-screenshots
           path: build/uiux-screenshots/
-          if-no-files-found: ignore
+          if-no-files-found: error
           retention-days: 30
 
       - name: Build debug APK
