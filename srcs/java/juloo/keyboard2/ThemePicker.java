@@ -3,6 +3,7 @@ package juloo.keyboard2;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -77,6 +78,43 @@ final class ThemePicker
     }
   }
 
+  static final class PickerPalette
+  {
+    final int cardBackground;
+    final int selectedCardBackground;
+    final int cardBorder;
+    final int primaryText;
+    final int secondaryText;
+    final int inputBackground;
+    final int chipBackground;
+    final int accent;
+    final int accentText;
+
+    PickerPalette(Context context)
+    {
+      Resources.Theme theme = context != null ? context.getTheme() : null;
+      TypedArray attrs = theme != null ? theme.obtainStyledAttributes(new int[] {
+        android.R.attr.colorBackground,
+        android.R.attr.textColorPrimary,
+        android.R.attr.textColorSecondary,
+        android.R.attr.colorAccent
+      }) : null;
+      int surface = attrs != null ? colorAt(attrs, 0, 0xFFFAFAFA) : 0xFFFAFAFA;
+      primaryText = attrs != null ? colorAt(attrs, 1, 0xFF202124) : 0xFF202124;
+      secondaryText = attrs != null ? colorAt(attrs, 2, 0xFF666666) : 0xFF666666;
+      accent = attrs != null ? colorAt(attrs, 3, 0xFF4285F4) : 0xFF4285F4;
+      if (attrs != null)
+        attrs.recycle();
+
+      cardBackground = surface;
+      selectedCardBackground = blend(surface, accent, 0.16f);
+      cardBorder = blend(surface, primaryText, 0.18f);
+      inputBackground = blend(surface, secondaryText, 0.12f);
+      chipBackground = blend(surface, secondaryText, 0.16f);
+      accentText = Theme.getContrastColor(accent);
+    }
+  }
+
   private static class CardHolder
   {
     final String value;
@@ -107,6 +145,7 @@ final class ThemePicker
   static AlertDialog create(AlertDialog.Builder builder, Resources resources, SharedPreferences prefs)
   {
     final Context context = builder.getContext();
+    final PickerPalette palette = new PickerPalette(context);
     final String[] values = (resources != null)
         ? resources.getStringArray(R.array.pref_theme_values) : new String[0];
     final String[] entries = (resources != null)
@@ -134,7 +173,7 @@ final class ThemePicker
     TextView hint = new TextView(context);
     hint.setText(getStringSafe(context, R.string.pref_theme_choose, "Choose a keyboard theme"));
     hint.setTextSize(14);
-    hint.setTextColor(0xFF666666);
+    hint.setTextColor(palette.secondaryText);
     root.addView(hint, new LinearLayout.LayoutParams(-1, -2));
 
     // Search bar
@@ -142,7 +181,9 @@ final class ThemePicker
     searchInput.setHint(getStringSafe(context, R.string.pref_theme_search_hint, "Search themes…"));
     searchInput.setSingleLine(true);
     searchInput.setTextSize(14);
-    searchInput.setBackground(rounded(0xFFF1F3F4, dp(context, 8)));
+    searchInput.setBackground(rounded(palette.inputBackground, dp(context, 8)));
+    searchInput.setTextColor(palette.primaryText);
+    searchInput.setHintTextColor(palette.secondaryText);
     searchInput.setPadding(dp(context, 12), dp(context, 8), dp(context, 12), dp(context, 8));
     LinearLayout.LayoutParams searchLp = new LinearLayout.LayoutParams(-1, -2);
     searchLp.topMargin = dp(context, 6);
@@ -178,7 +219,7 @@ final class ThemePicker
     noResultsView.setTextSize(14);
     noResultsView.setGravity(Gravity.CENTER);
     noResultsView.setPadding(0, dp(context, 32), 0, dp(context, 32));
-    noResultsView.setTextColor(0xFF888888);
+    noResultsView.setTextColor(palette.secondaryText);
     noResultsView.setVisibility(View.GONE);
     gallery.addView(noResultsView, new LinearLayout.LayoutParams(-1, -2));
 
@@ -194,19 +235,19 @@ final class ThemePicker
       chip.setContentDescription(getCategoryLabel(context, cat));
       chip.setOnClickListener(v -> {
         activeCategory[0] = cat;
-        updateChipStyles(context, chipViews, categories, activeCategory[0]);
+        updateChipStyles(context, chipViews, categories, activeCategory[0], palette);
         filterCards(cardHolders, noResultsView, currentQuery[0], activeCategory[0], favorites);
       });
       chipViews.add(chip);
       chipRow.addView(chip);
     }
-    updateChipStyles(context, chipViews, categories, activeCategory[0]);
+    updateChipStyles(context, chipViews, categories, activeCategory[0], palette);
     chipScroll.addView(chipRow);
     root.addView(chipScroll, new LinearLayout.LayoutParams(-1, -2));
 
     // Build theme cards once
     buildCards(context, gallery, values, entries, selected, borders[0], cardHolders,
-        colorCache, favorites, () -> {
+        colorCache, favorites, palette, () -> {
           if (activeCategory[0] == ThemeCategory.FAVORITES)
           {
             filterCards(cardHolders, noResultsView, currentQuery[0], activeCategory[0], favorites);
@@ -271,7 +312,7 @@ final class ThemePicker
 
   private static void buildCards(Context context, LinearLayout gallery, String[] values,
       String[] entries, String[] selected, boolean borders, List<CardHolder> cardHolders,
-      Map<String, int[]> colorCache, Set<String> favorites,
+      Map<String, int[]> colorCache, Set<String> favorites, PickerPalette palette,
       Runnable onFavoriteChanged)
   {
     if (values == null) return;
@@ -294,8 +335,8 @@ final class ThemePicker
       LinearLayout card = new LinearLayout(context);
       card.setOrientation(LinearLayout.VERTICAL);
       card.setPadding(dp(context, 10), dp(context, 9), dp(context, 10), dp(context, 9));
-      GradientDrawable cardBg = rounded(chosen ? 0xFFE8F0FE : 0xFFF7F7F7, dp(context, 12));
-      cardBg.setStroke(dp(context, chosen ? 2 : 1), chosen ? 0xFF4285F4 : 0xFFE0E0E0);
+      GradientDrawable cardBg = rounded(chosen ? palette.selectedCardBackground : palette.cardBackground, dp(context, 12));
+      cardBg.setStroke(dp(context, chosen ? 2 : 1), chosen ? palette.accent : palette.cardBorder);
       card.setBackground(cardBg);
       LinearLayout.LayoutParams cardLp = new LinearLayout.LayoutParams(-1, -2);
       cardLp.bottomMargin = dp(context, 8);
@@ -308,7 +349,7 @@ final class ThemePicker
       String entryName = (entries != null && i < entries.length && entries[i] != null) ? entries[i] : value;
       title.setText(entryName);
       title.setTextSize(15);
-      title.setTextColor(0xFF202124);
+      title.setTextColor(palette.primaryText);
       title.setTypeface(null, chosen ? Typeface.BOLD : Typeface.NORMAL);
       titleRow.addView(title, new LinearLayout.LayoutParams(0, -2, 1));
 
@@ -317,23 +358,25 @@ final class ThemePicker
       boolean isFav = favorites.contains(value);
       star.setText(isFav ? "★" : "☆");
       star.setTextSize(20);
-      star.setTextColor(isFav ? 0xFFF9A825 : 0xFF9AA0A6);
+      star.setTextColor(isFav ? 0xFFF9A825 : palette.secondaryText);
       star.setPadding(dp(context, 8), dp(context, 2), dp(context, 8), dp(context, 2));
-      star.setContentDescription(isFav ? "Favorited" : "Favorite");
+      star.setContentDescription(isFav
+          ? getStringSafe(context, R.string.pref_theme_favorite_remove, "Remove from favorites")
+          : getStringSafe(context, R.string.pref_theme_favorite_add, "Add to favorites"));
       star.setOnClickListener(v -> {
         if (favorites.contains(value))
         {
           favorites.remove(value);
           star.setText("☆");
-          star.setTextColor(0xFF9AA0A6);
-          star.setContentDescription("Favorite");
+          star.setTextColor(palette.secondaryText);
+          star.setContentDescription(getStringSafe(context, R.string.pref_theme_favorite_add, "Add to favorites"));
         }
         else
         {
           favorites.add(value);
           star.setText("★");
           star.setTextColor(0xFFF9A825);
-          star.setContentDescription("Favorited");
+          star.setContentDescription(getStringSafe(context, R.string.pref_theme_favorite_remove, "Remove from favorites"));
         }
         if (onFavoriteChanged != null)
         {
@@ -345,7 +388,7 @@ final class ThemePicker
       TextView check = new TextView(context);
       check.setText(chosen ? "✓" : "");
       check.setTextSize(22);
-      check.setTextColor(0xFF1A73E8);
+      check.setTextColor(palette.accent);
       check.setGravity(Gravity.CENTER);
       titleRow.addView(check, new LinearLayout.LayoutParams(dp(context, 30), -2));
       card.addView(titleRow);
@@ -404,16 +447,16 @@ final class ThemePicker
         {
           if (h.value.equals(prev))
           {
-            h.cardBg.setColor(0xFFF7F7F7);
-            h.cardBg.setStroke(dp(context, 1), 0xFFE0E0E0);
+            h.cardBg.setColor(palette.cardBackground);
+            h.cardBg.setStroke(dp(context, 1), palette.cardBorder);
             h.checkView.setText("");
             h.titleView.setTypeface(null, Typeface.NORMAL);
             h.cardView.setContentDescription(h.entryName);
           }
           else if (h.value.equals(value))
           {
-            h.cardBg.setColor(0xFFE8F0FE);
-            h.cardBg.setStroke(dp(context, 2), 0xFF4285F4);
+            h.cardBg.setColor(palette.selectedCardBackground);
+            h.cardBg.setStroke(dp(context, 2), palette.accent);
             h.checkView.setText("✓");
             h.titleView.setTypeface(null, Typeface.BOLD);
             h.cardView.setContentDescription(h.entryName + ", selected");
@@ -460,14 +503,14 @@ final class ThemePicker
   }
 
   private static void updateChipStyles(Context context, List<TextView> chips,
-      ThemeCategory[] categories, ThemeCategory active)
+      ThemeCategory[] categories, ThemeCategory active, PickerPalette palette)
   {
     for (int i = 0; i < chips.size() && i < categories.length; i++)
     {
       TextView chip = chips.get(i);
       boolean isSelected = (categories[i] == active);
-      chip.setBackground(rounded(isSelected ? 0xFF1A73E8 : 0xFFF1F3F4, dp(context, 16)));
-      chip.setTextColor(isSelected ? Color.WHITE : 0xFF3C4043);
+      chip.setBackground(rounded(isSelected ? palette.accent : palette.chipBackground, dp(context, 16)));
+      chip.setTextColor(isSelected ? palette.accentText : palette.primaryText);
       chip.setTypeface(null, isSelected ? Typeface.BOLD : Typeface.NORMAL);
     }
   }
@@ -561,6 +604,21 @@ final class ThemePicker
       return (int)(value + 0.5f);
     }
     return (int)(value * context.getResources().getDisplayMetrics().density + 0.5f);
+  }
+
+  private static int colorAt(TypedArray attributes, int index, int fallback)
+  {
+    ColorStateList colors = attributes.getColorStateList(index);
+    return colors != null ? colors.getDefaultColor() : attributes.getColor(index, fallback);
+  }
+
+  private static int blend(int base, int overlay, float fraction)
+  {
+    float t = Math.max(0f, Math.min(1f, fraction));
+    int red = Math.round(Color.red(base) * (1f - t) + Color.red(overlay) * t);
+    int green = Math.round(Color.green(base) * (1f - t) + Color.green(overlay) * t);
+    int blue = Math.round(Color.blue(base) * (1f - t) + Color.blue(overlay) * t);
+    return Color.rgb(red, green, blue);
   }
 
   private static GradientDrawable rounded(int color, float radius)

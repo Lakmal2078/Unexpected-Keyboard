@@ -2,7 +2,14 @@ package juloo.keyboard2;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.os.Environment;
 import android.os.Build;
+import android.view.ContextThemeWrapper;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,6 +64,71 @@ public class AuditRegressionDeviceTest
   }
 
   @Test
+  public void themePickerPaletteTracksPlatformLightAndDarkThemes()
+  {
+    Context context = ApplicationProvider.getApplicationContext();
+    ContextThemeWrapper lightContext =
+        new ContextThemeWrapper(context, android.R.style.Theme_DeviceDefault_Light);
+    ContextThemeWrapper darkContext =
+        new ContextThemeWrapper(context, android.R.style.Theme_DeviceDefault);
+
+    ThemePicker.PickerPalette light = new ThemePicker.PickerPalette(lightContext);
+    ThemePicker.PickerPalette dark = new ThemePicker.PickerPalette(darkContext);
+
+    assertNotEquals("Card surfaces must follow the active platform theme",
+        light.cardBackground, dark.cardBackground);
+    assertNotEquals("Primary text must follow the active platform theme",
+        light.primaryText, dark.primaryText);
+    assertEquals(Theme.getContrastColor(light.accent), light.accentText);
+    assertEquals(Theme.getContrastColor(dark.accent), dark.accentText);
+  }
+
+  @Test
+  public void themePickerScreenshotsRenderInLightAndDarkModes() throws Exception
+  {
+    Context context = ApplicationProvider.getApplicationContext();
+    File externalPictures = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    assertNotNull("External app picture directory must be available", externalPictures);
+    File screenshotDirectory = new File(externalPictures, "unexpected-keyboard-uiux");
+    assertTrue("Screenshot directory must be available",
+        screenshotDirectory.isDirectory() || screenshotDirectory.mkdirs());
+
+    try (ActivityScenario<SettingsActivity> scenario = ActivityScenario.launch(SettingsActivity.class))
+    {
+      captureThemePickerScreenshot(scenario, android.R.style.Theme_DeviceDefault_Light,
+          new File(screenshotDirectory, "theme-picker-light.png"));
+      captureThemePickerScreenshot(scenario, android.R.style.Theme_DeviceDefault,
+          new File(screenshotDirectory, "theme-picker-dark.png"));
+    }
+  }
+
+  private static void captureThemePickerScreenshot(ActivityScenario<SettingsActivity> scenario,
+      int themeResource, File output) throws IOException
+  {
+    final AlertDialog[] dialog = new AlertDialog[1];
+    scenario.onActivity(activity -> {
+      ContextThemeWrapper themedContext = new ContextThemeWrapper(activity, themeResource);
+      SharedPreferences prefs = DirectBootAwarePreferences.get_shared_preferences(activity);
+      dialog[0] = ThemePicker.create(
+          new AlertDialog.Builder(themedContext), themedContext.getResources(), prefs);
+      dialog[0].show();
+    });
+
+    android.app.Instrumentation instrumentation =
+        InstrumentationRegistry.getInstrumentation();
+    instrumentation.waitForIdleSync();
+    Bitmap screenshot = instrumentation.getUiAutomation().takeScreenshot();
+    assertNotNull("Theme picker screenshot must be captured", screenshot);
+    try (FileOutputStream stream = new FileOutputStream(output))
+    {
+      assertTrue("Theme picker screenshot must be written",
+          screenshot.compress(Bitmap.CompressFormat.PNG, 100, stream));
+    }
+    finally
+    {
+      screenshot.recycle();
+      scenario.onActivity(activity -> dialog[0].dismiss());
+    }
   public void SinhalaLearnerPersistsAndClearActionRemovesDiskAndMemoryData() throws Exception
   {
     Context context = ApplicationProvider.getApplicationContext();
