@@ -87,10 +87,8 @@ jobs:
           script: |
             ./gradlew connectedDebugAndroidTest
             mkdir -p build/uiux-screenshots
-            adb shell pm list packages | grep juloo.keyboard2
-            adb exec-out run-as "$(adb shell pm list packages | sed -n 's/^package:\(juloo\.keyboard2\(\.debug\)\?\)$/\1/p' | head -n 1)" cat files/unexpected-keyboard-uiux/theme-picker-light.png > build/uiux-screenshots/theme-picker-light.png
+            adb pull /sdcard/Pictures/unexpected-keyboard-uiux/. build/uiux-screenshots/
             test "$(od -An -tx1 -N8 build/uiux-screenshots/theme-picker-light.png | tr -d ' \n')" = "89504e470d0a1a0a"
-            adb exec-out run-as "$(adb shell pm list packages | sed -n 's/^package:\(juloo\.keyboard2\(\.debug\)\?\)$/\1/p' | head -n 1)" cat files/unexpected-keyboard-uiux/theme-picker-dark.png > build/uiux-screenshots/theme-picker-dark.png
             test "$(od -An -tx1 -N8 build/uiux-screenshots/theme-picker-dark.png | tr -d ' \n')" = "89504e470d0a1a0a"
 
       - name: Upload theme picker screenshots
