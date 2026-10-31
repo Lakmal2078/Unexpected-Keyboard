@@ -57,6 +57,8 @@ public class Keyboard2 extends InputMethodService
   private Handler _handler;
 
   private Config _config;
+  /** Last configuration used to derive orientation- and window-dependent keyboard metrics. */
+  private Configuration _last_configuration;
 
   private FoldStateTracker _foldStateTracker;
 
@@ -141,6 +143,7 @@ public class Keyboard2 extends InputMethodService
     Config.initGlobalConfig(prefs, getResources(),
         _foldStateTracker.isUnfolded(), _dictionaries);
     _config = Config.globalConfig();
+    _last_configuration = new Configuration(getResources().getConfiguration());
     Receiver recvr = this.new Receiver();
     _suggestions = new Suggestions(recvr, _config);
     _keyeventhandler = new KeyEventHandler(_config, recvr, _suggestions, this);
@@ -151,7 +154,7 @@ public class Keyboard2 extends InputMethodService
     refreshSubtypeImm();
     create_keyboard_view();
     ClipboardHistoryService.on_startup(this, _keyeventhandler);
-    _foldStateTracker.setChangedCallback(() -> { refresh_config(); });
+    _foldStateTracker.setChangedCallback(() -> { refresh_config_and_layout(); });
   }
 
   @Override
@@ -521,18 +524,37 @@ public class Keyboard2 extends InputMethodService
     update_top_bar_visibility();
   }
 
-  private int _last_night_mode = -1;
+  /** Whether a configuration change affects keyboard geometry or its system theme. */
+  static boolean shouldRefreshKeyboardConfig(Configuration previous, Configuration next,
+      boolean themeFollowsSystem)
+  {
+    if (previous == null || next == null)
+      return true;
+
+    boolean geometryChanged =
+        previous.orientation != next.orientation
+        || previous.screenWidthDp != next.screenWidthDp
+        || previous.screenHeightDp != next.screenHeightDp
+        || previous.smallestScreenWidthDp != next.smallestScreenWidthDp
+        || previous.densityDpi != next.densityDpi
+        || previous.screenLayout != next.screenLayout
+        || Float.compare(previous.fontScale, next.fontScale) != 0;
+
+    boolean nightModeChanged = (previous.uiMode & Configuration.UI_MODE_NIGHT_MASK)
+        != (next.uiMode & Configuration.UI_MODE_NIGHT_MASK);
+    return geometryChanged || (themeFollowsSystem && nightModeChanged);
+  }
 
   @Override
   public void onConfigurationChanged(Configuration newConfig)
   {
     super.onConfigurationChanged(newConfig);
     if (_config == null || newConfig == null) return;
-    if (!_config.theme_follows_system) return;
-    int night = newConfig.uiMode & Configuration.UI_MODE_NIGHT_MASK;
-    if (night == _last_night_mode) return;
-    _last_night_mode = night;
-    refresh_config();
+
+    Configuration previous = _last_configuration;
+    _last_configuration = new Configuration(newConfig);
+    if (shouldRefreshKeyboardConfig(previous, newConfig, _config.theme_follows_system))
+      refresh_config_and_layout();
   }
 
   /** Might re-create the keyboard view. [_keyboard_layout_view.setKeyboard()] and
@@ -578,6 +600,17 @@ public class Keyboard2 extends InputMethodService
     refresh_candidates_view();
   }
 
+  /** Recompute config, select the layout for the current window/editor, and refresh key handling. */
+  private void refresh_config_and_layout()
+  {
+    refresh_config();
+    _currentSpecialLayout = refresh_special_layout();
+    if (_keyboard_layout_view != null)
+      _keyboard_layout_view.setKeyboard(current_layout());
+    if (_keyeventhandler != null)
+      _keyeventhandler.started();
+  }
+
   private KeyboardData refresh_special_layout()
   {
     if (_config.editor_config.numeric_layout)
@@ -598,10 +631,7 @@ public class Keyboard2 extends InputMethodService
   public void onStartInputView(EditorInfo info, boolean restarting)
   {
     _config.editor_config.refresh(info, getResources());
-    refresh_config();
-    _currentSpecialLayout = refresh_special_layout();
-    _keyboard_layout_view.setKeyboard(current_layout());
-    _keyeventhandler.started();
+    refresh_config_and_layout();
     setInputView(_keyboard_container_view);
     Logs.debug_startup_input_view(info, _config);
   }
@@ -724,10 +754,7 @@ public class Keyboard2 extends InputMethodService
   @Override
   public void onSharedPreferenceChanged(SharedPreferences _prefs, String _key)
   {
-    refresh_config();
-    if (_keyeventhandler != null)
-      _keyeventhandler.started();
-    _keyboard_layout_view.setKeyboard(current_layout());
+    refresh_config_and_layout();
   }
 
   @Override
