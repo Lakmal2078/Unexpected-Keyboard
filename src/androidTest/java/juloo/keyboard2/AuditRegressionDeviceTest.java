@@ -62,6 +62,49 @@ public class AuditRegressionDeviceTest
   }
 
   @Test
+  public void resetRestoresKeyboardDefaultsAndPreservesLearnedSinhalaData()
+  {
+    Context context = ApplicationProvider.getApplicationContext();
+    SharedPreferences prefs = DirectBootAwarePreferences.get_shared_preferences(context);
+    SharedPreferences learned = DirectBootAwarePreferences.get_protected_prefs(
+        context, "sinhala_learned_bigrams");
+    Map<String, ?> previousPrefs = new HashMap<>(prefs.getAll());
+    String marker = "reset_test_preservation_marker";
+    boolean hadMarker = learned.contains(marker);
+    String previousMarker = learned.getString(marker, null);
+    try
+    {
+      assertTrue(prefs.edit()
+          .putBoolean("sinhala_transliteration", false)
+          .putString("theme", "dracula")
+          .putString("key_shape", "pill")
+          .putBoolean("need_migration", true)
+          .commit());
+      assertTrue(learned.edit().putString(marker, "keep").commit());
+
+      assertTrue(SettingsActivity.resetKeyboardSettings(prefs, Build.VERSION.SDK_INT >= 24));
+
+      assertTrue(prefs.getBoolean("sinhala_transliteration", false));
+      assertEquals(Config.DEFAULT_THEME, prefs.getString("theme", Config.DEFAULT_THEME));
+      assertEquals("theme", prefs.getString("key_shape", "theme"));
+      assertEquals("no_number_row", prefs.getString("number_row", "no_number_row"));
+      assertEquals(65, prefs.getInt("longpress_interval", 65));
+      assertEquals(6, prefs.getInt("version", 0));
+      if (Build.VERSION.SDK_INT >= 24)
+        assertFalse(prefs.getBoolean("need_migration", true));
+      assertEquals("keep", learned.getString(marker, null));
+    }
+    finally
+    {
+      restorePreferences(prefs, previousPrefs);
+      SharedPreferences.Editor editor = learned.edit();
+      if (hadMarker) editor.putString(marker, previousMarker);
+      else editor.remove(marker);
+      editor.commit();
+    }
+  }
+
+  @Test
   public void themePickerPaletteTracksPlatformLightAndDarkThemes()
   {
     Context context = ApplicationProvider.getApplicationContext();
