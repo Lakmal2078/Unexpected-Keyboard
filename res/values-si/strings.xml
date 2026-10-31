@@ -285,4 +285,11 @@
     <string name="pref_theme_favorite_remove">ප්‍රියතම ලැයිස්තුවෙන් ඉවත් කරන්න</string>
     <string name="pref_theme_day_title">දිවා තේමාව (Day Theme)</string>
     <string name="pref_theme_night_title">රාත්‍රී තේමාව (Night Theme)</string>
+    <string name="pref_category_privacy">පෞද්ගලිකත්වය සහ දත්ත</string>
+    <string name="pref_clear_sinhala_learned_data_title">ඉගෙනගත් සිංහල දත්ත මකන්න</string>
+    <string name="pref_clear_sinhala_learned_data_summary">මෙම උපාංගයේ සුරකින ලද වචන නිවැරදි කිරීම් සහ සන්දර්භ අනාවැකි මකන්න</string>
+    <string name="pref_clear_sinhala_learned_data_confirm_title">ඉගෙනගත් සිංහල දත්ත මකන්නද?</string>
+    <string name="pref_clear_sinhala_learned_data_confirm_message">මෙම උපාංගයේ සුරකින ලද සිංහල වචන නිවැරදි කිරීම් සහ සන්දර්භ අනාවැකි ස්ථිරවම මැකේ. ඔබගේ යතුරුපුවරු සැකසුම් සහ අනෙකුත් සැකසුම් වෙනස් නොවේ.</string>
+    <string name="pref_clear_sinhala_learned_data_action">දත්ත මකන්න</string>
+    <string name="pref_clear_sinhala_learned_data_done">ඉගෙනගත් සිංහල දත්ත මකා දැමුවා</string>
 </resources>
