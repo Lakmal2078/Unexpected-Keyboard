@@ -25,7 +25,23 @@ public final class SinhalaLearner
   public static final int MAX_CANDIDATES_PER_WORD = 8;
   public static final int MAX_WORD_LENGTH = 30;
 
+  public static final int MAX_CORRECTIONS = 200;
+
   private final SharedPreferences _prefs;
+  private final Map<String, String> _correctionsCache =
+      new LinkedHashMap<String, String>(16, 0.75f, true)
+      {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, String> eldest)
+        {
+          boolean remove = size() > MAX_CORRECTIONS;
+          if (remove && _prefs != null && eldest != null)
+          {
+            _prefs.edit().remove("corr|" + eldest.getKey()).apply();
+          }
+          return remove;
+        }
+      };
   private final Map<String, Map<String, Integer>> _memoryCache =
       new LinkedHashMap<String, Map<String, Integer>>(16, 0.75f, true)
       {
@@ -78,7 +94,18 @@ public final class SinhalaLearner
 
     for (Map.Entry<String, ?> entry : all.entrySet())
     {
-      String key = entry.getKey(); // formatted as "prevWord|nextWord"
+      String key = entry.getKey();
+      if (key.startsWith("corr|"))
+      {
+        String raw = key.substring(5);
+        Object val = entry.getValue();
+        if (val instanceof String && isValidSinhalaWord((String) val) && _correctionsCache.size() < MAX_CORRECTIONS)
+        {
+          _correctionsCache.put(raw, (String) val);
+        }
+        continue;
+      }
+
       int sep = key.indexOf('|');
       if (sep <= 0 || sep >= key.length() - 1)
         continue;
@@ -192,9 +219,31 @@ public final class SinhalaLearner
     return results;
   }
 
+  public synchronized void recordCorrection(String rawSinglish, String chosenSinhala)
+  {
+    if (rawSinglish == null || chosenSinhala == null)
+      return;
+    String raw = rawSinglish.trim().toLowerCase(java.util.Locale.ROOT);
+    if (raw.length() < 2 || raw.length() > MAX_WORD_LENGTH || !isValidSinhalaWord(chosenSinhala))
+      return;
+    _correctionsCache.put(raw, chosenSinhala);
+    if (_prefs != null)
+    {
+      _prefs.edit().putString("corr|" + raw, chosenSinhala).apply();
+    }
+  }
+
+  public synchronized String getLearnedCorrection(String rawSinglish)
+  {
+    if (rawSinglish == null)
+      return null;
+    return _correctionsCache.get(rawSinglish.trim().toLowerCase(java.util.Locale.ROOT));
+  }
+
   public synchronized void clearLearnedData()
   {
     _memoryCache.clear();
+    _correctionsCache.clear();
     if (_prefs != null)
     {
       _prefs.edit().clear().apply();

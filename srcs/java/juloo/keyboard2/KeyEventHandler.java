@@ -238,6 +238,7 @@ public final class KeyEventHandler
     }
     if (_sinhala_buffer.length() > 0 && conn != null)
     {
+      String typedSinglish = _sinhala_buffer.toString();
       String rawText = text.trim();
       if (add_space_after)
         text = text + " ";
@@ -245,6 +246,10 @@ public final class KeyEventHandler
       _sinhala_buffer.setLength(0);
       _typedword.typed(text);
       _suggestions.clear();
+      if (!_config.editor_config.is_sensitive_input && _sinhala_learner != null)
+      {
+        _sinhala_learner.recordCorrection(typedSinglish, rawText);
+      }
       update_sinhala_predictions(conn, rawText);
       _next_last_action = LastAction.SUGGESTION_ENTERED;
       return;

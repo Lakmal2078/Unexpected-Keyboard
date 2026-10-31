@@ -147,6 +147,23 @@ public class SinhalaLearnerTest
         learner.getLearnedPredictions("මම").isEmpty());
   }
 
+  @Test
+  public void testRecordCorrectionAndRetrieval()
+  {
+    assertNull(learner.getLearnedCorrection("amma"));
+    learner.recordCorrection("amma", "අම්මා");
+    assertEquals("අම්මා", learner.getLearnedCorrection("amma"));
+    assertEquals("අම්මා", learner.getLearnedCorrection("AMMA")); // case-insensitive
+
+    // Persisted in SharedPreferences
+    assertEquals("අම්මා", fakePrefs.getString("corr|amma", null));
+
+    // Clear data clears corrections too
+    learner.clearLearnedData();
+    assertNull(learner.getLearnedCorrection("amma"));
+    assertNull(fakePrefs.getString("corr|amma", null));
+  }
+
   /**
    * Lightweight in-memory fake SharedPreferences for testing.
    */
