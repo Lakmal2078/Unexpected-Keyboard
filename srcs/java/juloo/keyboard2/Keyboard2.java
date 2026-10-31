@@ -143,7 +143,7 @@ public class Keyboard2 extends InputMethodService
     _config = Config.globalConfig();
     Receiver recvr = this.new Receiver();
     _suggestions = new Suggestions(recvr, _config);
-    _keyeventhandler = new KeyEventHandler(_config, recvr, _suggestions);
+    _keyeventhandler = new KeyEventHandler(_config, recvr, _suggestions, this);
     KeyValue.Stateful._handler = recvr;
     _config.handler = _keyeventhandler;
     prefs.registerOnSharedPreferenceChangeListener(this);

@@ -41,6 +41,11 @@ public final class KeyEventHandler
 
   public KeyEventHandler(Config conf, IReceiver recv, Suggestions sg)
   {
+    this(conf, recv, sg, null);
+  }
+
+  public KeyEventHandler(Config conf, IReceiver recv, Suggestions sg, Context context)
+  {
     _config = conf;
     _recv = recv;
     Handler handler = recv.getHandler();
@@ -49,7 +54,7 @@ public final class KeyEventHandler
     _mods = Pointers.Modifiers.EMPTY;
     _suggestions = sg;
     _typedword = new CurrentlyTypedWord(handler, this);
-    _sinhala_learner = new SinhalaLearner((recv instanceof Context) ? (Context) recv : null);
+    _sinhala_learner = new SinhalaLearner(context);
   }
 
   public void setSinhalaLearner(SinhalaLearner learner)
