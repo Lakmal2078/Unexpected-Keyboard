@@ -264,20 +264,21 @@ public final class SinhalaLearner
   }
 
   /** Clear persisted learning and every live learner cache in this app process. */
-  public static void clearAllLearnedData(Context context)
+  public static boolean clearAllLearnedData(Context context)
   {
     if (context == null)
-      return;
+      return false;
     SharedPreferences prefs =
         DirectBootAwarePreferences.get_protected_prefs(context, PREF_NAME);
-    clearAllLearnedData(prefs);
+    return clearAllLearnedData(prefs);
   }
 
-  static void clearAllLearnedData(SharedPreferences prefs)
+  static boolean clearAllLearnedData(SharedPreferences prefs)
   {
+    if (prefs == null || !prefs.edit().clear().commit())
+      return false;
     clearActiveCaches();
-    if (prefs != null)
-      prefs.edit().clear().apply();
+    return true;
   }
 
   private static void clearActiveCaches()
