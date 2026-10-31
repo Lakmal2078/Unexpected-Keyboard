@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.os.Build;
 import android.view.ContextThemeWrapper;
 import java.io.ByteArrayOutputStream;
@@ -127,10 +126,8 @@ public class AuditRegressionDeviceTest
   @Test
   public void themePickerScreenshotsRenderInLightAndDarkModes() throws Exception
   {
-    Context context = ApplicationProvider.getApplicationContext();
-    File externalPictures = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-    assertNotNull("External app picture directory must be available", externalPictures);
-    File screenshotDirectory = new File(externalPictures, "unexpected-keyboard-uiux");
+    Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+    File screenshotDirectory = new File(context.getFilesDir(), "unexpected-keyboard-uiux");
     assertTrue("Screenshot directory must be available",
         screenshotDirectory.isDirectory() || screenshotDirectory.mkdirs());
 
@@ -170,6 +167,8 @@ public class AuditRegressionDeviceTest
       screenshot.recycle();
       scenario.onActivity(activity -> dialog[0].dismiss());
     }
+    assertTrue("Captured screenshot must be written and non-empty",
+        output.isFile() && output.length() > 0);
   }
 
   @Test
