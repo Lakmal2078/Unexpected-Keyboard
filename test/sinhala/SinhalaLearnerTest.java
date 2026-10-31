@@ -104,13 +104,20 @@ public class SinhalaLearnerTest
   @Test
   public void testClearLearnedData()
   {
+    SinhalaLearner secondActiveLearner = new SinhalaLearner(fakePrefs);
     learner.recordTransition("මම", "යනවා");
     learner.recordTransition("ඔබ", "එනවා");
+    secondActiveLearner.recordCorrection("amma", "අම්මා");
     assertFalse(fakePrefs.getAll().isEmpty());
 
     learner.clearLearnedData();
 
-    assertTrue("Memory cache must be empty", learner.getLearnedPredictions("මම").isEmpty());
+    assertTrue("First active learner cache must be empty",
+        learner.getLearnedPredictions("මම").isEmpty());
+    assertTrue("Other active learner cache must be empty",
+        secondActiveLearner.getLearnedPredictions("මම").isEmpty());
+    assertNull("Learned corrections must be cleared",
+        secondActiveLearner.getLearnedCorrection("amma"));
     assertTrue("SharedPreferences must be empty", fakePrefs.getAll().isEmpty());
   }
 
