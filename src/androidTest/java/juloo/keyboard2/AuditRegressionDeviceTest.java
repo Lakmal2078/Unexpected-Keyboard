@@ -3,6 +3,7 @@ package juloo.keyboard2;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.app.AlertDialog;
@@ -139,19 +140,23 @@ public class AuditRegressionDeviceTest
     try (ActivityScenario<SettingsActivity> scenario = ActivityScenario.launch(SettingsActivity.class))
     {
       captureThemePickerScreenshot(context, scenario, android.R.style.Theme_DeviceDefault_Light,
-          new File(screenshotDirectory, "theme-picker-light.png"));
+          false, new File(screenshotDirectory, "theme-picker-light.png"));
       captureThemePickerScreenshot(context, scenario, android.R.style.Theme_DeviceDefault,
-          new File(screenshotDirectory, "theme-picker-dark.png"));
+          true, new File(screenshotDirectory, "theme-picker-dark.png"));
     }
   }
 
   private static void captureThemePickerScreenshot(Context context,
-      ActivityScenario<SettingsActivity> scenario, int themeResource, File output)
+      ActivityScenario<SettingsActivity> scenario, int themeResource, boolean nightMode, File output)
       throws IOException
   {
     final AlertDialog[] dialog = new AlertDialog[1];
     scenario.onActivity(activity -> {
+      Configuration override = new Configuration(activity.getResources().getConfiguration());
+      override.uiMode = (override.uiMode & ~Configuration.UI_MODE_NIGHT_MASK)
+          | (nightMode ? Configuration.UI_MODE_NIGHT_YES : Configuration.UI_MODE_NIGHT_NO);
       ContextThemeWrapper themedContext = new ContextThemeWrapper(activity, themeResource);
+      themedContext.applyOverrideConfiguration(override);
       SharedPreferences prefs = DirectBootAwarePreferences.get_shared_preferences(activity);
       dialog[0] = ThemePicker.create(
           new AlertDialog.Builder(themedContext), themedContext.getResources(), prefs);
