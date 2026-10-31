@@ -852,6 +852,11 @@ public final class SinhalaTransliterator
       {
         return COMMON_WORDS.get(lowerFirst.toLowerCase(Locale.ROOT));
       }
+      // Preserve case-sensitive consonants such as D (ඩ) versus d (ද).
+      if (word.charAt(0) == 'D')
+      {
+        return parsePhonetic(word);
+      }
       return parsePhonetic(lowerFirst);
     }
 
