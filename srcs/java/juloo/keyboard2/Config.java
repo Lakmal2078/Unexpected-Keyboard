@@ -174,8 +174,8 @@ public class Config
       keyboardHeightPercent = _prefs.getInt(foldable_unfolded ? "keyboard_height_unfolded" : "keyboard_height", 35);
     }
     layouts = LayoutsPreference.load_from_preferences(res, _prefs);
-    inverse_numpad = _prefs.getString("numpad_layout", "default").equals("low_first");
-    String number_row = _prefs.getString("number_row", "no_symbols");
+    inverse_numpad = _prefs.getString("numpad_layout", "high_first").equals("low_first");
+    String number_row = _prefs.getString("number_row", "no_number_row");
     add_number_row = !number_row.equals("no_number_row");
     number_row_symbols = number_row.equals("symbols");
     suggestions_enabled = _prefs.getBoolean("suggestions", true);
@@ -475,7 +475,7 @@ public class Config
 
   /** Config migrations. */
 
-  private static int CONFIG_VERSION = 5;
+  private static int CONFIG_VERSION = 6;
 
   /** Map legacy theme preferences to the supported curated theme catalog. */
   static String migrateThemePreference(String theme)
@@ -515,6 +515,14 @@ public class Config
       default:
         return DEFAULT_THEME;
     }
+  }
+
+  /** Normalize stale values that no longer exist in the numpad preference list. */
+  static String migrateShowNumpadPreference(String value)
+  {
+    if ("never".equals(value) || "landscape".equals(value) || "always".equals(value))
+      return value;
+    return "never";
   }
 
   public static void migrate(SharedPreferences prefs)
@@ -571,6 +579,12 @@ public class Config
             migratedFavorites.add(migrateThemePreference(favorite));
           e.putStringSet("favorite_themes", migratedFavorites);
         }
+        // Fallthrough
+      case 5:
+        // Remove the invalid legacy XML default ("1") from the ListPreference.
+        if (prefs.contains("show_numpad"))
+          e.putString("show_numpad",
+              migrateShowNumpadPreference(prefs.getString("show_numpad", "never")));
         // Fallthrough
       default: break;
     }
