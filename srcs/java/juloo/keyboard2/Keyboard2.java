@@ -154,7 +154,7 @@ public class Keyboard2 extends InputMethodService
     refreshSubtypeImm();
     create_keyboard_view();
     ClipboardHistoryService.on_startup(this, _keyeventhandler);
-    _foldStateTracker.setChangedCallback(() -> { refresh_config(); });
+    _foldStateTracker.setChangedCallback(() -> { refresh_config_and_layout(); });
   }
 
   @Override
@@ -554,7 +554,7 @@ public class Keyboard2 extends InputMethodService
     Configuration previous = _last_configuration;
     _last_configuration = new Configuration(newConfig);
     if (shouldRefreshKeyboardConfig(previous, newConfig, _config.theme_follows_system))
-      refresh_config();
+      refresh_config_and_layout();
   }
 
   /** Might re-create the keyboard view. [_keyboard_layout_view.setKeyboard()] and
@@ -600,6 +600,17 @@ public class Keyboard2 extends InputMethodService
     refresh_candidates_view();
   }
 
+  /** Recompute config, select the layout for the current window/editor, and refresh key handling. */
+  private void refresh_config_and_layout()
+  {
+    refresh_config();
+    _currentSpecialLayout = refresh_special_layout();
+    if (_keyboard_layout_view != null)
+      _keyboard_layout_view.setKeyboard(current_layout());
+    if (_keyeventhandler != null)
+      _keyeventhandler.started();
+  }
+
   private KeyboardData refresh_special_layout()
   {
     if (_config.editor_config.numeric_layout)
@@ -620,10 +631,7 @@ public class Keyboard2 extends InputMethodService
   public void onStartInputView(EditorInfo info, boolean restarting)
   {
     _config.editor_config.refresh(info, getResources());
-    refresh_config();
-    _currentSpecialLayout = refresh_special_layout();
-    _keyboard_layout_view.setKeyboard(current_layout());
-    _keyeventhandler.started();
+    refresh_config_and_layout();
     setInputView(_keyboard_container_view);
     Logs.debug_startup_input_view(info, _config);
   }
@@ -746,10 +754,7 @@ public class Keyboard2 extends InputMethodService
   @Override
   public void onSharedPreferenceChanged(SharedPreferences _prefs, String _key)
   {
-    refresh_config();
-    if (_keyeventhandler != null)
-      _keyeventhandler.started();
-    _keyboard_layout_view.setKeyboard(current_layout());
+    refresh_config_and_layout();
   }
 
   @Override
