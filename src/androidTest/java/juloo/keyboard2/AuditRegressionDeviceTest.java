@@ -84,7 +84,7 @@ public class AuditRegressionDeviceTest
 
       assertTrue("Reset operation should commit", SettingsActivity.resetKeyboardSettings(prefs, Build.VERSION.SDK_INT >= 24));
 
-      assertTrue("Sinhala transliteration should return to its enabled default", prefs.getBoolean("sinhala_transliteration", false));
+      assertTrue("Sinhala transliteration should use its enabled runtime default", prefs.getBoolean("sinhala_transliteration", true));
       assertEquals("Theme should return to its default", Config.DEFAULT_THEME, prefs.getString("theme", Config.DEFAULT_THEME));
       assertEquals("Key shape should return to its default", "theme", prefs.getString("key_shape", "theme"));
       assertEquals("Number row should return to its default", "no_number_row", prefs.getString("number_row", "no_number_row"));
