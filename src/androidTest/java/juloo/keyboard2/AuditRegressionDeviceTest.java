@@ -3,6 +3,9 @@ package juloo.keyboard2;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
@@ -55,11 +58,10 @@ public class AuditRegressionDeviceTest
     SharedPreferences prefs =
         DirectBootAwarePreferences.get_protected_prefs(context, "sinhala_learned_bigrams");
     String transitionKey = "පරීක්ෂණය|සාර්ථකයි";
-    boolean hadValue = prefs.contains(transitionKey);
-    int previousCount = prefs.getInt(transitionKey, 0);
+    Map<String, ?> previousValues = new HashMap<>(prefs.getAll());
     try
     {
-      prefs.edit().remove(transitionKey).commit();
+      prefs.edit().clear().commit();
 
       SinhalaLearner learner = new SinhalaLearner(context);
       learner.recordTransition("පරීක්ෂණය", "සාර්ථකයි");
@@ -76,11 +78,26 @@ public class AuditRegressionDeviceTest
     }
     finally
     {
-      SharedPreferences.Editor editor = prefs.edit();
-      if (hadValue) editor.putInt(transitionKey, previousCount);
-      else editor.remove(transitionKey);
-      editor.commit();
+      restorePreferences(prefs, previousValues);
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  private static void restorePreferences(SharedPreferences prefs, Map<String, ?> values)
+  {
+    SharedPreferences.Editor editor = prefs.edit().clear();
+    for (Map.Entry<String, ?> entry : values.entrySet())
+    {
+      String key = entry.getKey();
+      Object value = entry.getValue();
+      if (value instanceof Boolean) editor.putBoolean(key, (Boolean)value);
+      else if (value instanceof Float) editor.putFloat(key, (Float)value);
+      else if (value instanceof Integer) editor.putInt(key, (Integer)value);
+      else if (value instanceof Long) editor.putLong(key, (Long)value);
+      else if (value instanceof String) editor.putString(key, (String)value);
+      else if (value instanceof Set) editor.putStringSet(key, (Set<String>)value);
+    }
+    editor.commit();
   }
 
   @Test
