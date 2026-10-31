@@ -301,4 +301,10 @@
     <string name="pref_reset_keyboard_settings_action">සැකසුම් නැවත සකසන්න</string>
     <string name="pref_reset_keyboard_settings_done">යතුරුපුවරු සැකසුම් පෙරනිමි අගයන්ට හරවා ඇත</string>
     <string name="pref_reset_keyboard_settings_failed">සැකසුම් නැවත සැකසිය නොහැකි විය. නැවත උත්සාහ කරන්න.</string>
+  <string name="quick_toolbar_apps_desc">ඉමෝජි සහ යෙදුම් මෙවලම්</string>
+  <string name="quick_toolbar_keyboard_desc">යතුරුපුවරුව තෝරන්න</string>
+  <string name="quick_toolbar_translate_desc">පෙළ පරිවර්තනය කරන්න</string>
+  <string name="quick_toolbar_settings_desc">යතුරුපුවරු සැකසුම්</string>
+  <string name="quick_toolbar_clipboard_desc">පිටපත් කළ පෙළ ඉතිහාසය</string>
+  <string name="quick_toolbar_theme_desc">යතුරුපුවරු තේමාව තෝරන්න</string>
 </resources>
