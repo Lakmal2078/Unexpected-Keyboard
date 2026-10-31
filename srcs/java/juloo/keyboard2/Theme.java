@@ -186,10 +186,16 @@ public class Theme
 
     public Computed(Theme theme, Config config, float keyWidth, KeyboardData layout)
     {
-      // Make sure that the layout isn't higher than the screen. Take the
-      // height of the candidates view into account.
-      row_height = Math.min(config.keyboard_rows_height_pixels,
-          (config.screenHeightPixels - config.keyboard_rows_height_pixels) / layout.keysHeight);
+      this(theme, config, keyWidth, layout, Float.POSITIVE_INFINITY);
+    }
+
+    public Computed(Theme theme, Config config, float keyWidth, KeyboardData layout,
+        float maxRowHeight)
+    {
+      // Respect both the configured screen-based size and the actual IME window.
+      row_height = Math.min(Math.min(config.keyboard_rows_height_pixels,
+          (config.screenHeightPixels - config.keyboard_rows_height_pixels) / layout.keysHeight),
+          maxRowHeight);
       vertical_margin = config.key_vertical_margin * row_height;
       horizontal_margin = config.key_horizontal_margin * keyWidth;
       // Add half of the key margin on the left and on the top as it's also
