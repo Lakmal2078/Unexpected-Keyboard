@@ -220,7 +220,7 @@ public class ClipboardHistoryServiceTest
   {
     service.add_clip("synthetic clipboard item");
     assertEquals(1, service._history.size());
-    clearInvocations(historyListener);
+    clearInvocations(historyListener, handler);
 
     Config.globalConfig().clipboard_history_enabled = false;
     ClipboardHistoryService.clear_history_if_disabled();
