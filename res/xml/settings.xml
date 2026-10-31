@@ -85,4 +85,7 @@
   <PreferenceCategory android:title="@string/pref_category_privacy">
     <Preference android:key="clear_sinhala_learned_data" android:title="@string/pref_clear_sinhala_learned_data_title" android:summary="@string/pref_clear_sinhala_learned_data_summary"/>
   </PreferenceCategory>
+  <PreferenceCategory android:title="@string/pref_category_maintenance">
+    <Preference android:key="reset_keyboard_settings" android:title="@string/pref_reset_keyboard_settings_title" android:summary="@string/pref_reset_keyboard_settings_summary"/>
+  </PreferenceCategory>
 </PreferenceScreen>
