@@ -560,8 +560,11 @@ public class Config
         }
         // Fallthrough
       case 3:
-        e.putString("change_method_key_replacement",
-            prefs.getBoolean("switch_input_immediate", false) ? "prev" : "picker");
+        // Only migrate this option when the legacy preference exists. On a fresh
+        // install, keep the XML default ("prev") instead of writing "picker".
+        if (prefs.contains("switch_input_immediate"))
+          e.putString("change_method_key_replacement",
+              prefs.getBoolean("switch_input_immediate", false) ? "prev" : "picker");
         // Fallthrough
       case 4:
         // Curate the theme catalog without discarding existing user choices.

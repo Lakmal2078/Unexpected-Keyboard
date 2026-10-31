@@ -53,6 +53,94 @@ public class ThemeTest
   }
 
   @Test
+  public void testFreshInstallMigrationKeepsXmlChangeMethodDefault()
+  {
+    android.content.SharedPreferences prefs =
+        org.mockito.Mockito.mock(android.content.SharedPreferences.class);
+    android.content.SharedPreferences.Editor editor =
+        org.mockito.Mockito.mock(android.content.SharedPreferences.Editor.class);
+    org.mockito.Mockito.when(prefs.getInt("version", 0)).thenReturn(0);
+    org.mockito.Mockito.when(prefs.edit()).thenReturn(editor);
+    org.mockito.Mockito.when(editor.putInt(org.mockito.ArgumentMatchers.anyString(),
+        org.mockito.ArgumentMatchers.anyInt())).thenReturn(editor);
+    org.mockito.Mockito.when(editor.putString(org.mockito.ArgumentMatchers.anyString(),
+        org.mockito.ArgumentMatchers.anyString())).thenReturn(editor);
+    org.mockito.Mockito.when(prefs.getString("layout", "system")).thenReturn("system");
+    org.mockito.Mockito.when(prefs.getString("second_layout", "none")).thenReturn("none");
+    org.mockito.Mockito.when(prefs.getString("custom_layout", "")).thenReturn("");
+    org.mockito.Mockito.when(prefs.getBoolean("number_row", false)).thenReturn(false);
+    org.mockito.Mockito.when(prefs.getBoolean("pin_entry_enabled", true)).thenReturn(true);
+    org.mockito.Mockito.when(prefs.contains("number_entry_layout")).thenReturn(false);
+    org.mockito.Mockito.when(prefs.contains("switch_input_immediate")).thenReturn(false);
+
+    Config.migrate(prefs);
+
+    org.mockito.Mockito.verify(editor, org.mockito.Mockito.never()).putString(
+        org.mockito.ArgumentMatchers.eq("change_method_key_replacement"),
+        org.mockito.ArgumentMatchers.anyString());
+    org.mockito.Mockito.verify(editor).putInt("version", 6);
+    org.mockito.Mockito.verify(editor).apply();
+  }
+
+  @Test
+  public void testLegacyChangeMethodPreferenceIsMigrated()
+  {
+    android.content.SharedPreferences prefs =
+        org.mockito.Mockito.mock(android.content.SharedPreferences.class);
+    android.content.SharedPreferences.Editor editor =
+        org.mockito.Mockito.mock(android.content.SharedPreferences.Editor.class);
+    org.mockito.Mockito.when(prefs.getInt("version", 0)).thenReturn(0);
+    org.mockito.Mockito.when(prefs.edit()).thenReturn(editor);
+    org.mockito.Mockito.when(editor.putInt(org.mockito.ArgumentMatchers.anyString(),
+        org.mockito.ArgumentMatchers.anyInt())).thenReturn(editor);
+    org.mockito.Mockito.when(editor.putString(org.mockito.ArgumentMatchers.anyString(),
+        org.mockito.ArgumentMatchers.anyString())).thenReturn(editor);
+    org.mockito.Mockito.when(prefs.getString("layout", "system")).thenReturn("system");
+    org.mockito.Mockito.when(prefs.getString("second_layout", "none")).thenReturn("none");
+    org.mockito.Mockito.when(prefs.getString("custom_layout", "")).thenReturn("");
+    org.mockito.Mockito.when(prefs.getBoolean("number_row", false)).thenReturn(false);
+    org.mockito.Mockito.when(prefs.getBoolean("pin_entry_enabled", true)).thenReturn(true);
+    org.mockito.Mockito.when(prefs.contains("number_entry_layout")).thenReturn(false);
+    org.mockito.Mockito.when(prefs.contains("switch_input_immediate")).thenReturn(true);
+    org.mockito.Mockito.when(prefs.getBoolean("switch_input_immediate", false)).thenReturn(false);
+
+    Config.migrate(prefs);
+
+    org.mockito.Mockito.verify(editor).putString("change_method_key_replacement", "picker");
+    org.mockito.Mockito.verify(editor).putInt("version", 6);
+    org.mockito.Mockito.verify(editor).apply();
+  }
+
+  @Test
+  public void testLegacyImmediateChangeMethodPreferenceMigratesToPrevious()
+  {
+    android.content.SharedPreferences prefs =
+        org.mockito.Mockito.mock(android.content.SharedPreferences.class);
+    android.content.SharedPreferences.Editor editor =
+        org.mockito.Mockito.mock(android.content.SharedPreferences.Editor.class);
+    org.mockito.Mockito.when(prefs.getInt("version", 0)).thenReturn(0);
+    org.mockito.Mockito.when(prefs.edit()).thenReturn(editor);
+    org.mockito.Mockito.when(editor.putInt(org.mockito.ArgumentMatchers.anyString(),
+        org.mockito.ArgumentMatchers.anyInt())).thenReturn(editor);
+    org.mockito.Mockito.when(editor.putString(org.mockito.ArgumentMatchers.anyString(),
+        org.mockito.ArgumentMatchers.anyString())).thenReturn(editor);
+    org.mockito.Mockito.when(prefs.getString("layout", "system")).thenReturn("system");
+    org.mockito.Mockito.when(prefs.getString("second_layout", "none")).thenReturn("none");
+    org.mockito.Mockito.when(prefs.getString("custom_layout", "")).thenReturn("");
+    org.mockito.Mockito.when(prefs.getBoolean("number_row", false)).thenReturn(false);
+    org.mockito.Mockito.when(prefs.getBoolean("pin_entry_enabled", true)).thenReturn(true);
+    org.mockito.Mockito.when(prefs.contains("number_entry_layout")).thenReturn(false);
+    org.mockito.Mockito.when(prefs.contains("switch_input_immediate")).thenReturn(true);
+    org.mockito.Mockito.when(prefs.getBoolean("switch_input_immediate", false)).thenReturn(true);
+
+    Config.migrate(prefs);
+
+    org.mockito.Mockito.verify(editor).putString("change_method_key_replacement", "prev");
+    org.mockito.Mockito.verify(editor).putInt("version", 6);
+    org.mockito.Mockito.verify(editor).apply();
+  }
+
+  @Test
   public void testVersionFourPreferencesAreMigrated()
   {
     android.content.SharedPreferences prefs =
