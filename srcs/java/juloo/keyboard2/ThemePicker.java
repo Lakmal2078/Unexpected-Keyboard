@@ -238,7 +238,7 @@ final class ThemePicker
       chipViews.add(chip);
       chipRow.addView(chip);
     }
-    updateChipStyles(context, chipViews, categories, activeCategory[0]);
+    updateChipStyles(context, chipViews, categories, activeCategory[0], palette);
     chipScroll.addView(chipRow);
     root.addView(chipScroll, new LinearLayout.LayoutParams(-1, -2));
 
