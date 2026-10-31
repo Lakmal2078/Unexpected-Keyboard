@@ -82,17 +82,17 @@ public class AuditRegressionDeviceTest
           .commit());
       assertTrue(learned.edit().putString(marker, "keep").commit());
 
-      assertTrue(SettingsActivity.resetKeyboardSettings(prefs, Build.VERSION.SDK_INT >= 24));
+      assertTrue("Reset operation should commit", SettingsActivity.resetKeyboardSettings(prefs, Build.VERSION.SDK_INT >= 24));
 
-      assertTrue(prefs.getBoolean("sinhala_transliteration", false));
-      assertEquals(Config.DEFAULT_THEME, prefs.getString("theme", Config.DEFAULT_THEME));
-      assertEquals("theme", prefs.getString("key_shape", "theme"));
-      assertEquals("no_number_row", prefs.getString("number_row", "no_number_row"));
-      assertEquals(65, prefs.getInt("longpress_interval", 65));
-      assertEquals(6, prefs.getInt("version", 0));
+      assertTrue("Sinhala transliteration should return to its enabled default", prefs.getBoolean("sinhala_transliteration", false));
+      assertEquals("Theme should return to its default", Config.DEFAULT_THEME, prefs.getString("theme", Config.DEFAULT_THEME));
+      assertEquals("Key shape should return to its default", "theme", prefs.getString("key_shape", "theme"));
+      assertEquals("Number row should return to its default", "no_number_row", prefs.getString("number_row", "no_number_row"));
+      assertEquals("Long-press interval should return to its default", 65, prefs.getInt("longpress_interval", 65));
+      assertEquals("Config migration should initialize the current version", 6, prefs.getInt("version", 0));
       if (Build.VERSION.SDK_INT >= 24)
-        assertFalse(prefs.getBoolean("need_migration", true));
-      assertEquals("keep", learned.getString(marker, null));
+        assertFalse("Legacy encrypted preferences must not be restored", prefs.getBoolean("need_migration", true));
+      assertEquals("Reset must preserve learned Sinhala data", "keep", learned.getString(marker, null));
     }
     finally
     {
