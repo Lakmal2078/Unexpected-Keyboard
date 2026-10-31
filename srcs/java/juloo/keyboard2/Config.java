@@ -475,7 +475,7 @@ public class Config
 
   /** Config migrations. */
 
-  private static int CONFIG_VERSION = 5;
+  private static int CONFIG_VERSION = 6;
 
   /** Map legacy theme preferences to the supported curated theme catalog. */
   static String migrateThemePreference(String theme)
@@ -515,6 +515,14 @@ public class Config
       default:
         return DEFAULT_THEME;
     }
+  }
+
+  /** Normalize stale values that no longer exist in the numpad preference list. */
+  static String migrateShowNumpadPreference(String value)
+  {
+    if ("never".equals(value) || "landscape".equals(value) || "always".equals(value))
+      return value;
+    return "never";
   }
 
   public static void migrate(SharedPreferences prefs)
@@ -571,6 +579,12 @@ public class Config
             migratedFavorites.add(migrateThemePreference(favorite));
           e.putStringSet("favorite_themes", migratedFavorites);
         }
+        // Fallthrough
+      case 5:
+        // Remove the invalid legacy XML default ("1") from the ListPreference.
+        if (prefs.contains("show_numpad"))
+          e.putString("show_numpad",
+              migrateShowNumpadPreference(prefs.getString("show_numpad", "never")));
         // Fallthrough
       default: break;
     }
