@@ -255,7 +255,7 @@ public final class SinhalaLearner
     return _correctionsCache.get(rawSinglish.trim().toLowerCase(java.util.Locale.ROOT));
   }
 
-  public void clearLearnedData()
+  public synchronized void clearLearnedData()
   {
     clearActiveCaches();
     if (_prefs != null)
@@ -265,14 +265,18 @@ public final class SinhalaLearner
   /** Clear persisted learning and every live learner cache in this app process. */
   public static void clearAllLearnedData(Context context)
   {
+    if (context == null)
+      return;
+    SharedPreferences prefs =
+        DirectBootAwarePreferences.get_protected_prefs(context, PREF_NAME);
+    clearAllLearnedData(prefs);
+  }
+
+  static void clearAllLearnedData(SharedPreferences prefs)
+  {
     clearActiveCaches();
-    if (context != null)
-    {
-      SharedPreferences prefs =
-          DirectBootAwarePreferences.get_protected_prefs(context, PREF_NAME);
-      if (prefs != null)
-        prefs.edit().clear().apply();
-    }
+    if (prefs != null)
+      prefs.edit().clear().apply();
   }
 
   private static void clearActiveCaches()
