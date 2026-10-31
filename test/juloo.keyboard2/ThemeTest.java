@@ -39,6 +39,7 @@ public class ThemeTest
       "sinhala_tech", "amoled_cyan", "cyber_purple", "neon_rose",
       "gradientpurplepink", "sinhala_heritage", "aurora", "ocean_teal"
     };
+    assertEquals("light", Config.migrateThemePreference("soft_lavender"));
     for (String theme : legacyThemes)
     {
       String migrated = Config.migrateThemePreference(theme);
@@ -78,7 +79,7 @@ public class ThemeTest
 
     Config.migrate(prefs);
 
-    org.mockito.Mockito.verify(editor).putString("theme", "graphite_pro");
+    org.mockito.Mockito.verify(editor).putString("theme", "light");
     org.mockito.Mockito.verify(editor).putString("day_theme", "light");
     org.mockito.Mockito.verify(editor).putString("night_theme", "graphite_pro");
     org.mockito.Mockito.verify(editor).putStringSet(org.mockito.ArgumentMatchers.eq("favorite_themes"),
