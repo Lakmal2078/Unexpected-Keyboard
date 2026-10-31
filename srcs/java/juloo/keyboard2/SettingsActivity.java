@@ -43,9 +43,12 @@ public class SettingsActivity extends PreferenceActivity
             .setPositiveButton(R.string.pref_clear_sinhala_learned_data_action, (dialog, which) -> {
               try
               {
-                SinhalaLearner.clearAllLearnedData(this);
-                Toast.makeText(this, R.string.pref_clear_sinhala_learned_data_done,
-                    Toast.LENGTH_SHORT).show();
+                int message = SinhalaLearner.clearAllLearnedData(this)
+                    ? R.string.pref_clear_sinhala_learned_data_done
+                    : R.string.pref_clear_sinhala_learned_data_failed;
+                Toast.makeText(this, message,
+                    message == R.string.pref_clear_sinhala_learned_data_done
+                        ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG).show();
               }
               catch (Exception e)
               {
