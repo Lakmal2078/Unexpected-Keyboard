@@ -77,22 +77,23 @@ public class AuditRegressionDeviceTest
   public void themePickerScreenshotsRenderInLightAndDarkModes() throws Exception
   {
     Context context = ApplicationProvider.getApplicationContext();
-    File screenshotDirectory = new File(
-        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "unexpected-keyboard-uiux");
+    File externalPictures = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    assertNotNull("External app picture directory must be available", externalPictures);
+    File screenshotDirectory = new File(externalPictures, "unexpected-keyboard-uiux");
     assertTrue("Screenshot directory must be available",
         screenshotDirectory.isDirectory() || screenshotDirectory.mkdirs());
 
     try (ActivityScenario<SettingsActivity> scenario = ActivityScenario.launch(SettingsActivity.class))
     {
-      captureThemePickerScreenshot(scenario, context, android.R.style.Theme_DeviceDefault_Light,
+      captureThemePickerScreenshot(scenario, android.R.style.Theme_DeviceDefault_Light,
           new File(screenshotDirectory, "theme-picker-light.png"));
-      captureThemePickerScreenshot(scenario, context, android.R.style.Theme_DeviceDefault,
+      captureThemePickerScreenshot(scenario, android.R.style.Theme_DeviceDefault,
           new File(screenshotDirectory, "theme-picker-dark.png"));
     }
   }
 
   private static void captureThemePickerScreenshot(ActivityScenario<SettingsActivity> scenario,
-      Context appContext, int themeResource, File output) throws IOException
+      int themeResource, File output) throws IOException
   {
     final AlertDialog[] dialog = new AlertDialog[1];
     scenario.onActivity(activity -> {
