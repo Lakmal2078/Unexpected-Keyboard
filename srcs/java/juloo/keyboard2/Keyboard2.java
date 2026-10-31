@@ -563,10 +563,15 @@ public class Keyboard2 extends InputMethodService
   {
     int prev_theme = _config.theme;
     boolean prev_custom_colors = _config.custom_colors_enabled;
+    boolean prev_clipboard_history_enabled = _config.clipboard_history_enabled;
     int prev_custom_bg = _config.custom_bg_color;
     int prev_custom_accent = _config.custom_accent_color;
 
     _config.refresh(getResources(), _foldStateTracker.isUnfolded(), _dictionaries);
+    boolean clipboardHistoryChanged =
+        prev_clipboard_history_enabled != _config.clipboard_history_enabled;
+    if (prev_clipboard_history_enabled && !_config.clipboard_history_enabled)
+      ClipboardHistoryService.clear_history_if_disabled();
     refresh_current_dictionary();
     // Refreshing the theme config or custom colors requires re-creating the views
     if (prev_theme != _config.theme
@@ -595,6 +600,13 @@ public class Keyboard2 extends InputMethodService
       Drawable bg = _keyboard_container_view.getBackground().mutate();
       bg.setAlpha(_config.keyboardOpacity);
       _keyboard_container_view.setBackground(bg);
+    }
+    if (clipboardHistoryChanged && _clipboard_pane != null)
+    {
+      ClipboardHistoryCheckBox checkbox =
+          _clipboard_pane.findViewById(R.id.clipboard_history_checkbox);
+      if (checkbox != null)
+        checkbox.refreshFromConfig();
     }
     _keyboard_layout_view.reset();
     refresh_candidates_view();

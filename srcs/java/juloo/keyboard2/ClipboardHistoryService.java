@@ -55,6 +55,14 @@ public final class ClipboardHistoryService
       _service.clear_history();
   }
 
+  /** Purge volatile history when settings changes disable the feature. */
+  public static void clear_history_if_disabled()
+  {
+    Config config = Config.globalConfig();
+    if (_service != null && config != null && !config.clipboard_history_enabled)
+      _service.clear_history();
+  }
+
   /** Send the given string to the editor. */
   public static void paste(String clip)
   {

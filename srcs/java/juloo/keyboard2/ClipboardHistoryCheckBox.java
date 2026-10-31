@@ -15,6 +15,15 @@ final class ClipboardHistoryCheckBox extends CheckBox
     setOnCheckedChangeListener(this);
   }
 
+  /** Refresh the cached clipboard pane after settings are reset externally. */
+  void refreshFromConfig()
+  {
+    boolean enabled = Config.globalConfig().clipboard_history_enabled;
+    setOnCheckedChangeListener(null);
+    setChecked(enabled);
+    setOnCheckedChangeListener(this);
+  }
+
   @Override
   public void onCheckedChanged(CompoundButton _v, boolean isChecked)
   {
