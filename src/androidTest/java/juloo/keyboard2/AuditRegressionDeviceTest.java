@@ -1,17 +1,22 @@
 package juloo.keyboard2;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.os.Build;
+import android.os.Environment;
 import android.view.ContextThemeWrapper;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -127,28 +132,31 @@ public class AuditRegressionDeviceTest
   @Test
   public void themePickerScreenshotsRenderInLightAndDarkModes() throws Exception
   {
-    Context context = ApplicationProvider.getApplicationContext();
-    File externalPictures = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-    assertNotNull("External app picture directory must be available", externalPictures);
-    File screenshotDirectory = new File(externalPictures, "unexpected-keyboard-uiux");
+    Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+    File screenshotDirectory = new File(context.getFilesDir(), "unexpected-keyboard-uiux");
     assertTrue("Screenshot directory must be available",
         screenshotDirectory.isDirectory() || screenshotDirectory.mkdirs());
 
     try (ActivityScenario<SettingsActivity> scenario = ActivityScenario.launch(SettingsActivity.class))
     {
-      captureThemePickerScreenshot(scenario, android.R.style.Theme_DeviceDefault_Light,
-          new File(screenshotDirectory, "theme-picker-light.png"));
-      captureThemePickerScreenshot(scenario, android.R.style.Theme_DeviceDefault,
-          new File(screenshotDirectory, "theme-picker-dark.png"));
+      captureThemePickerScreenshot(context, scenario, android.R.style.Theme_DeviceDefault_Light,
+          false, new File(screenshotDirectory, "theme-picker-light.png"));
+      captureThemePickerScreenshot(context, scenario, android.R.style.Theme_DeviceDefault,
+          true, new File(screenshotDirectory, "theme-picker-dark.png"));
     }
   }
 
-  private static void captureThemePickerScreenshot(ActivityScenario<SettingsActivity> scenario,
-      int themeResource, File output) throws IOException
+  private static void captureThemePickerScreenshot(Context context,
+      ActivityScenario<SettingsActivity> scenario, int themeResource, boolean nightMode, File output)
+      throws IOException
   {
     final AlertDialog[] dialog = new AlertDialog[1];
     scenario.onActivity(activity -> {
+      Configuration override = new Configuration(activity.getResources().getConfiguration());
+      override.uiMode = (override.uiMode & ~Configuration.UI_MODE_NIGHT_MASK)
+          | (nightMode ? Configuration.UI_MODE_NIGHT_YES : Configuration.UI_MODE_NIGHT_NO);
       ContextThemeWrapper themedContext = new ContextThemeWrapper(activity, themeResource);
+      themedContext.applyOverrideConfiguration(override);
       SharedPreferences prefs = DirectBootAwarePreferences.get_shared_preferences(activity);
       dialog[0] = ThemePicker.create(
           new AlertDialog.Builder(themedContext), themedContext.getResources(), prefs);
@@ -160,15 +168,63 @@ public class AuditRegressionDeviceTest
     instrumentation.waitForIdleSync();
     Bitmap screenshot = instrumentation.getUiAutomation().takeScreenshot();
     assertNotNull("Theme picker screenshot must be captured", screenshot);
-    try (FileOutputStream stream = new FileOutputStream(output))
+    try
     {
-      assertTrue("Theme picker screenshot must be written",
-          screenshot.compress(Bitmap.CompressFormat.PNG, 100, stream));
+      try (FileOutputStream stream = new FileOutputStream(output))
+      {
+        assertTrue("Theme picker screenshot must be written",
+            screenshot.compress(Bitmap.CompressFormat.PNG, 100, stream));
+      }
+      publishScreenshotToMediaStore(context, screenshot, output.getName());
     }
     finally
     {
       screenshot.recycle();
       scenario.onActivity(activity -> dialog[0].dismiss());
+    }
+    assertTrue("Captured screenshot must be written and non-empty",
+        output.isFile() && output.length() > 0);
+  }
+
+  /** Publish screenshots to shared media storage so CI can pull them after instrumentation exits. */
+  private static void publishScreenshotToMediaStore(Context context, Bitmap screenshot,
+      String fileName) throws IOException
+  {
+    ContentValues values = new ContentValues();
+    values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+    values.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
+    if (Build.VERSION.SDK_INT >= 29)
+    {
+      values.put(MediaStore.MediaColumns.RELATIVE_PATH,
+          Environment.DIRECTORY_PICTURES + "/unexpected-keyboard-uiux");
+      values.put(MediaStore.MediaColumns.IS_PENDING, 1);
+    }
+
+    Uri uri = context.getContentResolver().insert(
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    if (uri == null)
+      throw new IOException("Could not create a shared screenshot media entry");
+
+    try
+    {
+      try (OutputStream stream = context.getContentResolver().openOutputStream(uri))
+      {
+        if (stream == null
+            || !screenshot.compress(Bitmap.CompressFormat.PNG, 100, stream))
+          throw new IOException("Could not write screenshot to shared media storage");
+      }
+      if (Build.VERSION.SDK_INT >= 29)
+      {
+        ContentValues publish = new ContentValues();
+        publish.put(MediaStore.MediaColumns.IS_PENDING, 0);
+        if (context.getContentResolver().update(uri, publish, null, null) != 1)
+          throw new IOException("Could not publish screenshot media entry");
+      }
+    }
+    catch (IOException e)
+    {
+      context.getContentResolver().delete(uri, null, null);
+      throw e;
     }
   }
 
