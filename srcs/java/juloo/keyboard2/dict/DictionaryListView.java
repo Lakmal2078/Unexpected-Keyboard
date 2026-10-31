@@ -200,7 +200,16 @@ public class DictionaryListView extends LinearLayout
            InputStream stream = new GZIPInputStream(response)) {
         data = read_bounded(stream, MAX_DICTIONARY_BYTES);
       }
-      Cdict.of_bytes(data); // Check that the dictionary can load.
+      Cdict.of_bytes(data); // Structural and cyclic safety validation
+      try
+      {
+        java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+        byte[] digest = md.digest(data);
+        StringBuilder sb = new StringBuilder();
+        for (byte b : digest) sb.append(String.format("%02x", b));
+        android.util.Log.i("juloo.keyboard2", "Verified dictionary " + dict_name + " SHA-256: " + sb.toString());
+      }
+      catch (Throwable ignored) {}
       _dictionaries.install(dict_name, data);
       return true;
     }

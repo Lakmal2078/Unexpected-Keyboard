@@ -13,14 +13,17 @@ import java.util.Map;
 /**
  * Privacy-preserving, on-device dynamic bigram learner for Sinhala text.
  * Learns frequent word transitions typed by the user to personalize predictions.
- * All data stays strictly on-device, bounded in size, and is never logged or transmitted.
+ * All data stays strictly on-device, bounded in size (max 250 previous words,
+ * max 8 candidates per word), and is never logged or transmitted.
+ * Entries evicted from memory are simultaneously purged from disk.
+ * Users can wipe learned data at any time via clearLearnedData().
  */
 public final class SinhalaLearner
 {
   private static final String PREF_NAME = "sinhala_learned_bigrams";
-  private static final int MAX_PREV_WORDS = 250;
-  private static final int MAX_CANDIDATES_PER_WORD = 8;
-  private static final int MAX_WORD_LENGTH = 30;
+  public static final int MAX_PREV_WORDS = 250;
+  public static final int MAX_CANDIDATES_PER_WORD = 8;
+  public static final int MAX_WORD_LENGTH = 30;
 
   private final SharedPreferences _prefs;
   private final Map<String, Map<String, Integer>> _memoryCache =
@@ -29,7 +32,22 @@ public final class SinhalaLearner
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Map<String, Integer>> eldest)
         {
-          return size() > MAX_PREV_WORDS;
+          boolean remove = size() > MAX_PREV_WORDS;
+          if (remove && _prefs != null && eldest != null)
+          {
+            String prevWord = eldest.getKey();
+            Map<String, Integer> candidates = eldest.getValue();
+            if (candidates != null && !candidates.isEmpty())
+            {
+              SharedPreferences.Editor editor = _prefs.edit();
+              for (String nextWord : candidates.keySet())
+              {
+                editor.remove(prevWord + "|" + nextWord);
+              }
+              editor.apply();
+            }
+          }
+          return remove;
         }
       };
 
@@ -66,11 +84,16 @@ public final class SinhalaLearner
         continue;
       String prev = key.substring(0, sep);
       String next = key.substring(sep + 1);
+      if (!isValidSinhalaWord(prev) || !isValidSinhalaWord(next))
+        continue;
       Object val = entry.getValue();
       int count = (val instanceof Integer) ? (Integer) val : 1;
 
       Map<String, Integer> nexts = getOrCreateNexts(prev);
-      nexts.put(next, count);
+      if (nexts.size() < MAX_CANDIDATES_PER_WORD)
+      {
+        nexts.put(next, count);
+      }
     }
   }
 
@@ -102,32 +125,39 @@ public final class SinhalaLearner
     int updated = current + 1;
     nexts.put(nextWord, updated);
 
-    // Prune excess next-words for this previous word
+    SharedPreferences.Editor editor = (_prefs != null) ? _prefs.edit() : null;
+
+    // Prune excess next-words for this previous word to MAX_CANDIDATES_PER_WORD
     if (nexts.size() > MAX_CANDIDATES_PER_WORD)
     {
       String leastKey = null;
       int minCount = Integer.MAX_VALUE;
       for (Map.Entry<String, Integer> e : nexts.entrySet())
       {
-        if (e.getValue() < minCount)
+        int count = e.getValue();
+        if (count < minCount || (count == minCount && leastKey != null && e.getKey().compareTo(leastKey) < 0))
         {
-          minCount = e.getValue();
+          minCount = count;
           leastKey = e.getKey();
         }
       }
-      if (leastKey != null && !leastKey.equals(nextWord))
+      if (leastKey != null)
       {
         nexts.remove(leastKey);
-        if (_prefs != null)
+        if (editor != null)
         {
-          _prefs.edit().remove(prevWord + "|" + leastKey).apply();
+          editor.remove(prevWord + "|" + leastKey);
         }
       }
     }
 
-    if (_prefs != null)
+    if (editor != null)
     {
-      _prefs.edit().putInt(prevWord + "|" + nextWord, updated).apply();
+      if (nexts.containsKey(nextWord))
+      {
+        editor.putInt(prevWord + "|" + nextWord, updated);
+      }
+      editor.apply();
     }
   }
 

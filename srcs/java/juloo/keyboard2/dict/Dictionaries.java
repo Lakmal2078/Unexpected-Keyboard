@@ -179,7 +179,10 @@ public final class Dictionaries
         inp.close();
         return Cdict.of_bytes(data);
       }
-      catch (Throwable t) { }
+      catch (Throwable t)
+      {
+        Logs.exn("Dictionaries: load_uncached from internal storage failed for " + dict_name, t);
+      }
     }
     try
     {
@@ -188,7 +191,11 @@ public final class Dictionaries
       inp.close();
       return Cdict.of_bytes(data);
     }
-    catch (Throwable t) { return null; }
+    catch (Throwable t)
+    {
+      Logs.exn("Dictionaries: load_uncached from assets failed for " + dict_name, t);
+      return null;
+    }
   }
 
   synchronized void save()

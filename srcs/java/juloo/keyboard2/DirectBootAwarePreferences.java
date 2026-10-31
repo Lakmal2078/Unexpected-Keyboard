@@ -9,11 +9,12 @@ import java.util.Set;
 
 public final class DirectBootAwarePreferences
 {
-  /* On API >= 24, preferences are read from the device protected storage. This
-   * storage is less protected than the default, no personnal or sensitive
-   * information is stored there (only the keyboard settings). This storage is
-   * accessible during boot and allow the keyboard to read its settings and
-   * allow typing the storage password. */
+  /* On API >= 24, preferences are read from device-protected storage. This
+   * storage is accessible during boot (before user credentials are entered) to
+   * allow typing the storage password. Settings and bounded on-device learned bigrams
+   * stored here never leave the device, are strictly bounded in size, and can be
+   * cleared by the user. Sensitive inputs (passwords, credit cards, private mode)
+   * are strictly excluded from learning. */
   public static SharedPreferences get_shared_preferences(Context context)
   {
     if (VERSION.SDK_INT < 24)

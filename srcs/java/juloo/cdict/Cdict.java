@@ -108,16 +108,25 @@ public class Cdict {
     // Use iterative DFS colors to reject back-edges (cycles) while accepting
     // already-validated shared nodes.
     java.util.ArrayDeque<Integer> pending = new java.util.ArrayDeque<>();
-    java.util.HashMap<Integer, Integer> state = new java.util.HashMap<>();
+    int trieSpan = trieEnd - trieStart;
+    byte[] state = new byte[trieSpan]; // 0 = unvisited, 1 = visiting, 2 = finished
+    int visitedCount = 0;
     pending.push(root);
     while (!pending.isEmpty()) {
       int entry = pending.pop();
       if (entry < 0) {
-        state.put(~entry, 2); // finished
+        int finishedNode = ~entry;
+        int stateIdx = finishedNode - trieStart;
+        if (stateIdx >= 0 && stateIdx < trieSpan) {
+          state[stateIdx] = 2; // finished
+        }
         continue;
       }
-      Integer previousState = state.get(entry);
-      int nodeState = previousState == null ? 0 : previousState.intValue();
+      if (entry < trieStart || entry >= trieEnd) {
+        throw new ConstructionError("Trie node offset out of bounds");
+      }
+      int stateIdx = entry - trieStart;
+      int nodeState = state[stateIdx];
       if (nodeState == 1) {
         throw new ConstructionError("Trie contains a cycle");
       }
@@ -125,12 +134,10 @@ public class Cdict {
         continue; // shared node already validated
       }
       int node = entry;
-      if (node < trieStart || node >= trieEnd) {
-        throw new ConstructionError("Trie node offset out of bounds");
-      }
-      state.put(node, 1); // visiting
+      state[stateIdx] = 1; // visiting
+      visitedCount++;
       pending.push(~node); // exit marker; children are processed first
-      if (state.size() > data.length / 2 + 1) {
+      if (visitedCount > data.length / 2 + 1) {
         throw new ConstructionError("Trie node count exceeds file size");
       }
       requireRange(data, node, 2, "trie node header");
@@ -315,10 +322,38 @@ public class Cdict {
 
   public String word(int index) {
     if (index < 0) return "";
-    byte[] buf = new byte[128];
+    byte[] buf = new byte[512];
     int len = word_node(_root_node, 0, index, buf, 0, buf.length);
     if (len <= 0) return "";
+    if (len == buf.length) {
+      len = trimIncompleteUtf8(buf, len);
+    }
     return new String(buf, 0, len, StandardCharsets.UTF_8);
+  }
+
+  private static int trimIncompleteUtf8(byte[] buf, int len) {
+    int i = len - 1;
+    while (i >= 0 && (buf[i] & 0xC0) == 0x80) {
+      i--;
+    }
+    if (i < 0) return 0;
+    int lead = buf[i] & 0xFF;
+    int expectedLen;
+    if ((lead & 0x80) == 0) {
+      expectedLen = 1;
+    } else if ((lead & 0xE0) == 0xC0) {
+      expectedLen = 2;
+    } else if ((lead & 0xF0) == 0xE0) {
+      expectedLen = 3;
+    } else if ((lead & 0xF8) == 0xF0) {
+      expectedLen = 4;
+    } else {
+      return i;
+    }
+    if (i + expectedLen > len) {
+      return i;
+    }
+    return len;
   }
 
   public int[] suffixes(Result result, int count) {
@@ -456,22 +491,24 @@ public class Cdict {
   }
 
   private static int levenshtein(byte[] a, int a_off, int a_len, byte[] b, int b_off, int b_len) {
-    int[] v0 = new int[b_len + 1];
-    int[] v1 = new int[b_len + 1];
-    for (int i = 0; i <= b_len; i++) v0[i] = i;
+    int rowLen = b_len + 1;
+    int[] v = new int[rowLen * 2];
+    int v0 = 0;
+    int v1 = rowLen;
+    for (int i = 0; i <= b_len; i++) v[v0 + i] = i;
     for (int i = 0; i < a_len; i++) {
-      v1[0] = i + 1;
+      v[v1] = i + 1;
       for (int j = 0; j < b_len; j++) {
-        int del = v0[j + 1] + 1;
-        int ins = v1[j] + 1;
-        int rpl = v0[j] + ((a[a_off + i] == b[b_off + j]) ? 0 : 1);
-        v1[j + 1] = Math.min(del, Math.min(ins, rpl));
+        int del = v[v0 + j + 1] + 1;
+        int ins = v[v1 + j] + 1;
+        int rpl = v[v0 + j] + ((a[a_off + i] == b[b_off + j]) ? 0 : 1);
+        v[v1 + j + 1] = Math.min(del, Math.min(ins, rpl));
       }
-      int[] tmp = v0;
+      int tmp = v0;
       v0 = v1;
       v1 = tmp;
     }
-    return v0[b_len];
+    return v[v0 + b_len];
   }
 
   private Result find_node(int parent_node, int ptr, byte[] word, int word_idx, int word_end, int index) {
