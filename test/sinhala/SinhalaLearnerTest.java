@@ -122,6 +122,24 @@ public class SinhalaLearnerTest
   }
 
   @Test
+  public void testInstanceClearDoesNotDeleteAnotherLearnerStore()
+  {
+    FakeSharedPreferences otherPrefs = new FakeSharedPreferences();
+    SinhalaLearner otherLearner = new SinhalaLearner(otherPrefs);
+    learner.recordTransition("මම", "යනවා");
+    otherLearner.recordTransition("ඔබ", "එනවා");
+
+    learner.clearLearnedData();
+
+    assertTrue(fakePrefs.getAll().isEmpty());
+    assertTrue(learner.getLearnedPredictions("මම").isEmpty());
+    assertFalse("Clearing one learner must not erase another store",
+        otherPrefs.getAll().isEmpty());
+    assertFalse("Other learner predictions must remain intact",
+        otherLearner.getLearnedPredictions("ඔබ").isEmpty());
+  }
+
+  @Test
   public void testInputValidation_rejectsInvalidTokens()
   {
     // English words
