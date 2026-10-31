@@ -275,11 +275,17 @@ public class Keyboard2View extends View
     VibratorCompat.vibrate(this, _config);
   }
 
+  /** Resolve the keyboard's available width from its parent window, not the full display. */
+  static int resolveAvailableWidth(int widthSpecSize, int displayWidth)
+  {
+    return widthSpecSize > 0 ? widthSpecSize : displayWidth;
+  }
+
   @Override
   public void onMeasure(int wSpec, int hSpec)
   {
     DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
-    int width = dm.widthPixels;
+    int width = resolveAvailableWidth(MeasureSpec.getSize(wSpec), dm.widthPixels);
     _marginLeft = Math.max(_config.horizontal_margin, _insets_left);
     _marginRight = Math.max(_config.horizontal_margin, _insets_right);
     _marginBottom = _config.margin_bottom + _insets_bottom;
