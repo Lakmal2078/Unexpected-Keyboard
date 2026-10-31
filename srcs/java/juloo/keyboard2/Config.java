@@ -492,7 +492,7 @@ public class Config
       case "monetlight": case "monetdark":
         return "monet";
       case "gruvbox_light": case "everforestlight": case "sepia_warm":
-      case "desert": case "rose_quartz": case "ocean_breeze": case "citrus_pop":
+      case "desert": case "soft_lavender": case "rose_quartz": case "ocean_breeze": case "citrus_pop":
       case "mint_matcha": case "glass": case "soft_3d": case "zen_minimal":
         return "light";
       case "epaper": return "white";
