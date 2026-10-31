@@ -302,5 +302,11 @@
     <string name="pref_reset_keyboard_settings_action">Reset settings</string>
     <string name="pref_reset_keyboard_settings_done">Keyboard settings restored to defaults</string>
     <string name="pref_reset_keyboard_settings_failed">Could not reset keyboard settings. Please try again.</string>
+  <string name="quick_toolbar_apps_desc">Emoji and app tools</string>
+  <string name="quick_toolbar_keyboard_desc">Choose keyboard</string>
+  <string name="quick_toolbar_translate_desc">Translate text</string>
+  <string name="quick_toolbar_settings_desc">Keyboard settings</string>
+  <string name="quick_toolbar_clipboard_desc">Clipboard history</string>
+  <string name="quick_toolbar_theme_desc">Choose keyboard theme</string>
 </resources>
 
