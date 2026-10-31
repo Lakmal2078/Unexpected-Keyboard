@@ -46,69 +46,32 @@ final class ThemePicker
 
   public static ThemeCategory categoryOf(String key)
   {
-    if (key == null)
-      return null;
+    if (key == null) return null;
     switch (key)
     {
       case "system":
       case "monet":
-      case "monetlight":
-      case "monetdark":
         return ThemeCategory.SYSTEM;
-
       case "dark":
       case "black":
       case "oled_black":
       case "graphite_pro":
-      case "cobalt":
+      case "gruvbox_dark":
+      case "solarized_dark":
       case "dracula":
       case "nord":
       case "tokyo_night":
       case "catppuccin_mocha":
-      case "gruvbox_dark":
-      case "solarized_dark":
-      case "rosepine":
-      case "quiet_teal":
-      case "midnight_purple":
-      case "midnight_ocean":
-      case "matrix_green":
-      case "sunset_glow":
-      case "unexpected_keyboard":
-      case "copper_night":
-      case "berry_noir":
-      case "aurora_flow":
-      case "pixel_retro":
       case "high_contrast":
-      case "high_contrast_yellow":
         return ThemeCategory.DARK;
-
       case "light":
       case "white":
       case "gruvbox_light":
       case "catppuccin_latte":
-      case "everforestlight":
-      case "sepia_warm":
-      case "zen_minimal":
-      case "arctic_blue":
-      case "soft_lavender":
-      case "rose_quartz":
-      case "ocean_breeze":
-      case "citrus_pop":
-      case "mint_matcha":
-      case "glass":
-      case "soft_3d":
         return ThemeCategory.LIGHT;
-
-      case "lanka_maroon":
-      case "lanka_blue":
-      case "royal_gold":
       case "sinhala_sand":
-      case "emerald_forest":
-      case "cyberpunk_neon":
-      case "desert":
-      case "jungle":
+      case "lanka_maroon":
         return ThemeCategory.VIBRANT;
-
       default:
         return null;
     }
