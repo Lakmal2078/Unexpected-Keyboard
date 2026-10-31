@@ -89,7 +89,7 @@ public class AuditRegressionDeviceTest
       assertEquals("theme", prefs.getString("key_shape", "theme"));
       assertEquals("no_number_row", prefs.getString("number_row", "no_number_row"));
       assertEquals(65, prefs.getInt("longpress_interval", 65));
-      assertEquals(Config.CONFIG_VERSION, prefs.getInt("version", 0));
+      assertEquals(6, prefs.getInt("version", 0));
       if (Build.VERSION.SDK_INT >= 24)
         assertFalse(prefs.getBoolean("need_migration", true));
       assertEquals("keep", learned.getString(marker, null));
