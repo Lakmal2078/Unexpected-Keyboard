@@ -216,6 +216,34 @@ public class ClipboardHistoryServiceTest
   }
 
   @Test
+  public void disablingClipboardHistoryThroughSettingsPurgesVolatileEntries()
+  {
+    service.add_clip("synthetic clipboard item");
+    assertEquals(1, service._history.size());
+    clearInvocations(historyListener);
+
+    Config.globalConfig().clipboard_history_enabled = false;
+    ClipboardHistoryService.clear_history_if_disabled();
+
+    assertTrue(service._history.isEmpty());
+    verify(historyListener).on_clipboard_history_change();
+    verify(handler).removeCallbacks(service._expire_history);
+  }
+
+  @Test
+  public void settingsRefreshDoesNotPurgeHistoryWhileFeatureRemainsEnabled()
+  {
+    service.add_clip("synthetic clipboard item");
+    clearInvocations(historyListener);
+
+    Config.globalConfig().clipboard_history_enabled = true;
+    ClipboardHistoryService.clear_history_if_disabled();
+
+    assertEquals(1, service._history.size());
+    verifyNoInteractions(historyListener);
+  }
+
+  @Test
   public void previewReadsSystemClipboardWithoutRetainingHistory()
   {
     Config.globalConfig().clipboard_history_enabled = false;
