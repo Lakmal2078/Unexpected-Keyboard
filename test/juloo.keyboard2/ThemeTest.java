@@ -52,6 +52,42 @@ public class ThemeTest
   }
 
   @Test
+  public void testVersionFourPreferencesAreMigrated()
+  {
+    android.content.SharedPreferences prefs =
+        org.mockito.Mockito.mock(android.content.SharedPreferences.class);
+    android.content.SharedPreferences.Editor editor =
+        org.mockito.Mockito.mock(android.content.SharedPreferences.Editor.class);
+    org.mockito.Mockito.when(prefs.getInt("version", 0)).thenReturn(4);
+    org.mockito.Mockito.when(prefs.edit()).thenReturn(editor);
+    org.mockito.Mockito.when(editor.putInt("version", 5)).thenReturn(editor);
+    org.mockito.Mockito.when(prefs.contains("theme")).thenReturn(true);
+    org.mockito.Mockito.when(prefs.contains("day_theme")).thenReturn(true);
+    org.mockito.Mockito.when(prefs.contains("night_theme")).thenReturn(true);
+    org.mockito.Mockito.when(prefs.getString("theme", Config.DEFAULT_THEME))
+        .thenReturn("soft_lavender");
+    org.mockito.Mockito.when(prefs.getString("day_theme", "light")).thenReturn("sepia_warm");
+    org.mockito.Mockito.when(prefs.getString("night_theme", "dark")).thenReturn("rosepine");
+    java.util.Set<String> favorites = new java.util.HashSet<>(
+        java.util.Arrays.asList("monetlight", "sinhala_heritage"));
+    org.mockito.Mockito.when(prefs.getStringSet("favorite_themes", null)).thenReturn(favorites);
+    org.mockito.Mockito.when(editor.putString(org.mockito.ArgumentMatchers.anyString(),
+        org.mockito.ArgumentMatchers.anyString())).thenReturn(editor);
+    org.mockito.Mockito.when(editor.putStringSet(org.mockito.ArgumentMatchers.eq("favorite_themes"),
+        org.mockito.ArgumentMatchers.anySet())).thenReturn(editor);
+
+    Config.migrate(prefs);
+
+    org.mockito.Mockito.verify(editor).putString("theme", "graphite_pro");
+    org.mockito.Mockito.verify(editor).putString("day_theme", "light");
+    org.mockito.Mockito.verify(editor).putString("night_theme", "graphite_pro");
+    org.mockito.Mockito.verify(editor).putStringSet(org.mockito.ArgumentMatchers.eq("favorite_themes"),
+        org.mockito.ArgumentMatchers.eq(new java.util.HashSet<>(
+            java.util.Arrays.asList("monet", "lanka_maroon"))));
+    org.mockito.Mockito.verify(editor).apply();
+  }
+
+  @Test
   public void testUnknownLegacyThemeUsesDefault()
   {
     assertEquals(Config.DEFAULT_THEME, Config.migrateThemePreference("unknown_theme"));
