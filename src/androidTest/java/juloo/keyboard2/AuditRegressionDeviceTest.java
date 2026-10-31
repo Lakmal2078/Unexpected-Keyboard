@@ -3,6 +3,7 @@ package juloo.keyboard2;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.view.ContextThemeWrapper;
 import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
@@ -46,6 +47,26 @@ public class AuditRegressionDeviceTest
       if (hadValue) editor.putBoolean(key, original); else editor.remove(key);
       editor.commit();
     }
+  }
+
+  @Test
+  public void themePickerPaletteTracksPlatformLightAndDarkThemes()
+  {
+    Context context = ApplicationProvider.getApplicationContext();
+    ContextThemeWrapper lightContext =
+        new ContextThemeWrapper(context, android.R.style.Theme_DeviceDefault_Light);
+    ContextThemeWrapper darkContext =
+        new ContextThemeWrapper(context, android.R.style.Theme_DeviceDefault);
+
+    ThemePicker.PickerPalette light = new ThemePicker.PickerPalette(lightContext);
+    ThemePicker.PickerPalette dark = new ThemePicker.PickerPalette(darkContext);
+
+    assertNotEquals("Card surfaces must follow the active platform theme",
+        light.cardBackground, dark.cardBackground);
+    assertNotEquals("Primary text must follow the active platform theme",
+        light.primaryText, dark.primaryText);
+    assertEquals(Theme.getContrastColor(light.accent), light.accentText);
+    assertEquals(Theme.getContrastColor(dark.accent), dark.accentText);
   }
 
   @Test
