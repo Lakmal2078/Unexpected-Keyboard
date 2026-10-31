@@ -145,50 +145,32 @@ public class ThemeTest
   }
 
   @Test
-  public void testAll51ThemesMapToExactlyOneCategory()
+  public void testCuratedThemesMapToExactlyOneCategory()
   {
-    String[] all51Themes = {
-      "system", "dark", "light", "black", "oled_black", "white",
-      "monet", "monetlight", "monetdark", "gruvbox_dark", "gruvbox_light",
-      "solarized_dark", "dracula", "nord", "tokyo_night", "catppuccin_mocha",
-      "catppuccin_latte", "rosepine", "everforestlight", "sepia_warm",
-      "desert", "sinhala_sand", "emerald_forest", "jungle", "cyberpunk_neon",
-      "matrix_green", "sunset_glow", "lanka_maroon", "royal_gold",
-      "midnight_purple", "midnight_ocean", "arctic_blue", "cobalt",
-      "graphite_pro", "quiet_teal", "soft_lavender", "high_contrast",
-      "high_contrast_yellow", "lanka_blue", "unexpected_keyboard",
-      "rose_quartz", "ocean_breeze", "citrus_pop", "copper_night",
-      "berry_noir", "mint_matcha", "glass", "aurora_flow", "zen_minimal",
-      "soft_3d", "pixel_retro"
+    String[] themes = {
+      "system", "dark", "light", "black", "oled_black", "white", "monet",
+      "graphite_pro", "gruvbox_dark", "solarized_dark", "dracula", "nord",
+      "tokyo_night", "catppuccin_mocha", "catppuccin_latte", "sinhala_sand",
+      "lanka_maroon", "high_contrast"
     };
-
-    assertEquals(51, all51Themes.length);
-
-    java.util.Map<ThemePicker.ThemeCategory, Integer> categoryCounts = new java.util.HashMap<>();
-    for (ThemePicker.ThemeCategory cat : ThemePicker.ThemeCategory.values())
+    assertEquals(18, themes.length);
+    java.util.Map<ThemePicker.ThemeCategory, Integer> counts = new java.util.HashMap<>();
+    for (ThemePicker.ThemeCategory category : ThemePicker.ThemeCategory.values())
+      counts.put(category, 0);
+    for (String theme : themes)
     {
-      categoryCounts.put(cat, 0);
+      ThemePicker.ThemeCategory category = ThemePicker.categoryOf(theme);
+      assertNotNull("Theme " + theme + " must map to a gallery category", category);
+      assertNotEquals(ThemePicker.ThemeCategory.ALL, category);
+      assertNotEquals(ThemePicker.ThemeCategory.FAVORITES, category);
+      counts.put(category, counts.get(category) + 1);
     }
-
-    for (String themeKey : all51Themes)
-    {
-      ThemePicker.ThemeCategory category = ThemePicker.categoryOf(themeKey);
-      assertNotNull("Theme key '" + themeKey + "' must map to a category", category);
-      assertNotEquals("Theme key '" + themeKey + "' should not map to ALL category",
-          ThemePicker.ThemeCategory.ALL, category);
-      assertNotEquals("Theme key '" + themeKey + "' should not map to FAVORITES category",
-          ThemePicker.ThemeCategory.FAVORITES, category);
-      categoryCounts.put(category, categoryCounts.get(category) + 1);
-    }
-
-    assertEquals(4, (int) categoryCounts.get(ThemePicker.ThemeCategory.SYSTEM));
-    assertEquals(24, (int) categoryCounts.get(ThemePicker.ThemeCategory.DARK));
-    assertEquals(15, (int) categoryCounts.get(ThemePicker.ThemeCategory.LIGHT));
-    assertEquals(8, (int) categoryCounts.get(ThemePicker.ThemeCategory.VIBRANT));
-    assertEquals(0, (int) categoryCounts.get(ThemePicker.ThemeCategory.FAVORITES));
-
+    assertEquals(2, (int) counts.get(ThemePicker.ThemeCategory.SYSTEM));
+    assertEquals(11, (int) counts.get(ThemePicker.ThemeCategory.DARK));
+    assertEquals(3, (int) counts.get(ThemePicker.ThemeCategory.LIGHT));
+    assertEquals(2, (int) counts.get(ThemePicker.ThemeCategory.VIBRANT));
     assertNull(ThemePicker.categoryOf(null));
-    assertNull(ThemePicker.categoryOf("unknown_custom_theme"));
+    assertNull(ThemePicker.categoryOf("removed_theme"));
   }
 
   @Test
