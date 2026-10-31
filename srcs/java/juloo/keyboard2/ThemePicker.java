@@ -3,6 +3,7 @@ package juloo.keyboard2;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -97,10 +98,10 @@ final class ThemePicker
         android.R.attr.textColorSecondary,
         android.R.attr.colorAccent
       });
-      int surface = attrs.getColor(0, 0xFFFAFAFA);
-      primaryText = attrs.getColor(1, 0xFF202124);
-      secondaryText = attrs.getColor(2, 0xFF666666);
-      accent = attrs.getColor(3, 0xFF4285F4);
+      int surface = colorAt(attrs, 0, 0xFFFAFAFA);
+      primaryText = colorAt(attrs, 1, 0xFF202124);
+      secondaryText = colorAt(attrs, 2, 0xFF666666);
+      accent = colorAt(attrs, 3, 0xFF4285F4);
       attrs.recycle();
 
       cardBackground = surface;
@@ -601,6 +602,12 @@ final class ThemePicker
       return (int)(value + 0.5f);
     }
     return (int)(value * context.getResources().getDisplayMetrics().density + 0.5f);
+  }
+
+  private static int colorAt(TypedArray attributes, int index, int fallback)
+  {
+    ColorStateList colors = attributes.getColorStateList(index);
+    return colors != null ? colors.getDefaultColor() : attributes.getColor(index, fallback);
   }
 
   private static int blend(int base, int overlay, float fraction)
