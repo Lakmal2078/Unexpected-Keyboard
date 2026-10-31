@@ -57,6 +57,8 @@ public class Keyboard2 extends InputMethodService
   private Handler _handler;
 
   private Config _config;
+  /** Last configuration used to derive orientation- and window-dependent keyboard metrics. */
+  private Configuration _last_configuration;
 
   private FoldStateTracker _foldStateTracker;
 
@@ -141,6 +143,7 @@ public class Keyboard2 extends InputMethodService
     Config.initGlobalConfig(prefs, getResources(),
         _foldStateTracker.isUnfolded(), _dictionaries);
     _config = Config.globalConfig();
+    _last_configuration = new Configuration(getResources().getConfiguration());
     Receiver recvr = this.new Receiver();
     _suggestions = new Suggestions(recvr, _config);
     _keyeventhandler = new KeyEventHandler(_config, recvr, _suggestions, this);
@@ -521,18 +524,37 @@ public class Keyboard2 extends InputMethodService
     update_top_bar_visibility();
   }
 
-  private int _last_night_mode = -1;
+  /** Whether a configuration change affects keyboard geometry or its system theme. */
+  static boolean shouldRefreshKeyboardConfig(Configuration previous, Configuration next,
+      boolean themeFollowsSystem)
+  {
+    if (previous == null || next == null)
+      return true;
+
+    boolean geometryChanged =
+        previous.orientation != next.orientation
+        || previous.screenWidthDp != next.screenWidthDp
+        || previous.screenHeightDp != next.screenHeightDp
+        || previous.smallestScreenWidthDp != next.smallestScreenWidthDp
+        || previous.densityDpi != next.densityDpi
+        || previous.screenLayout != next.screenLayout
+        || Float.compare(previous.fontScale, next.fontScale) != 0;
+
+    boolean nightModeChanged = (previous.uiMode & Configuration.UI_MODE_NIGHT_MASK)
+        != (next.uiMode & Configuration.UI_MODE_NIGHT_MASK);
+    return geometryChanged || (themeFollowsSystem && nightModeChanged);
+  }
 
   @Override
   public void onConfigurationChanged(Configuration newConfig)
   {
     super.onConfigurationChanged(newConfig);
     if (_config == null || newConfig == null) return;
-    if (!_config.theme_follows_system) return;
-    int night = newConfig.uiMode & Configuration.UI_MODE_NIGHT_MASK;
-    if (night == _last_night_mode) return;
-    _last_night_mode = night;
-    refresh_config();
+
+    Configuration previous = _last_configuration;
+    _last_configuration = new Configuration(newConfig);
+    if (shouldRefreshKeyboardConfig(previous, newConfig, _config.theme_follows_system))
+      refresh_config();
   }
 
   /** Might re-create the keyboard view. [_keyboard_layout_view.setKeyboard()] and
