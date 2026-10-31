@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.os.Environment;
 import android.view.ContextThemeWrapper;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
