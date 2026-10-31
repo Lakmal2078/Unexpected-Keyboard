@@ -286,5 +286,12 @@
     <string name="pref_theme_favorite_remove">Remove from favorites</string>
     <string name="pref_theme_day_title">Day theme</string>
     <string name="pref_theme_night_title">Night theme</string>
+    <string name="pref_category_privacy">Privacy &amp; data</string>
+    <string name="pref_clear_sinhala_learned_data_title">Clear learned Sinhala data</string>
+    <string name="pref_clear_sinhala_learned_data_summary">Delete learned word corrections and context predictions stored on this device</string>
+    <string name="pref_clear_sinhala_learned_data_confirm_title">Clear learned Sinhala data?</string>
+    <string name="pref_clear_sinhala_learned_data_confirm_message">This permanently removes learned Sinhala word corrections and context predictions from this device. Your keyboard layouts and other settings will not be changed.</string>
+    <string name="pref_clear_sinhala_learned_data_action">Clear data</string>
+    <string name="pref_clear_sinhala_learned_data_done">Learned Sinhala data cleared</string>
 </resources>
 
