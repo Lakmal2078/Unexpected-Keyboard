@@ -2,7 +2,11 @@ package juloo.keyboard2;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.os.Environment;
 import android.os.Build;
+import android.view.ContextThemeWrapper;
 import android.view.ContextThemeWrapper;
 import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.ActivityScenario;
@@ -67,6 +71,53 @@ public class AuditRegressionDeviceTest
         light.primaryText, dark.primaryText);
     assertEquals(Theme.getContrastColor(light.accent), light.accentText);
     assertEquals(Theme.getContrastColor(dark.accent), dark.accentText);
+  }
+
+  @Test
+  public void themePickerScreenshotsRenderInLightAndDarkModes() throws Exception
+  {
+    Context context = ApplicationProvider.getApplicationContext();
+    File screenshotDirectory = new File(
+        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "unexpected-keyboard-uiux");
+    assertTrue("Screenshot directory must be available",
+        screenshotDirectory.isDirectory() || screenshotDirectory.mkdirs());
+
+    try (ActivityScenario<SettingsActivity> scenario = ActivityScenario.launch(SettingsActivity.class))
+    {
+      captureThemePickerScreenshot(scenario, context, android.R.style.Theme_DeviceDefault_Light,
+          new File(screenshotDirectory, "theme-picker-light.png"));
+      captureThemePickerScreenshot(scenario, context, android.R.style.Theme_DeviceDefault,
+          new File(screenshotDirectory, "theme-picker-dark.png"));
+    }
+  }
+
+  private static void captureThemePickerScreenshot(ActivityScenario<SettingsActivity> scenario,
+      Context appContext, int themeResource, File output) throws IOException
+  {
+    final AlertDialog[] dialog = new AlertDialog[1];
+    scenario.onActivity(activity -> {
+      ContextThemeWrapper themedContext = new ContextThemeWrapper(activity, themeResource);
+      SharedPreferences prefs = DirectBootAwarePreferences.get_shared_preferences(activity);
+      dialog[0] = ThemePicker.create(
+          new AlertDialog.Builder(themedContext), themedContext.getResources(), prefs);
+      dialog[0].show();
+    });
+
+    android.app.Instrumentation instrumentation =
+        InstrumentationRegistry.getInstrumentation();
+    instrumentation.waitForIdleSync();
+    Bitmap screenshot = instrumentation.getUiAutomation().takeScreenshot();
+    assertNotNull("Theme picker screenshot must be captured", screenshot);
+    try (FileOutputStream stream = new FileOutputStream(output))
+    {
+      assertTrue("Theme picker screenshot must be written",
+          screenshot.compress(Bitmap.CompressFormat.PNG, 100, stream));
+    }
+    finally
+    {
+      screenshot.recycle();
+      scenario.onActivity(activity -> dialog[0].dismiss());
+    }
   }
 
   @Test
