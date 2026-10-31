@@ -49,6 +49,41 @@ public class AuditRegressionDeviceTest
   }
 
   @Test
+  public void SinhalaLearnerPersistsAndClearActionRemovesDiskAndMemoryData()
+  {
+    Context context = ApplicationProvider.getApplicationContext();
+    SharedPreferences prefs =
+        DirectBootAwarePreferences.get_protected_prefs(context, "sinhala_learned_bigrams");
+    String transitionKey = "පරීක්ෂණය|සාර්ථකයි";
+    boolean hadValue = prefs.contains(transitionKey);
+    int previousCount = prefs.getInt(transitionKey, 0);
+    try
+    {
+      prefs.edit().remove(transitionKey).commit();
+
+      SinhalaLearner learner = new SinhalaLearner(context);
+      learner.recordTransition("පරීක්ෂණය", "සාර්ථකයි");
+
+      SinhalaLearner afterServiceRestart = new SinhalaLearner(context);
+      assertTrue("A new learner must reload persisted context predictions",
+          afterServiceRestart.getLearnedPredictions("පරීක්ෂණය").contains("සාර්ථකයි"));
+
+      SinhalaLearner.clearAllLearnedData(context);
+      assertTrue("All live learner caches must be cleared",
+          afterServiceRestart.getLearnedPredictions("පරීක්ෂණය").isEmpty());
+      assertFalse("The dedicated learning store must be empty for this transition",
+          prefs.contains(transitionKey));
+    }
+    finally
+    {
+      SharedPreferences.Editor editor = prefs.edit();
+      if (hadValue) editor.putInt(transitionKey, previousCount);
+      else editor.remove(transitionKey);
+      editor.commit();
+    }
+  }
+
+  @Test
   public void cachedClipboardPaneRegistersAfterEveryAttach()
   {
     Context context = ApplicationProvider.getApplicationContext();
