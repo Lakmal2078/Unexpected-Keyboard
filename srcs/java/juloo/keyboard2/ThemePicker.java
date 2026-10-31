@@ -92,17 +92,19 @@ final class ThemePicker
 
     PickerPalette(Context context)
     {
-      TypedArray attrs = context.obtainStyledAttributes(new int[] {
+      Resources.Theme theme = context != null ? context.getTheme() : null;
+      TypedArray attrs = theme != null ? theme.obtainStyledAttributes(new int[] {
         android.R.attr.colorBackground,
         android.R.attr.textColorPrimary,
         android.R.attr.textColorSecondary,
         android.R.attr.colorAccent
-      });
-      int surface = colorAt(attrs, 0, 0xFFFAFAFA);
-      primaryText = colorAt(attrs, 1, 0xFF202124);
-      secondaryText = colorAt(attrs, 2, 0xFF666666);
-      accent = colorAt(attrs, 3, 0xFF4285F4);
-      attrs.recycle();
+      }) : null;
+      int surface = attrs != null ? colorAt(attrs, 0, 0xFFFAFAFA) : 0xFFFAFAFA;
+      primaryText = attrs != null ? colorAt(attrs, 1, 0xFF202124) : 0xFF202124;
+      secondaryText = attrs != null ? colorAt(attrs, 2, 0xFF666666) : 0xFF666666;
+      accent = attrs != null ? colorAt(attrs, 3, 0xFF4285F4) : 0xFF4285F4;
+      if (attrs != null)
+        attrs.recycle();
 
       cardBackground = surface;
       selectedCardBackground = blend(surface, accent, 0.16f);
