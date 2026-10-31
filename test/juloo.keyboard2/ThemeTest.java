@@ -9,58 +9,53 @@ public class ThemeTest
   public void testCuratedThemesResolveToValidStyles()
   {
     String[] curatedThemes = {
-      "light",
-      "dark",
-      "black",
-      "oled_black",
-      "white",
-      "gruvbox_dark",
-      "gruvbox_light",
-      "solarized_dark",
-      "sepia_warm",
-      "dracula",
-      "nord",
-      "tokyo_night",
-      "catppuccin_mocha",
-      "catppuccin_latte",
-      "rosepine",
-      "everforestlight",
-      "desert",
-      "sinhala_sand",
-      "emerald_forest",
-      "jungle",
-      "cyberpunk_neon",
-      "matrix_green",
-      "sunset_glow",
-      "lanka_maroon",
-      "royal_gold",
-      "midnight_purple",
-      "midnight_ocean",
-      "arctic_blue",
-      "cobalt",
-      "graphite_pro",
-      "quiet_teal",
-      "soft_lavender",
-      "high_contrast",
-      "high_contrast_yellow",
-      "rose_quartz",
-      "ocean_breeze",
-      "citrus_pop",
-      "copper_night",
-      "berry_noir",
-      "mint_matcha",
-      "glass",
-      "aurora_flow",
-      "zen_minimal",
-      "soft_3d",
-      "pixel_retro"
+      "system", "dark", "light", "black", "oled_black", "white", "monet",
+      "graphite_pro", "gruvbox_dark", "solarized_dark", "dracula", "nord",
+      "tokyo_night", "catppuccin_mocha", "catppuccin_latte", "sinhala_sand",
+      "lanka_maroon", "high_contrast"
     };
-
+    assertEquals(18, curatedThemes.length);
     for (String theme : curatedThemes)
     {
       int themeId = Config.getThemeId(null, theme);
       assertTrue("Theme " + theme + " should resolve to a valid style ID", themeId != 0);
+      assertNotNull("Theme " + theme + " should have a gallery category",
+          ThemePicker.categoryOf(theme));
     }
+  }
+
+  @Test
+  public void testLegacyThemePreferencesMigrateToCuratedCatalog()
+  {
+    String[] legacyThemes = {
+      "monetlight", "monetdark", "gruvbox_light", "rosepine", "everforestlight",
+      "sepia_warm", "desert", "emerald_forest", "jungle", "cyberpunk_neon",
+      "matrix_green", "sunset_glow", "lanka_blue", "royal_gold", "midnight_purple",
+      "midnight_ocean", "arctic_blue", "cobalt", "quiet_teal", "soft_lavender",
+      "high_contrast_yellow", "unexpected_keyboard", "rose_quartz", "ocean_breeze",
+      "citrus_pop", "copper_night", "berry_noir", "mint_matcha", "glass",
+      "aurora_flow", "zen_minimal", "soft_3d", "pixel_retro", "epaper",
+      "epaperblack", "altblack", "pine", "forest_mist", "quantum_neon",
+      "sinhala_tech", "amoled_cyan", "cyber_purple", "neon_rose",
+      "gradientpurplepink", "sinhala_heritage", "aurora", "ocean_teal"
+    };
+    for (String theme : legacyThemes)
+    {
+      String migrated = Config.migrateThemePreference(theme);
+      assertTrue("Legacy theme " + theme + " migrated to unsupported key " + migrated,
+          java.util.Arrays.asList("system", "dark", "light", "black", "oled_black",
+              "white", "monet", "graphite_pro", "gruvbox_dark", "solarized_dark",
+              "dracula", "nord", "tokyo_night", "catppuccin_mocha",
+              "catppuccin_latte", "sinhala_sand", "lanka_maroon", "high_contrast")
+              .contains(migrated));
+    }
+  }
+
+  @Test
+  public void testUnknownLegacyThemeUsesDefault()
+  {
+    assertEquals(Config.DEFAULT_THEME, Config.migrateThemePreference("unknown_theme"));
+    assertEquals(Config.DEFAULT_THEME, Config.migrateThemePreference(null));
   }
 
   @Test
