@@ -408,7 +408,7 @@
     <item name="colorKeyAction">#7446A8</item>
     <item name="colorKeySpaceBar">#343746</item>
     <item name="colorLabel">#F8F8F2</item>
-    <item name="colorLabelActivated">#FF96D2</item>
+    <item name="colorLabelActivated">#41152F</item>
     <item name="colorLabelLocked">#50FA7B</item>
     <item name="colorSubLabel">#96A1C2</item>
     <item name="keyBorderRadius">10dp</item>
@@ -422,7 +422,7 @@
     <item name="keyBorderColorTop">#626987</item>
     <item name="keyBorderColorRight">#4B5068</item>
     <item name="keyBorderColorBottom">#282A36</item>
-    <item name="colorLabelPressed">#F8F8F2</item>
+    <item name="colorLabelPressed">#41152F</item>
       <item name="keyboardGradientStart">#171522</item>
     <item name="keyboardGradientEnd">#35204B</item>
 </style>
@@ -456,8 +456,8 @@
     <item name="colorKeyAction">#585B70</item>
     <item name="colorKeySpaceBar">#313244</item>
     <item name="colorLabel">#CDD6F4</item>
-    <item name="colorLabelPressed">#FFFFFF</item>
-    <item name="colorLabelActivated">#CDA9F7</item>
+    <item name="colorLabelPressed">#3B2854</item>
+    <item name="colorLabelActivated">#3B2854</item>
     <item name="colorLabelLocked">#A6E3A1</item>
     <item name="colorSubLabel">#89DCEB</item>
     <item name="keyBorderRadius">12dp</item>
@@ -484,8 +484,8 @@
     <item name="colorKeyAction">#DCC8D8</item>
     <item name="colorKeySpaceBar">#E6E9EF</item>
     <item name="colorLabel">#4C4F69</item>
-    <item name="colorLabelPressed">#1850C1</item>
-    <item name="colorLabelActivated">#1850C1</item>
+    <item name="colorLabelPressed">#6B2944</item>
+    <item name="colorLabelActivated">#6B2944</item>
     <item name="colorLabelLocked">#40A02B</item>
     <item name="colorSubLabel">#8538EA</item>
     <item name="keyBorderRadius">12dp</item>
@@ -512,8 +512,8 @@
     <item name="colorKeyAction">#343B58</item>
     <item name="colorKeySpaceBar">#24283B</item>
     <item name="colorLabel">#C0CAF5</item>
-    <item name="colorLabelPressed">#FFFFFF</item>
-    <item name="colorLabelActivated">#9CBAF9</item>
+    <item name="colorLabelPressed">#0C2340</item>
+    <item name="colorLabelActivated">#0C2340</item>
     <item name="colorLabelLocked">#9ECE6A</item>
     <item name="colorSubLabel">#BB9AF7</item>
     <item name="keyBorderRadius">5dp</item>
@@ -540,8 +540,8 @@
     <item name="colorKeyAction">#434C5E</item>
     <item name="colorKeySpaceBar">#3B4252</item>
     <item name="colorLabel">#ECEFF4</item>
-    <item name="colorLabelPressed">#ABD3DE</item>
-    <item name="colorLabelActivated">#ABD3DE</item>
+    <item name="colorLabelPressed">#143A44</item>
+    <item name="colorLabelActivated">#143A44</item>
     <item name="colorLabelLocked">#A3BE8C</item>
     <item name="colorSubLabel">#98B2CC</item>
     <item name="keyBorderRadius">6dp</item>
@@ -1054,7 +1054,7 @@
     <item name="keyBorderColorRight">#DCC5B2</item>
     <item name="keyBorderColorBottom">#C9AD98</item>
     <item name="colorLabel">#39271F</item>
-    <item name="colorLabelActivated">#704F43</item>
+    <item name="colorLabelActivated">#573321</item>
     <item name="colorLabelLocked">#3E7A4A</item>
     <item name="colorSubLabel">#795548</item>
     <item name="emoji_button_bg">#F2E0D0</item>
@@ -1153,7 +1153,7 @@
     <item name="keyBorderWidthActivated">0.8dp</item>
     <item name="keyBorderColorBottom">#282828</item>
     <item name="colorLabel">#EBDBB2</item>
-    <item name="colorLabelActivated">#FE8019</item>
+    <item name="colorLabelActivated">#2B1C12</item>
     <item name="colorLabelLocked">#B8BB26</item>
     <item name="colorSubLabel">#AFA18E</item>
     <item name="emoji_button_bg">#32302F</item>
@@ -1164,7 +1164,7 @@
     <item name="keyBorderColorLeft">#504945</item>
     <item name="keyBorderColorTop">#665C54</item>
     <item name="keyBorderColorRight">#504945</item>
-    <item name="colorLabelPressed">#EBDBB2</item>
+    <item name="colorLabelPressed">#2B1C12</item>
       <item name="keyboardGradientStart">#1D1915</item>
     <item name="keyboardGradientEnd">#3A2D22</item>
 </style>
@@ -1200,7 +1200,7 @@
     <item name="keyBorderWidthActivated">0.8dp</item>
     <item name="keyBorderColorBottom">#002B36</item>
     <item name="colorLabel">#93A1A1</item>
-    <item name="colorLabelActivated">#3995D6</item>
+    <item name="colorLabelActivated">#302309</item>
     <item name="colorLabelLocked">#859900</item>
     <item name="colorSubLabel">#8C9DA2</item>
     <item name="emoji_button_bg">#00212B</item>
@@ -1211,7 +1211,7 @@
     <item name="keyBorderColorLeft">#0B5262</item>
     <item name="keyBorderColorTop">#176071</item>
     <item name="keyBorderColorRight">#0B5262</item>
-    <item name="colorLabelPressed">#93A1A1</item>
+    <item name="colorLabelPressed">#302309</item>
       <item name="keyboardGradientStart">#001D26</item>
     <item name="keyboardGradientEnd">#00414C</item>
 </style>
