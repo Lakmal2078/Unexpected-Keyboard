@@ -260,10 +260,10 @@
     <item name="keyBorderWidthActivated">1dp</item>
     <item name="keyBorderWidthAction">0.6dp</item>
     <item name="keyBorderWidthSpaceBar">0.6dp</item>
-    <item name="keyBorderColorLeft">@color/system_neutral2_200</item>
+    <item name="keyBorderColorLeft">#D4D9E2</item>
     <item name="keyBorderColorTop">@color/system_neutral1_50</item>
-    <item name="keyBorderColorRight">@color/system_neutral2_200</item>
-    <item name="keyBorderColorBottom">@color/system_neutral2_300</item>
+    <item name="keyBorderColorRight">#D4D9E2</item>
+    <item name="keyBorderColorBottom">#C1C8D3</item>
   </style>
   <style name="MonetDark" parent="@style/BaseTheme">
     <item name="isLightTheme">false</item>
@@ -283,10 +283,10 @@
     <item name="keyBorderWidthActivated">1dp</item>
     <item name="keyBorderWidthAction">0.6dp</item>
     <item name="keyBorderWidthSpaceBar">0.6dp</item>
-    <item name="keyBorderColorLeft">@color/system_neutral2_700</item>
-    <item name="keyBorderColorTop">@color/system_neutral2_600</item>
-    <item name="keyBorderColorRight">@color/system_neutral2_700</item>
-    <item name="keyBorderColorBottom">@color/system_neutral2_800</item>
+    <item name="keyBorderColorLeft">#5A606B</item>
+    <item name="keyBorderColorTop">#454B56</item>
+    <item name="keyBorderColorRight">#5A606B</item>
+    <item name="keyBorderColorBottom">#292E37</item>
   </style>
   <style name="RosePine" parent="BaseTheme">
     <item name="isLightTheme">false</item>
