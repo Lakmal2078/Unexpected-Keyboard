@@ -149,16 +149,14 @@ export RELEASE_KEY_PASSWORD="your-key-password"
 
 #### Option B: Using `.env` and `build_release.sh`
 
-Create a `.env` file in the project root:
+Create a local environment file from the safe template:
 
-```env
-RELEASE_KEYSTORE=release.keystore
-RELEASE_KEYSTORE_PASSWORD=your-keystore-password
-RELEASE_KEY_ALIAS=your-key-alias
-RELEASE_KEY_PASSWORD=your-key-password
+```sh
+cp .env.example .env
+chmod 600 .env
 ```
 
-Run the build script:
+Edit `.env` and set the four signing values. The keystore path may be absolute or relative to the repository root. Then build:
 
 ```sh
 ./build_release.sh
@@ -167,8 +165,25 @@ Run the build script:
 - **Output:** `build/outputs/apk/release/Unexpected-Keyboard-release.apk`
 - A build summary and size report is automatically generated at `build/reports/apk-release-report.txt`.
 
+The script sources `.env` as a trusted, shell-compatible file. Only put values you control in it; do not download or source an untrusted env file.
+
+### GitHub Actions release build
+
+The existing `.github/workflows/make-apk.yml` workflow reads these repository Actions secrets:
+
+| GitHub Actions secret | Value |
+|---|---|
+| `RELEASE_KEYSTORE_BASE64` | Base64-encoded keystore file |
+| `RELEASE_KEYSTORE_PASSWORD` | Keystore password |
+| `RELEASE_KEY_ALIAS` | Key alias |
+| `RELEASE_KEY_PASSWORD` | Key password |
+
+Create each under **Repository → Settings → Secrets and variables → Actions → New repository secret**. For the keystore value, encode the binary file locally with `base64 -w 0 release.keystore` (Linux) and paste the output directly into the secret. Never add these values to workflow YAML, commits, issue comments, or chat.
+
+The workflow builds on a `v*` tag or manual dispatch. A tagged run publishes the APK and its SHA-256 checksum to GitHub Releases.
+
 > [!CAUTION]
-> Never commit `.env` or production `.keystore` files to version control. Keep credentials safe.
+> Never commit `.env` or production `.keystore` files to version control. Rotate any signing credentials that may have appeared in repository history before configuring new Actions secrets.
 
 ### 5. Building Inside Termux / PRoot (Android)
 
