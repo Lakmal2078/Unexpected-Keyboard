@@ -1,6 +1,7 @@
 import buildlogic.InitDebugKeystore
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import java.io.FileOutputStream
+import java.util.Base64
 import java.util.Date
 import java.util.Locale
 
@@ -64,16 +65,26 @@ android {
     }
 
     create("release") {
-      val ks = System.getenv("RELEASE_KEYSTORE")
-      if (!ks.isNullOrBlank()) {
-        val keystore = file(ks)
-        if (!keystore.exists() || !keystore.isFile) {
-          throw GradleException("Release keystore does not exist or is not a file: ${keystore.absolutePath}")
+      val rawKs = System.getenv("RELEASE_KEYSTORE")?.trim()?.removePrefix("=")
+      val ks = if (rawKs.isNullOrBlank()) "release.keystore" else rawKs
+      val keystore = file(ks)
+      if (!keystore.exists() || !keystore.isFile) {
+        val b64 = System.getenv("RELEASE_KEYSTORE_BASE64")?.trim()?.removePrefix("=")
+        if (!b64.isNullOrBlank()) {
+          runCatching {
+            val cleanB64 = b64.replace(Regex("[^A-Za-z0-9+/=]"), "")
+            keystore.writeBytes(Base64.getDecoder().decode(cleanB64))
+          }
         }
+      }
+      if (keystore.exists() && keystore.isFile) {
         storeFile = keystore
-        storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD") ?: throw GradleException("Missing RELEASE_KEYSTORE_PASSWORD")
-        keyAlias = System.getenv("RELEASE_KEY_ALIAS") ?: throw GradleException("Missing RELEASE_KEY_ALIAS")
-        keyPassword = System.getenv("RELEASE_KEY_PASSWORD") ?: throw GradleException("Missing RELEASE_KEY_PASSWORD")
+        val rawPass = System.getenv("RELEASE_KEYSTORE_PASSWORD")?.trim()?.removePrefix("=")
+        storePassword = if (!rawPass.isNullOrBlank()) rawPass else "c8ca952e38469c57270af746884fc7ace4e706acd0496170"
+        val rawAlias = System.getenv("RELEASE_KEY_ALIAS")?.trim()?.removePrefix("=")
+        keyAlias = if (!rawAlias.isNullOrBlank()) rawAlias else "release"
+        val rawKeyPass = System.getenv("RELEASE_KEY_PASSWORD")?.trim()?.removePrefix("=")
+        keyPassword = if (!rawKeyPass.isNullOrBlank()) rawKeyPass else "c8ca952e38469c57270af746884fc7ace4e706acd0496170"
       }
     }
   }
