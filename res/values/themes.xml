@@ -93,7 +93,9 @@
     <item name="keyBorderColorRight">#303A49</item>
     <item name="clipboard_divider_color">#303A49</item>
     <item name="suggestions_background">#171A21</item>
-  </style>
+      <item name="keyboardGradientStart">#101722</item>
+    <item name="keyboardGradientEnd">#253448</item>
+</style>
   <style name="Light" parent="BaseTheme">
     <item name="isLightTheme">true</item>
     <item name="android:isLightTheme" tools:targetApi="29">true</item>
@@ -119,7 +121,9 @@
     <item name="keyBorderRadius">5dp</item>
     <item name="clipboard_divider_color">#D5DDE8</item>
     <item name="suggestions_background">#E9EEF5</item>
-  </style>
+      <item name="keyboardGradientStart">#F1F5FA</item>
+    <item name="keyboardGradientEnd">#DCE6F2</item>
+</style>
   <style name="Black" parent="BaseTheme">
     <item name="isLightTheme">false</item>
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
@@ -145,7 +149,9 @@
     <item name="keyBorderWidthSpaceBar">0.8dp</item>
     <item name="clipboard_divider_color">#292D35</item>
     <item name="suggestions_background">#0C0D10</item>
-  </style>
+      <item name="keyboardGradientStart">#07090D</item>
+    <item name="keyboardGradientEnd">#191D25</item>
+</style>
   <style name="AltBlack" parent="Black">
     <item name="keyBorderWidth">1dp</item>
   </style>
@@ -154,7 +160,7 @@
     <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#FFFFFF</item>
     <item name="colorKey">#FFFFFF</item>
-    <item name="colorKeyAction">#F0F4FA</item>
+    <item name="colorKeyAction">#EAF2FC</item>
     <item name="colorKeySpaceBar">#F7F9FC</item>
     <item name="keyBorderWidth">1dp</item>
     <item name="keyBorderWidthActivated">1.2dp</item>
@@ -162,7 +168,7 @@
     <item name="keyBorderColorTop">#FFFFFF</item>
     <item name="keyBorderColorRight">#DCE3EC</item>
     <item name="keyBorderColorBottom">#C7D0DC</item>
-    <item name="colorKeyActivated">#E5EEF9</item>
+    <item name="colorKeyActivated">#D8E9FF</item>
     <item name="colorLabel">#182230</item>
     <item name="colorLabelActivated">#0057B8</item>
     <item name="colorLabelLocked">#237A45</item>
@@ -174,7 +180,9 @@
     <item name="keyBorderWidthAction">1dp</item>
     <item name="keyBorderWidthSpaceBar">1dp</item>
     <item name="suggestions_background">#FFFFFF</item>
-  </style>
+      <item name="keyboardGradientStart">#FFFFFF</item>
+    <item name="keyboardGradientEnd">#EAF0F8</item>
+</style>
   <style name="ePaper" parent="BaseTheme">
     <item name="isLightTheme">true</item>
     <item name="android:isLightTheme" tools:targetApi="29">true</item>
@@ -396,7 +404,7 @@
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#282A36</item>
     <item name="colorKey">#343746</item>
-    <item name="colorKeyActivated">#44475A</item>
+    <item name="colorKeyActivated">#FF4FA3</item>
     <item name="colorKeyAction">#7446A8</item>
     <item name="colorKeySpaceBar">#343746</item>
     <item name="colorLabel">#F8F8F2</item>
@@ -415,7 +423,9 @@
     <item name="keyBorderColorRight">#4B5068</item>
     <item name="keyBorderColorBottom">#282A36</item>
     <item name="colorLabelPressed">#F8F8F2</item>
-  </style>
+      <item name="keyboardGradientStart">#171522</item>
+    <item name="keyboardGradientEnd">#35204B</item>
+</style>
   <style name="GradientPurplePink" parent="BaseTheme">
     <item name="isLightTheme">false</item>
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
@@ -442,7 +452,7 @@
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#1E1E2E</item>
     <item name="colorKey">#313244</item>
-    <item name="colorKeyActivated">#45475A</item>
+    <item name="colorKeyActivated">#CBA6F7</item>
     <item name="colorKeyAction">#585B70</item>
     <item name="colorKeySpaceBar">#313244</item>
     <item name="colorLabel">#CDD6F4</item>
@@ -462,14 +472,16 @@
     <item name="keyBorderColorTop">#585B70</item>
     <item name="keyBorderColorRight">#45475A</item>
     <item name="keyBorderColorBottom">#181825</item>
-  </style>
+      <item name="keyboardGradientStart">#181321</item>
+    <item name="keyboardGradientEnd">#342044</item>
+</style>
   <style name="CatppuccinLatte" parent="BaseTheme">
     <item name="isLightTheme">true</item>
     <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#EFF1F5</item>
     <item name="colorKey">#E6E9EF</item>
-    <item name="colorKeyActivated">#CCD0DA</item>
-    <item name="colorKeyAction">#C2C7D2</item>
+    <item name="colorKeyActivated">#E7B5C9</item>
+    <item name="colorKeyAction">#DCC8D8</item>
     <item name="colorKeySpaceBar">#E6E9EF</item>
     <item name="colorLabel">#4C4F69</item>
     <item name="colorLabelPressed">#1850C1</item>
@@ -488,13 +500,15 @@
     <item name="keyBorderColorTop">#DCE0E8</item>
     <item name="keyBorderColorRight">#BCC0CC</item>
     <item name="keyBorderColorBottom">#EFF1F5</item>
-  </style>
+      <item name="keyboardGradientStart">#FFF4EA</item>
+    <item name="keyboardGradientEnd">#F0DFE8</item>
+</style>
   <style name="TokyoNight" parent="BaseTheme">
     <item name="isLightTheme">false</item>
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#1A1B26</item>
     <item name="colorKey">#24283B</item>
-    <item name="colorKeyActivated">#414868</item>
+    <item name="colorKeyActivated">#38BDF8</item>
     <item name="colorKeyAction">#343B58</item>
     <item name="colorKeySpaceBar">#24283B</item>
     <item name="colorLabel">#C0CAF5</item>
@@ -514,13 +528,15 @@
     <item name="keyBorderColorTop">#485477</item>
     <item name="keyBorderColorRight">#343B59</item>
     <item name="keyBorderColorBottom">#171925</item>
-  </style>
+      <item name="keyboardGradientStart">#10162B</item>
+    <item name="keyboardGradientEnd">#1E2C54</item>
+</style>
   <style name="Nord" parent="BaseTheme">
     <item name="isLightTheme">false</item>
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#2E3440</item>
     <item name="colorKey">#3B4252</item>
-    <item name="colorKeyActivated">#4C566A</item>
+    <item name="colorKeyActivated">#56CFE1</item>
     <item name="colorKeyAction">#434C5E</item>
     <item name="colorKeySpaceBar">#3B4252</item>
     <item name="colorLabel">#ECEFF4</item>
@@ -540,7 +556,9 @@
     <item name="keyBorderColorTop">#5E6A80</item>
     <item name="keyBorderColorRight">#4C566A</item>
     <item name="keyBorderColorBottom">#2E3440</item>
-  </style>
+      <item name="keyboardGradientStart">#26364A</item>
+    <item name="keyboardGradientEnd">#3C536C</item>
+</style>
   <style name="CyberpunkNeon" parent="BaseTheme">
     <item name="isLightTheme">false</item>
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
@@ -618,7 +636,7 @@
     <item name="keyboardGradientStart">#3D0C14</item>
     <item name="keyboardGradientEnd">#1A0509</item>
     <item name="colorKey">#4A121D</item>
-    <item name="colorKeyActivated">#FFB300</item>
+    <item name="colorKeyActivated">#FFC107</item>
     <item name="colorKeyAction">#801826</item>
     <item name="colorKeySpaceBar">#3E0E18</item>
     <item name="colorLabel">#FFFDF7</item>
@@ -772,7 +790,9 @@
     <item name="keyBorderWidthAction">0.8dp</item>
     <item name="keyBorderWidthSpaceBar">0.8dp</item>
     <item name="suggestions_background">#1C2430</item>
-  </style>
+      <item name="keyboardGradientStart">#111B2B</item>
+    <item name="keyboardGradientEnd">#2B3D52</item>
+</style>
 
   <style name="SinhalaHeritage" parent="BaseTheme">
     <item name="isLightTheme">false</item>
@@ -804,8 +824,8 @@
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#000000</item>
     <item name="colorKey">#000000</item>
-    <item name="colorKeyActivated">#202020</item>
-    <item name="colorKeyAction">#050505</item>
+    <item name="colorKeyActivated">#003B46</item>
+    <item name="colorKeyAction">#07151A</item>
     <item name="colorKeySpaceBar">#030303</item>
     <item name="keyBorderWidth">0.7dp</item>
     <item name="keyBorderWidthActivated">1dp</item>
@@ -821,7 +841,9 @@
     <item name="emoji_button_bg">#000000</item>
     <item name="emoji_color">#FFFFFF</item>
     <item name="clipboard_divider_color" type="color">#292929</item>
-  </style>
+      <item name="keyboardGradientStart">#000000</item>
+    <item name="keyboardGradientEnd">#080D12</item>
+</style>
 
 
   <!-- Additional themes from the 18-theme palette collection. -->
@@ -1022,7 +1044,7 @@
     <item name="android:isLightTheme" tools:targetApi="29">true</item>
     <item name="colorKeyboard">#FFF4E6</item>
     <item name="colorKey">#FFFFFF</item>
-    <item name="colorKeyActivated">#E8C7AE</item>
+    <item name="colorKeyActivated">#E8B78E</item>
     <item name="colorKeyAction">#F2E0D0</item>
     <item name="colorKeySpaceBar">#F5E5D6</item>
     <item name="keyBorderWidth">1dp</item>
@@ -1040,7 +1062,9 @@
     <item name="keyBorderRadius">6dp</item>
     <item name="keyBorderWidthAction">0.8dp</item>
     <item name="keyBorderWidthSpaceBar">0.8dp</item>
-  </style>
+      <item name="keyboardGradientStart">#EAC9A6</item>
+    <item name="keyboardGradientEnd">#FFF2DE</item>
+</style>
 
   <style name="QuietTeal" parent="BaseTheme">
     <item name="isLightTheme">false</item>
@@ -1122,7 +1146,7 @@
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#282828</item>
     <item name="colorKey">#3C3836</item>
-    <item name="colorKeyActivated">#282828</item>
+    <item name="colorKeyActivated">#FE8019</item>
     <item name="colorKeyAction">#504945</item>
     <item name="colorKeySpaceBar">#32302F</item>
     <item name="keyBorderWidth">1dp</item>
@@ -1141,7 +1165,9 @@
     <item name="keyBorderColorTop">#665C54</item>
     <item name="keyBorderColorRight">#504945</item>
     <item name="colorLabelPressed">#EBDBB2</item>
-  </style>
+      <item name="keyboardGradientStart">#1D1915</item>
+    <item name="keyboardGradientEnd">#3A2D22</item>
+</style>
 
   <style name="GruvboxLight" parent="BaseTheme">
     <item name="isLightTheme">true</item>
@@ -1167,8 +1193,8 @@
     <item name="android:isLightTheme" tools:targetApi="29">false</item>
     <item name="colorKeyboard">#002B36</item>
     <item name="colorKey">#073642</item>
-    <item name="colorKeyActivated">#002B36</item>
-    <item name="colorKeyAction">#003B49</item>
+    <item name="colorKeyActivated">#DCA64B</item>
+    <item name="colorKeyAction">#075568</item>
     <item name="colorKeySpaceBar">#083B49</item>
     <item name="keyBorderWidth">1dp</item>
     <item name="keyBorderWidthActivated">0.8dp</item>
@@ -1186,7 +1212,9 @@
     <item name="keyBorderColorTop">#176071</item>
     <item name="keyBorderColorRight">#0B5262</item>
     <item name="colorLabelPressed">#93A1A1</item>
-  </style>
+      <item name="keyboardGradientStart">#001D26</item>
+    <item name="keyboardGradientEnd">#00414C</item>
+</style>
 
   <style name="SepiaWarm" parent="BaseTheme">
     <item name="isLightTheme">true</item>
